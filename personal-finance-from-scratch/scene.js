@@ -178,66 +178,97 @@
     /* --- a fine incuse guide line --- */
     ring(x, cx, cy, R * 0.775, S * 0.0025, '#6e6e6e');
 
+    x.textAlign = 'center';
+    x.textBaseline = 'middle';
+
     if (which === 'obverse') {
-      /* legend around the top, denomination-style value below */
-      x.fillStyle = HIGH;
-      x.textAlign = 'center';
-      x.textBaseline = 'middle';
+      /* ===== the reverse of the coin, shown to the camera: the common
+         loon on the water — CANADA above, DOLLAR below ===== */
+      x.font = '600 ' + Math.round(S * 0.070) + 'px Georgia, "Times New Roman", serif';
+      arcText(x, 'CANADA', cx, cy, R * 0.708, Math.PI * 1.345, Math.PI * 0.31, false);
+      x.font = '600 ' + Math.round(S * 0.066) + 'px Georgia, "Times New Roman", serif';
+      arcText(x, 'DOLLAR', cx, cy, R * 0.712, Math.PI * 0.345, Math.PI * 0.31, true);
 
-      x.font = '600 ' + Math.round(S * 0.062) + 'px Georgia, "Times New Roman", serif';
-      arcText(x, 'PERSONAL FINANCE', cx, cy, R * 0.700, Math.PI * 1.30, Math.PI * 0.40, false);
-
-      x.font = '600 ' + Math.round(S * 0.050) + 'px Georgia, "Times New Roman", serif';
-      arcText(x, 'FROM SCRATCH', cx, cy, R * 0.705, Math.PI * 0.32, Math.PI * 0.36, true);
-
-      star(x, cx - R * 0.700, cy + R * 0.020, R * 0.042, MID);
-      star(x, cx + R * 0.700, cy + R * 0.020, R * 0.042, MID);
-
-      /* the device: a struck currency mark, with a soft cameo behind
-         it so the glyph sits on a slightly domed relief             */
-      var cameo = x.createRadialGradient(cx, cy - R * 0.03, 0, cx, cy - R * 0.03, R * 0.40);
-      cameo.addColorStop(0, '#a0a0a0');
-      cameo.addColorStop(1, FIELD);
-      x.fillStyle = cameo;
-      x.beginPath();
-      x.arc(cx, cy - R * 0.03, R * 0.40, 0, TAU);
-      x.fill();
-
-      x.fillStyle = HIGH;
-      x.font = '700 ' + Math.round(S * 0.46) + 'px Georgia, "Times New Roman", serif';
-      x.fillText('$', cx, cy - R * 0.045);
-
+      /* the RCM security mark — a small raised roundel, above the loon */
       x.fillStyle = MID;
-      x.font = '500 ' + Math.round(S * 0.050) + 'px Georgia, "Times New Roman", serif';
-      x.fillText('MMXXVI', cx, cy + R * 0.500);
+      x.beginPath();
+      x.arc(cx, cy - R * 0.46, R * 0.058, 0, TAU);
+      x.fill();
+      x.strokeStyle = HIGH; x.lineWidth = S * 0.004;
+      x.beginPath(); x.arc(cx, cy - R * 0.46, R * 0.058, 0, TAU); x.stroke();
 
-    } else {
-      /* reverse: laurel wreath around the book's own title */
-      var i, a;
-      for (i = 0; i < 13; i++) {
-        a = Math.PI * 0.60 + (i / 12) * Math.PI * 0.74;          /* left branch  */
-        leaf(x, cx + Math.cos(a) * R * 0.615, cy + Math.sin(a) * R * 0.615,
-             R * 0.145, R * 0.052, a - Math.PI * 0.42, MID);
-        a = Math.PI * 0.40 - (i / 12) * Math.PI * 0.74;          /* right branch */
-        leaf(x, cx + Math.cos(a) * R * 0.615, cy + Math.sin(a) * R * 0.615,
-             R * 0.145, R * 0.052, a + Math.PI * 0.42, MID);
+      /* water — a few incuse ripple lines low on the field */
+      x.strokeStyle = LOW;
+      x.lineWidth = S * 0.006;
+      for (var wl = 0; wl < 4; wl++) {
+        var wy = cy + R * (0.30 + wl * 0.085);
+        var span = R * (0.60 - wl * 0.05);
+        x.beginPath();
+        x.moveTo(cx - span, wy);
+        x.bezierCurveTo(cx - span * 0.4, wy - R * 0.03, cx + span * 0.4, wy + R * 0.03, cx + span, wy);
+        x.stroke();
       }
 
+      /* the loon, swimming right, drawn as one raised silhouette */
       x.fillStyle = HIGH;
-      x.textAlign = 'center';
-      x.textBaseline = 'middle';
-      x.font = '600 ' + Math.round(S * 0.058) + 'px Georgia, "Times New Roman", serif';
-      arcText(x, 'TEN MODULES', cx, cy, R * 0.700, Math.PI * 1.34, Math.PI * 0.32, false);
+      x.beginPath();
+      x.moveTo(cx - R * 0.34, cy + R * 0.17);                                   /* tail, low-left      */
+      x.bezierCurveTo(cx - R * 0.30, cy - R * 0.02, cx - R * 0.06, cy - R * 0.04, cx + R * 0.06, cy + R * 0.00); /* back rising right   */
+      x.bezierCurveTo(cx + R * 0.15, cy + R * 0.02, cx + R * 0.20, cy - R * 0.10, cx + R * 0.245, cy - R * 0.235); /* up the back of neck */
+      x.bezierCurveTo(cx + R * 0.265, cy - R * 0.30, cx + R * 0.34, cy - R * 0.315, cx + R * 0.37, cy - R * 0.265); /* over the head       */
+      x.lineTo(cx + R * 0.52, cy - R * 0.235);                                  /* beak, pointing right*/
+      x.lineTo(cx + R * 0.37, cy - R * 0.205);
+      x.bezierCurveTo(cx + R * 0.315, cy - R * 0.16, cx + R * 0.30, cy - R * 0.09, cx + R * 0.235, cy - R * 0.03); /* front of neck down  */
+      x.bezierCurveTo(cx + R * 0.16, cy + R * 0.05, cx + R * 0.06, cy + R * 0.10, cx - R * 0.06, cy + R * 0.15);   /* breast to belly     */
+      x.bezierCurveTo(cx - R * 0.18, cy + R * 0.19, cx - R * 0.28, cy + R * 0.20, cx - R * 0.34, cy + R * 0.17);   /* belly back to tail  */
+      x.closePath();
+      x.fill();
 
-      x.font = '700 ' + Math.round(S * 0.115) + 'px Georgia, "Times New Roman", serif';
-      x.fillText('FROM', cx, cy - R * 0.085);
-      x.fillText('SCRATCH', cx, cy + R * 0.070);
+      /* eye (incuse) and a soft back highlight (checker-like loon plumage) */
+      x.fillStyle = LOW;
+      x.beginPath(); x.arc(cx + R * 0.315, cy - R * 0.245, R * 0.016, 0, TAU); x.fill();
+      x.strokeStyle = MID; x.lineWidth = S * 0.004;
+      for (var pl = 0; pl < 5; pl++) {
+        x.beginPath();
+        x.moveTo(cx - R * 0.24 + pl * R * 0.075, cy - R * 0.01);
+        x.lineTo(cx - R * 0.20 + pl * R * 0.075, cy + R * 0.06);
+        x.stroke();
+      }
 
-      ring(x, cx, cy, R * 0.30, S * 0.004, '#6e6e6e');
+    } else {
+      /* ===== the obverse of the coin: the sovereign's right-facing
+         profile — ELIZABETH II  /  D · G · REGINA  /  year ===== */
+      x.font = '600 ' + Math.round(S * 0.052) + 'px Georgia, "Times New Roman", serif';
+      arcText(x, 'ELIZABETH II', cx, cy, R * 0.712, Math.PI * 1.36, Math.PI * 0.40, false);
+      arcText(x, 'D \u00B7 G \u00B7 REGINA', cx, cy, R * 0.712, Math.PI * 0.30, Math.PI * 0.40, true);
 
       x.fillStyle = MID;
-      x.font = '500 ' + Math.round(S * 0.046) + 'px Georgia, "Times New Roman", serif';
-      arcText(x, 'ZERO KNOWLEDGE ASSUMED', cx, cy, R * 0.712, Math.PI * 0.26, Math.PI * 0.48, true);
+      x.font = '500 ' + Math.round(S * 0.060) + 'px Georgia, "Times New Roman", serif';
+      x.fillText('2026', cx, cy + R * 0.56);
+
+      /* a right-facing profile bust, raised */
+      x.fillStyle = HIGH;
+      x.beginPath();
+      x.moveTo(cx - R * 0.16, cy - R * 0.40);                                   /* crown           */
+      x.bezierCurveTo(cx + R * 0.06, cy - R * 0.44, cx + R * 0.19, cy - R * 0.30, cx + R * 0.185, cy - R * 0.14); /* forehead        */
+      x.bezierCurveTo(cx + R * 0.245, cy - R * 0.12, cx + R * 0.255, cy - R * 0.05, cx + R * 0.20, cy - R * 0.02); /* nose bridge/tip */
+      x.bezierCurveTo(cx + R * 0.235, cy + R * 0.02, cx + R * 0.20, cy + R * 0.05, cx + R * 0.175, cy + R * 0.075);/* lips            */
+      x.bezierCurveTo(cx + R * 0.205, cy + R * 0.12, cx + R * 0.165, cy + R * 0.17, cx + R * 0.10, cy + R * 0.185);/* chin            */
+      x.bezierCurveTo(cx + R * 0.09, cy + R * 0.27, cx + R * 0.12, cy + R * 0.34, cx + R * 0.155, cy + R * 0.40); /* neck to bust    */
+      x.lineTo(cx - R * 0.20, cy + R * 0.40);                                   /* shoulder base   */
+      x.bezierCurveTo(cx - R * 0.20, cy + R * 0.16, cx - R * 0.30, cy + R * 0.10, cx - R * 0.285, cy - R * 0.06); /* nape / hair mass*/
+      x.bezierCurveTo(cx - R * 0.31, cy - R * 0.22, cx - R * 0.30, cy - R * 0.36, cx - R * 0.16, cy - R * 0.40);  /* back of hair    */
+      x.closePath();
+      x.fill();
+
+      /* a couple of incuse hair lines + a crown hint */
+      x.strokeStyle = MID; x.lineWidth = S * 0.004;
+      for (var hl = 0; hl < 4; hl++) {
+        x.beginPath();
+        x.moveTo(cx - R * 0.24, cy - R * 0.24 + hl * R * 0.10);
+        x.bezierCurveTo(cx - R * 0.14, cy - R * 0.20 + hl * R * 0.10, cx - R * 0.02, cy - R * 0.16 + hl * R * 0.10, cx + R * 0.06, cy - R * 0.10 + hl * R * 0.10);
+        x.stroke();
+      }
     }
 
     /* soften: a real die has no infinitely sharp corner, and an
@@ -422,11 +453,11 @@
         highlights.                                                     */
     var g = x.createLinearGradient(0, 0, 0, H);
     if (light) {
-      g.addColorStop(0.00, '#ffffff');
-      g.addColorStop(0.36, '#f3efe6');
-      g.addColorStop(0.52, '#e9e4d7');   /* horizon, ~paper bg */
-      g.addColorStop(0.74, '#cfc9ba');
-      g.addColorStop(1.00, '#a49d8c');   /* soft floor         */
+      g.addColorStop(0.00, '#fbf7ee');
+      g.addColorStop(0.34, '#ddd6c6');
+      g.addColorStop(0.50, '#b6ae9c');   /* horizon — deeper, for contrast */
+      g.addColorStop(0.74, '#807a6c');
+      g.addColorStop(1.00, '#4b463d');   /* dark floor                     */
     } else {
       g.addColorStop(0.00, '#3a3a38');   /* dim ceiling glow   */
       g.addColorStop(0.34, '#262625');
@@ -472,9 +503,10 @@
         x.fillStyle = rg;
         x.fillRect(px - w, py - h, w * 2, h * 2);
       }
-      blocker(0.50, 0.30, 150, 120, 0.5);
-      blocker(0.90, 0.42, 120, 150, 0.42);
-      blocker(0.08, 0.40, 90, 120, 0.4);
+      blocker(0.50, 0.32, 175, 140, 0.72);
+      blocker(0.90, 0.44, 140, 165, 0.6);
+      blocker(0.06, 0.42, 120, 150, 0.58);
+      blocker(0.34, 0.62, 130, 120, 0.5);
     }
 
     var tex = new THREE.CanvasTexture(c);
@@ -555,17 +587,26 @@
   /*  Per-theme exposure and rim balance. On the bright paper theme the
       studio already carries most of the light, so the direct rig is
       pulled back and exposure trimmed; on charcoal it is pushed. */
+  var coinMats = [];   /* populated when the coin is built below */
   function applyThemeLook(theme) {
-    if (theme === 'light') {
-      renderer.toneMappingExposure = 0.94;
-      key.intensity = 1.9;
-      rim.intensity = 1.1;
-      rim2.intensity = 0.6;
+    var lightT = theme === 'light';
+    if (lightT) {
+      /* on paper the coin was washing out — trim exposure and, above all,
+         cut the mirror reflection strength so the gold reads as gold with
+         directional shape rather than a flat bright disc; push the key so
+         the modelling comes from the lamp, not the room */
+      renderer.toneMappingExposure = 0.98;
+      key.intensity = 2.9;
+      rim.intensity = 1.25;
+      rim2.intensity = 0.7;
     } else {
       renderer.toneMappingExposure = 1.08;
       key.intensity = 2.35;
       rim.intensity = 1.8;
       rim2.intensity = 0.9;
+    }
+    for (var i = 0; i < coinMats.length; i++) {
+      coinMats[i].envMapIntensity = coinMats[i].userData.emi * (lightT ? 0.52 : 1);
     }
   }
   applyThemeLook(readTheme());
@@ -591,7 +632,7 @@
   function faceMaterial(which) {
     var height = orientCap(faceHeight(which), which === 'obverse' ? 1 : -1);
 
-    var colour = new THREE.CanvasTexture(colourFromHeight(height, '#d8c07f', '#6f571f'));
+    var colour = new THREE.CanvasTexture(colourFromHeight(height, '#d6b24f', '#6a4f16'));
     colour.encoding = THREE.sRGBEncoding;
     colour.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
@@ -601,7 +642,7 @@
     var rough = new THREE.CanvasTexture(roughnessFromHeight(height, 0.05, 0.52));
     rough.anisotropy = colour.anisotropy;
 
-    return new THREE.MeshStandardMaterial({
+    var mat = new THREE.MeshStandardMaterial({
       map: colour,
       normalMap: normal,
       normalScale: new THREE.Vector2(1.25, 1.25),
@@ -610,33 +651,40 @@
       metalness: 1.0,
       envMapIntensity: 2.15
     });
+    mat.userData.emi = 2.15;
+    coinMats.push(mat);
+    return mat;
   }
 
   function edgeMaterial() {
-    var height = edgeHeight();
-    var normal = new THREE.CanvasTexture(normalFromHeight(height, 2.6));
-    normal.wrapS = THREE.RepeatWrapping;
-    normal.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    return new THREE.MeshStandardMaterial({
-      color: 0xc9ad6e,
+    /* the loonie has a PLAIN edge (no reeding) — smooth polished gold */
+    var em = new THREE.MeshStandardMaterial({
+      color: 0xcaa25a,
       metalness: 1.0,
-      roughness: 0.16,
-      normalMap: normal,
-      normalScale: new THREE.Vector2(1.6, 1.6),
-      envMapIntensity: 2.2
+      roughness: 0.24,
+      envMapIntensity: 2.0,
+      flatShading: true               /* read each of the 11 faces cleanly */
     });
+    em.userData.emi = 2.0;
+    coinMats.push(em);
+    return em;
   }
 
+  /* The loonie is an 11-sided coin (a rounded hendecagon). Eleven radial
+     segments give that silhouette; the faces are still flat discs the
+     relief maps onto. */
+  var SIDES = 11;
   var RADIUS = 1.0;
-  var THICKNESS = 0.15;
+  var THICKNESS = 0.13;
 
-  var geo = new THREE.CylinderGeometry(RADIUS, RADIUS, THICKNESS, SEGMENTS, 1, false);
+  var geo = new THREE.CylinderGeometry(RADIUS, RADIUS, THICKNESS, SIDES, 1, false);
   geo.rotateX(Math.PI / 2);              /* caps now face +Z / -Z */
 
   var coin = new THREE.Mesh(geo, [edgeMaterial(), faceMaterial('obverse'), faceMaterial('reverse')]);
   var coinGroup = new THREE.Group();
   coinGroup.add(coin);
   scene.add(coinGroup);
+  applyThemeLook(readTheme());        /* now that coinMats is populated */
 
   /* ============================================================
      7. SCROLL STAGING
@@ -657,7 +705,7 @@
     { x:  2.14, y:  0.62, scale: 0.50 },   /* 1 method     */
     { x:  2.22, y: -0.30, scale: 0.46 },   /* 2 sources    */
     { x:  2.20, y:  0.50, scale: 0.44 },   /* 3 curriculum */
-    { x:  1.66, y: -0.06, scale: 0.86 }    /* 4 ledger     */
+    { x:  1.62, y:  0.42, scale: 0.72 }    /* 4 ledger — raised so the whole coin clears the footer */
   ];
 
   var FLIPS = 4;                            /* full tumbles top to bottom */
