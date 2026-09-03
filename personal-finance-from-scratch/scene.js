@@ -412,36 +412,46 @@
     var c = surface(W, H);
     var x = c.getContext('2d');
 
-    /* sky to floor */
+    /*  A DARK studio, to match the page's charcoal ground. Metal is
+        almost pure reflection, so the environment is what the coin
+        looks like — on a dark page it must be mostly dark, with a
+        few bright soft sources streaking across. The dark tone is
+        keyed near the page background (#222) so the coin's shadowed
+        reflections blend into the page and it feels embedded rather
+        than pasted on. This dark-dominant map is the single biggest
+        realism win over the previous bright studio.                */
     var g = x.createLinearGradient(0, 0, 0, H);
-    g.addColorStop(0.00, '#ffffff');
-    g.addColorStop(0.40, '#f2efe8');
-    g.addColorStop(0.50, '#a29c92');
-    g.addColorStop(0.62, '#4a4740');
-    g.addColorStop(1.00, '#141312');
+    g.addColorStop(0.00, '#3a3a38');     /* dim ceiling glow  */
+    g.addColorStop(0.34, '#262625');
+    g.addColorStop(0.52, '#1b1b1a');     /* horizon, ~page bg */
+    g.addColorStop(0.72, '#161615');
+    g.addColorStop(1.00, '#0d0d0c');     /* dark floor        */
     x.fillStyle = g;
     x.fillRect(0, 0, W, H);
 
-    /* three softboxes — the highlights that read as key, fill and rim */
-    function softbox(u, v, w, h, alpha) {
+    /* soft light sources — coloured, so the metal picks up warmth and
+       a hint of the page's pink accent instead of flat white */
+    function softbox(u, v, w, h, col, alpha) {
       var px = u * W, py = v * H;
       var rg = x.createRadialGradient(px, py, 0, px, py, Math.max(w, h));
-      rg.addColorStop(0.0, 'rgba(255,255,255,' + alpha + ')');
-      rg.addColorStop(0.5, 'rgba(255,255,255,' + (alpha * 0.42).toFixed(3) + ')');
-      rg.addColorStop(1.0, 'rgba(255,255,255,0)');
+      rg.addColorStop(0.0, 'rgba(' + col + ',' + alpha + ')');
+      rg.addColorStop(0.45, 'rgba(' + col + ',' + (alpha * 0.4).toFixed(3) + ')');
+      rg.addColorStop(1.0, 'rgba(' + col + ',0)');
       x.fillStyle = rg;
       x.fillRect(px - w, py - h, w * 2, h * 2);
     }
-    softbox(0.26, 0.22, 190, 130, 1.0);
-    softbox(0.72, 0.30, 150, 100, 0.85);
-    softbox(0.50, 0.06, 260, 90, 0.7);
-
-    /* a couple of dark blockers, so the metal has something to go
-       black against — an all-bright environment reads as plastic */
-    x.fillStyle = 'rgba(14,13,12,0.82)';
-    x.fillRect(W * 0.38, H * 0.24, W * 0.12, H * 0.30);
-    x.fillRect(W * 0.86, H * 0.20, W * 0.11, H * 0.34);
-    x.fillRect(W * 0.02, H * 0.34, W * 0.07, H * 0.22);
+    /* key — large, warm, upper-left */
+    softbox(0.24, 0.20, 210, 150, '255,248,232', 1.0);
+    /* a hard bright core inside the key, for a crisp specular hotspot */
+    softbox(0.24, 0.20, 60, 46, '255,255,255', 1.0);
+    /* fill — cooler, right */
+    softbox(0.74, 0.32, 165, 118, '214,222,236', 0.62);
+    /* rim strip — the page's pink accent, low and wide, so the coin's
+       lower edge catches a mauve highlight that ties it to the palette */
+    softbox(0.52, 0.9, 300, 70, '236,196,224', 0.5);
+    /* a thin overhead strip light, for a moving linear glint */
+    x.fillStyle = 'rgba(255,252,244,0.5)';
+    x.fillRect(W * 0.30, H * 0.045, W * 0.42, H * 0.02);
 
     var tex = new THREE.CanvasTexture(c);
     tex.mapping = THREE.EquirectangularReflectionMapping;
@@ -469,7 +479,7 @@
   renderer.setClearAlpha(0);
   renderer.outputEncoding = THREE.sRGBEncoding;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.0;
+  renderer.toneMappingExposure = 1.08;
 
   var scene = new THREE.Scene();
   scene.background = null;
@@ -487,17 +497,24 @@
   pmrem.dispose();
 
   /* direct light, for the moving specular the env map cannot give */
-  var key = new THREE.DirectionalLight(0xfff4e2, 2.1);
+  var key = new THREE.DirectionalLight(0xfff2dc, 2.35);
   key.position.set(-3.2, 4.0, 5.0);
   scene.add(key);
 
-  var fill = new THREE.DirectionalLight(0xdfe8ff, 0.85);
+  var fill = new THREE.DirectionalLight(0xd6deec, 0.55);
   fill.position.set(4.0, -2.2, 3.0);
   scene.add(fill);
 
-  var rim = new THREE.DirectionalLight(0xffe6bd, 1.5);
-  rim.position.set(1.5, 2.0, -4.5);
+  /* rim in the page's pink accent — grazes the top edge and ties the
+     coin to the palette without tinting the whole face */
+  var rim = new THREE.DirectionalLight(0xcd8dbd, 1.8);
+  rim.position.set(1.4, 2.4, -4.5);
   scene.add(rim);
+
+  /* a second warm rim from below-left, catching the opposite edge */
+  var rim2 = new THREE.DirectionalLight(0xffe0b0, 0.9);
+  rim2.position.set(-2.2, -2.6, -3.5);
+  scene.add(rim2);
 
   /* ============================================================
      6. THE COIN
@@ -510,24 +527,24 @@
   function faceMaterial(which) {
     var height = orientCap(faceHeight(which), which === 'obverse' ? 1 : -1);
 
-    var colour = new THREE.CanvasTexture(colourFromHeight(height, '#d3bd88', '#7a6633'));
+    var colour = new THREE.CanvasTexture(colourFromHeight(height, '#d8c07f', '#6f571f'));
     colour.encoding = THREE.sRGBEncoding;
     colour.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
     var normal = new THREE.CanvasTexture(normalFromHeight(height, 3.4));
     normal.anisotropy = colour.anisotropy;
 
-    var rough = new THREE.CanvasTexture(roughnessFromHeight(height, 0.11, 0.36));
+    var rough = new THREE.CanvasTexture(roughnessFromHeight(height, 0.05, 0.52));
     rough.anisotropy = colour.anisotropy;
 
     return new THREE.MeshStandardMaterial({
       map: colour,
       normalMap: normal,
-      normalScale: new THREE.Vector2(1.15, 1.15),
+      normalScale: new THREE.Vector2(1.25, 1.25),
       roughnessMap: rough,
       roughness: 1.0,
       metalness: 1.0,
-      envMapIntensity: 1.85
+      envMapIntensity: 2.15
     });
   }
 
@@ -537,12 +554,12 @@
     normal.wrapS = THREE.RepeatWrapping;
     normal.anisotropy = renderer.capabilities.getMaxAnisotropy();
     return new THREE.MeshStandardMaterial({
-      color: 0xbfa871,
+      color: 0xc9ad6e,
       metalness: 1.0,
-      roughness: 0.19,
+      roughness: 0.16,
       normalMap: normal,
-      normalScale: new THREE.Vector2(1.5, 1.5),
-      envMapIntensity: 1.9
+      normalScale: new THREE.Vector2(1.6, 1.6),
+      envMapIntensity: 2.2
     });
   }
 
