@@ -87,6 +87,7 @@ def head(title_text, description, extra_head=''):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#222222">
   <title>%s &middot; Personal Finance From Scratch</title>
   <meta name="description" content="%s">
 
