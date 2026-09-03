@@ -1,23 +1,33 @@
 /* ============================================================
    PERSONAL FINANCE FROM SCRATCH — scene.js
-   The landing page's scroll-driven hero scene: a financial
-   district at night, entered at street level and left from
-   altitude, staged so the camera's height rises as the page
-   moves from "zero-knowledge basics" toward the macro view.
 
-   Structure, mirroring the reference three.js project:
-     0. capability gate — reduced motion / no WebGL / no THREE
-     1. procedural textures (facade, ground grid, particle sprite)
-     2. scene content — skyline, ground plane, particles, lights
-     3. camera rig — five waypoints through two CatmullRom splines
-     4. hand-rolled bloom (bright pass -> separable blur -> add)
-     5. scroll + pointer input
-     6. render loop, with an FPS watchdog that degrades rather
-        than stutters
+   One object: a struck coin, tumbling end over end as the page
+   scrolls. Nothing else is in the scene — no floor, no backdrop,
+   no fog. The canvas is transparent, so the coin floats on the
+   page's own paper.
 
-   This file runs on index.html ONLY. The module reader pages are
-   deliberately dependency-light and load neither three.js nor
-   this file — see the plan's scope boundary.
+   Realism here comes from four things, in order of how much they
+   matter:
+
+     1. A prefiltered environment map. Metal is almost entirely
+        reflection; without one, gold renders as beige plastic.
+        A studio is drawn to an equirectangular canvas at runtime
+        and pushed through PMREMGenerator.
+     2. Genuine relief. A height field is drawn for each face —
+        rim, beading, arc lettering, devices — and converted to a
+        tangent-space normal map with a Sobel pass, so the strike
+        catches light the way a real one does instead of being a
+        picture of a coin.
+     3. Roughness variation. High points polish, recesses hold
+        dirt, and the fields carry faint radial die-polish lines.
+     4. Correct colour pipeline: sRGB output with ACES tone
+        mapping, colour maps tagged sRGB and data maps left linear.
+
+   Every texture is generated at runtime. No image asset is
+   fetched or shipped.
+
+   This file runs on index.html ONLY — the reader pages load
+   neither three.js nor this file, deliberately.
    ============================================================ */
 
 (function () {
@@ -25,667 +35,695 @@
 
   var root = document.documentElement;
   var canvas = document.getElementById('scene-canvas');
-
-  /* ============================================================
-     0. CAPABILITY GATE
-     If any of these fail we never touch three.js at all. The page
-     is then carried by #scene-canvas's own CSS gradient plus the
-     .scene-static grid, both defined in style.css — the fallback
-     is the element's painted background, not a JS-drawn one, so
-     it is already on screen before this file even runs.
-     ============================================================ */
+  if (!canvas) { return; }
 
   function bailOut(reason) {
     root.setAttribute('data-scene', 'fallback');
     root.setAttribute('data-scene-reason', reason);
   }
 
-  if (!canvas) { return; }
-
   var REDUCED_MOTION = window.matchMedia &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (REDUCED_MOTION) { bailOut('reduced-motion'); return; }
   if (typeof THREE === 'undefined') { bailOut('no-three'); return; }
 
   var probeOk = false;
   try {
     var probe = document.createElement('canvas');
-    probeOk = !!(probe.getContext('webgl2') ||
-                 probe.getContext('webgl') ||
-                 probe.getContext('experimental-webgl'));
-  } catch (err) {
-    probeOk = false;
-  }
+    probeOk = !!(probe.getContext('webgl2') || probe.getContext('webgl'));
+  } catch (err) { probeOk = false; }
   if (!probeOk) { bailOut('no-webgl'); return; }
 
-  /* ---------- palette, matching style.css's tokens ---------- */
-
-  var C_BG     = 0x0A0E14;   /* --bg / --ink   */
-  var C_WARM   = 0xE36414;   /* --warm         */
-  var C_MARKET = 0x3ADB76;   /* --market       */
-  var C_MOON   = 0x8FA8C8;   /* cool moonlight */
-
-  var isSmallViewport = window.innerWidth < 820;
-  var isCoarse = window.matchMedia &&
-                 window.matchMedia('(pointer: coarse)').matches;
-  var LOW_END = isSmallViewport || isCoarse ||
+  var isCoarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+  var LOW_END = window.innerWidth < 820 || isCoarse ||
                 (navigator.hardwareConcurrency || 8) <= 4;
 
+  var TEX = LOW_END ? 1024 : 2048;          /* face map resolution   */
+  var SEGMENTS = LOW_END ? 160 : 320;       /* silhouette smoothness */
+  var TAU = Math.PI * 2;
+
   /* ============================================================
-     1. PROCEDURAL TEXTURES
-     Every texture is drawn into an off-screen 2D canvas at
-     runtime and uploaded as a THREE.CanvasTexture. No image
-     asset is fetched or shipped for the 3D scene.
+     1. CANVAS DRAWING HELPERS
      ============================================================ */
 
-  function hex(c) { return '#' + ('000000' + c.toString(16)).slice(-6); }
-
-  /* --- 1a. building facade: dark glass with lit windows ---
-     One texture serves every building; the emissive channel is a
-     second canvas holding only the lit windows, so the warm
-     window light glows without lifting the whole facade.        */
-
-  function makeFacadeTextures() {
-    var W = 128, H = 256;
-    var colsPerFace = 8, rowsPerFace = 26;
-
-    var base = document.createElement('canvas');
-    base.width = W; base.height = H;
-    var b = base.getContext('2d');
-    b.fillStyle = '#0D141F';
-    b.fillRect(0, 0, W, H);
-
-    var emis = document.createElement('canvas');
-    emis.width = W; emis.height = H;
-    var e = emis.getContext('2d');
-    e.fillStyle = '#000000';
-    e.fillRect(0, 0, W, H);
-
-    var padX = 5, padY = 4;
-    var cw = (W - padX * (colsPerFace + 1)) / colsPerFace;
-    var ch = (H - padY * (rowsPerFace + 1)) / rowsPerFace;
-
-    for (var r = 0; r < rowsPerFace; r++) {
-      for (var c = 0; c < colsPerFace; c++) {
-        var x = padX + c * (cw + padX);
-        var y = padY + r * (ch + padY);
-
-        /* every window has a dark pane in the base map */
-        b.fillStyle = '#111C2B';
-        b.fillRect(x, y, cw, ch);
-
-        /* about a third are lit, in warm office light; a few in
-           the cold "screen glow" of a trading desk               */
-        var lit = Math.random();
-        if (lit < 0.22) {
-          var warmth = 0.62 + Math.random() * 0.38;
-          e.fillStyle = 'rgba(227,100,20,' + warmth.toFixed(3) + ')';
-          e.fillRect(x, y, cw, ch);
-          b.fillStyle = 'rgba(227,100,20,0.22)';
-          b.fillRect(x, y, cw, ch);
-        } else if (lit < 0.255) {
-          e.fillStyle = 'rgba(58,219,118,' + (0.45 + Math.random() * 0.4).toFixed(3) + ')';
-          e.fillRect(x, y, cw, ch);
-        }
-      }
-    }
-
-    var baseTex = new THREE.CanvasTexture(base);
-    var emisTex = new THREE.CanvasTexture(emis);
-    [baseTex, emisTex].forEach(function (t) {
-      t.wrapS = t.wrapT = THREE.RepeatWrapping;
-      t.magFilter = THREE.LinearFilter;
-      t.minFilter = THREE.LinearMipmapLinearFilter;
-    });
-    return { base: baseTex, emissive: emisTex };
+  function surface(w, h) {
+    var c = document.createElement('canvas');
+    c.width = w; c.height = h;
+    return c;
   }
 
-  /* --- 1b. ground: the market grid the camera moves over --- */
-
-  function makeGroundTexture() {
-    var S = 512;
-    var cv = document.createElement('canvas');
-    cv.width = cv.height = S;
-    var g = cv.getContext('2d');
-
-    g.fillStyle = '#070B12';
-    g.fillRect(0, 0, S, S);
-
-    /* fine grid — the "data" accent, used sparingly */
-    g.strokeStyle = 'rgba(58,219,118,0.13)';
-    g.lineWidth = 1;
-    for (var i = 0; i <= S; i += 32) {
-      g.beginPath(); g.moveTo(i + 0.5, 0); g.lineTo(i + 0.5, S); g.stroke();
-      g.beginPath(); g.moveTo(0, i + 0.5); g.lineTo(S, i + 0.5); g.stroke();
+  /* Text set along a circular arc, letter by letter. `sweep` is the
+     total angle the string occupies; `flip` runs it along the lower
+     arc so the bottom legend reads right way up.                   */
+  function arcText(ctx, str, cx, cy, radius, startAngle, sweep, flip) {
+    /*  A lower-arc legend sweeps right-to-left across the screen, so its
+        characters have to be laid down in reverse for the word to read
+        left-to-right once each glyph is rotated upright.              */
+    var chars = flip ? str.split('').reverse() : str.split('');
+    var step = sweep / Math.max(1, chars.length - 1);
+    for (var i = 0; i < chars.length; i++) {
+      var a = startAngle + step * i;
+      ctx.save();
+      ctx.translate(cx + Math.cos(a) * radius, cy + Math.sin(a) * radius);
+      ctx.rotate(a + (flip ? -Math.PI / 2 : Math.PI / 2));
+      ctx.fillText(chars[i], 0, 0);
+      ctx.restore();
     }
-    /* coarse grid — brighter rules every eighth line */
-    g.strokeStyle = 'rgba(58,219,118,0.30)';
-    g.lineWidth = 2;
-    for (var j = 0; j <= S; j += 256) {
-      g.beginPath(); g.moveTo(j, 0); g.lineTo(j, S); g.stroke();
-      g.beginPath(); g.moveTo(0, j); g.lineTo(S, j); g.stroke();
+  }
+
+  function ring(ctx, cx, cy, radius, width, value) {
+    ctx.strokeStyle = value;
+    ctx.lineWidth = width;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, TAU);
+    ctx.stroke();
+  }
+
+  /* the ring of small raised beads just inside the rim */
+  function beading(ctx, cx, cy, radius, count, dotR, value) {
+    ctx.fillStyle = value;
+    for (var i = 0; i < count; i++) {
+      var a = (i / count) * TAU;
+      ctx.beginPath();
+      ctx.arc(cx + Math.cos(a) * radius, cy + Math.sin(a) * radius, dotR, 0, TAU);
+      ctx.fill();
     }
-    /* a scatter of warm street lamps sitting on the plane */
-    for (var k = 0; k < 26; k++) {
-      var x = Math.random() * S, y = Math.random() * S;
-      var rad = g.createRadialGradient(x, y, 0, x, y, 16 + Math.random() * 20);
-      rad.addColorStop(0, 'rgba(227,100,20,0.42)');
-      rad.addColorStop(1, 'rgba(227,100,20,0)');
-      g.fillStyle = rad;
-      g.fillRect(x - 40, y - 40, 80, 80);
+  }
+
+  function star(ctx, cx, cy, r, value) {
+    ctx.fillStyle = value;
+    ctx.beginPath();
+    for (var i = 0; i < 10; i++) {
+      var rad = (i % 2 === 0) ? r : r * 0.44;
+      var a = -Math.PI / 2 + (i / 10) * TAU;
+      var x = cx + Math.cos(a) * rad, y = cy + Math.sin(a) * rad;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  /* one laurel leaf, drawn as a filled quadratic lens */
+  function leaf(ctx, x, y, len, wide, angle, value) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(angle);
+    ctx.fillStyle = value;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.quadraticCurveTo(len * 0.45, -wide, len, 0);
+    ctx.quadraticCurveTo(len * 0.45, wide, 0, 0);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /* ============================================================
+     2. HEIGHT FIELDS — the actual strike
+     Drawn in greyscale: mid grey is the field, lighter is raised,
+     darker is incuse. Converted to a normal map below.
+     ============================================================ */
+
+  var FIELD = '#808080';
+  var HIGH  = '#f2f2f2';
+  var MID   = '#c8c8c8';
+  var LOW   = '#3a3a3a';
+
+  function faceHeight(which) {
+    var S = TEX;
+    var c = surface(S, S);
+    var x = c.getContext('2d');
+    var cx = S / 2, cy = S / 2;
+    var R = S / 2;
+
+    /* outside the coin's circle is never sampled, but fill it so the
+       Sobel pass at the silhouette has something continuous to read */
+    x.fillStyle = FIELD;
+    x.fillRect(0, 0, S, S);
+
+    /* --- raised rim: a broad collar, highest at its outer edge --- */
+    var rimGrad = x.createRadialGradient(cx, cy, R * 0.855, cx, cy, R * 0.995);
+    rimGrad.addColorStop(0.00, FIELD);
+    rimGrad.addColorStop(0.35, '#d6d6d6');
+    rimGrad.addColorStop(0.80, HIGH);
+    rimGrad.addColorStop(1.00, '#b4b4b4');
+    x.fillStyle = rimGrad;
+    x.beginPath();
+    x.arc(cx, cy, R * 0.995, 0, TAU);
+    x.arc(cx, cy, R * 0.855, 0, TAU, true);
+    x.fill();
+
+    /* --- beading inside the rim --- */
+    beading(x, cx, cy, R * 0.818, Math.round(R / 11), R * 0.0125, MID);
+
+    /* --- a fine incuse guide line --- */
+    ring(x, cx, cy, R * 0.775, S * 0.0025, '#6e6e6e');
+
+    if (which === 'obverse') {
+      /* legend around the top, denomination-style value below */
+      x.fillStyle = HIGH;
+      x.textAlign = 'center';
+      x.textBaseline = 'middle';
+
+      x.font = '600 ' + Math.round(S * 0.062) + 'px Georgia, "Times New Roman", serif';
+      arcText(x, 'PERSONAL FINANCE', cx, cy, R * 0.700, Math.PI * 1.30, Math.PI * 0.40, false);
+
+      x.font = '600 ' + Math.round(S * 0.050) + 'px Georgia, "Times New Roman", serif';
+      arcText(x, 'FROM SCRATCH', cx, cy, R * 0.705, Math.PI * 0.32, Math.PI * 0.36, true);
+
+      star(x, cx - R * 0.700, cy + R * 0.020, R * 0.042, MID);
+      star(x, cx + R * 0.700, cy + R * 0.020, R * 0.042, MID);
+
+      /* the device: a struck currency mark, with a soft cameo behind
+         it so the glyph sits on a slightly domed relief             */
+      var cameo = x.createRadialGradient(cx, cy - R * 0.03, 0, cx, cy - R * 0.03, R * 0.40);
+      cameo.addColorStop(0, '#a0a0a0');
+      cameo.addColorStop(1, FIELD);
+      x.fillStyle = cameo;
+      x.beginPath();
+      x.arc(cx, cy - R * 0.03, R * 0.40, 0, TAU);
+      x.fill();
+
+      x.fillStyle = HIGH;
+      x.font = '700 ' + Math.round(S * 0.46) + 'px Georgia, "Times New Roman", serif';
+      x.fillText('$', cx, cy - R * 0.045);
+
+      x.fillStyle = MID;
+      x.font = '500 ' + Math.round(S * 0.050) + 'px Georgia, "Times New Roman", serif';
+      x.fillText('MMXXVI', cx, cy + R * 0.500);
+
+    } else {
+      /* reverse: laurel wreath around the book's own title */
+      var i, a;
+      for (i = 0; i < 13; i++) {
+        a = Math.PI * 0.60 + (i / 12) * Math.PI * 0.74;          /* left branch  */
+        leaf(x, cx + Math.cos(a) * R * 0.615, cy + Math.sin(a) * R * 0.615,
+             R * 0.145, R * 0.052, a - Math.PI * 0.42, MID);
+        a = Math.PI * 0.40 - (i / 12) * Math.PI * 0.74;          /* right branch */
+        leaf(x, cx + Math.cos(a) * R * 0.615, cy + Math.sin(a) * R * 0.615,
+             R * 0.145, R * 0.052, a + Math.PI * 0.42, MID);
+      }
+
+      x.fillStyle = HIGH;
+      x.textAlign = 'center';
+      x.textBaseline = 'middle';
+      x.font = '600 ' + Math.round(S * 0.058) + 'px Georgia, "Times New Roman", serif';
+      arcText(x, 'TEN MODULES', cx, cy, R * 0.700, Math.PI * 1.34, Math.PI * 0.32, false);
+
+      x.font = '700 ' + Math.round(S * 0.115) + 'px Georgia, "Times New Roman", serif';
+      x.fillText('FROM', cx, cy - R * 0.085);
+      x.fillText('SCRATCH', cx, cy + R * 0.070);
+
+      ring(x, cx, cy, R * 0.30, S * 0.004, '#6e6e6e');
+
+      x.fillStyle = MID;
+      x.font = '500 ' + Math.round(S * 0.046) + 'px Georgia, "Times New Roman", serif';
+      arcText(x, 'ZERO KNOWLEDGE ASSUMED', cx, cy, R * 0.712, Math.PI * 0.26, Math.PI * 0.48, true);
     }
 
-    var tex = new THREE.CanvasTexture(cv);
-    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-    tex.repeat.set(14, 14);
-    tex.anisotropy = 4;
+    /* soften: a real die has no infinitely sharp corner, and an
+       unblurred height field turns every edge into normal-map noise */
+    if (typeof x.filter === 'string') {
+      var blurred = surface(S, S);
+      var b = blurred.getContext('2d');
+      b.filter = 'blur(' + Math.max(1, S / 700).toFixed(2) + 'px)';
+      b.drawImage(c, 0, 0);
+      return blurred;
+    }
+    return c;
+  }
+
+  /*  CylinderGeometry maps its caps as u = cos(theta), v = sin(theta) —
+      the axes are swapped relative to a canvas, so a face texture lands
+      rotated a quarter turn. The bottom cap additionally negates v, which
+      mirrors it. Both are cancelled here, on the HEIGHT field, before any
+      derived map is computed — so colour, roughness and the Sobel-derived
+      normals all stay in agreement with one another.                   */
+  function orientCap(src, sign) {
+    var S = src.width;
+    var out = surface(S, S);
+    var o = out.getContext('2d');
+    o.translate(S / 2, S / 2);
+    o.rotate(-Math.PI / 2);
+    if (sign < 0) { o.scale(-1, 1); }
+    o.drawImage(src, -S / 2, -S / 2);
+    return out;
+  }
+
+  /* the milled edge — the reeding you feel on a coin's rim */
+  function edgeHeight() {
+    var W = 2048, H = 64;
+    var c = surface(W, H);
+    var x = c.getContext('2d');
+    x.fillStyle = FIELD;
+    x.fillRect(0, 0, W, H);
+
+    var reeds = 132;
+    var step = W / reeds;
+    for (var i = 0; i < reeds; i++) {
+      var g = x.createLinearGradient(i * step, 0, (i + 1) * step, 0);
+      g.addColorStop(0.00, LOW);
+      g.addColorStop(0.42, HIGH);
+      g.addColorStop(0.58, HIGH);
+      g.addColorStop(1.00, LOW);
+      x.fillStyle = g;
+      x.fillRect(i * step, 0, step, H);
+    }
+    /* the rim's chamfer: the reeding dies away at both lips */
+    var fade = x.createLinearGradient(0, 0, 0, H);
+    fade.addColorStop(0.00, 'rgba(128,128,128,1)');
+    fade.addColorStop(0.16, 'rgba(128,128,128,0)');
+    fade.addColorStop(0.84, 'rgba(128,128,128,0)');
+    fade.addColorStop(1.00, 'rgba(128,128,128,1)');
+    x.fillStyle = fade;
+    x.fillRect(0, 0, W, H);
+    return c;
+  }
+
+  /* ============================================================
+     3. HEIGHT -> TANGENT-SPACE NORMAL MAP (Sobel)
+     three.js uses the OpenGL convention, so +G points up.
+     ============================================================ */
+
+  function normalFromHeight(heightCanvas, strength) {
+    var W = heightCanvas.width, H = heightCanvas.height;
+    var src = heightCanvas.getContext('2d').getImageData(0, 0, W, H).data;
+
+    var out = surface(W, H);
+    var octx = out.getContext('2d');
+    var img = octx.createImageData(W, H);
+    var d = img.data;
+
+    function h(px, py) {
+      var xx = px < 0 ? 0 : (px >= W ? W - 1 : px);
+      var yy = py < 0 ? 0 : (py >= H ? H - 1 : py);
+      return src[(yy * W + xx) * 4] / 255;
+    }
+
+    for (var y = 0; y < H; y++) {
+      for (var x = 0; x < W; x++) {
+        var tl = h(x - 1, y - 1), t = h(x, y - 1), tr = h(x + 1, y - 1);
+        var l  = h(x - 1, y),                      r  = h(x + 1, y);
+        var bl = h(x - 1, y + 1), b = h(x, y + 1), br = h(x + 1, y + 1);
+
+        var dx = (tr + 2 * r + br) - (tl + 2 * l + bl);
+        var dy = (bl + 2 * b + br) - (tl + 2 * t + tr);
+
+        var nx = -dx * strength;
+        var ny = -dy * strength;          /* +G up: screen-y is inverted */
+        var nz = 1;
+        var len = Math.sqrt(nx * nx + ny * ny + nz * nz) || 1;
+
+        var o = (y * W + x) * 4;
+        d[o]     = ((nx / len) * 0.5 + 0.5) * 255;
+        d[o + 1] = ((ny / len) * 0.5 + 0.5) * 255;
+        d[o + 2] = ((nz / len) * 0.5 + 0.5) * 255;
+        d[o + 3] = 255;
+      }
+    }
+    octx.putImageData(img, 0, 0);
+    return out;
+  }
+
+  /* ---------- roughness, derived from the same relief ----------
+     High points take wear and polish; recesses hold the dirt that
+     never gets rubbed out. Plus faint radial die-polish lines.   */
+
+  function roughnessFromHeight(heightCanvas, lo, hi) {
+    var W = heightCanvas.width, H = heightCanvas.height;
+    var src = heightCanvas.getContext('2d').getImageData(0, 0, W, H);
+    var d = src.data;
+    for (var i = 0; i < d.length; i += 4) {
+      var height = d[i] / 255;
+      var rough = hi - (hi - lo) * height;              /* raised = smoother */
+      var jitter = (Math.random() - 0.5) * 0.05;
+      var v = Math.max(0, Math.min(1, rough + jitter)) * 255;
+      d[i] = d[i + 1] = d[i + 2] = v;
+      d[i + 3] = 255;
+    }
+    var out = surface(W, H);
+    var o = out.getContext('2d');
+    o.putImageData(src, 0, 0);
+
+    /* radial die-polish streaks, very faint */
+    o.globalAlpha = 0.05;
+    o.strokeStyle = '#000';
+    o.lineWidth = Math.max(1, W / 900);
+    var cx = W / 2, cy = H / 2;
+    for (var k = 0; k < 220; k++) {
+      var a = Math.random() * TAU;
+      var r0 = (0.16 + Math.random() * 0.4) * W / 2;
+      var r1 = r0 + (0.06 + Math.random() * 0.3) * W / 2;
+      o.beginPath();
+      o.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0);
+      o.lineTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1);
+      o.stroke();
+    }
+    o.globalAlpha = 1;
+    return out;
+  }
+
+  /* ---------- colour: gold, darkened where the relief is deep ---------- */
+
+  function colourFromHeight(heightCanvas, base, shadow) {
+    var W = heightCanvas.width, H = heightCanvas.height;
+    var src = heightCanvas.getContext('2d').getImageData(0, 0, W, H);
+    var d = src.data;
+    var b = [parseInt(base.substr(1, 2), 16), parseInt(base.substr(3, 2), 16), parseInt(base.substr(5, 2), 16)];
+    var s = [parseInt(shadow.substr(1, 2), 16), parseInt(shadow.substr(3, 2), 16), parseInt(shadow.substr(5, 2), 16)];
+    for (var i = 0; i < d.length; i += 4) {
+      var t = d[i] / 255;                                /* 0 incuse .. 1 raised */
+      var k = 0.45 + 0.55 * t;                           /* recesses go darker   */
+      d[i]     = s[0] + (b[0] - s[0]) * k;
+      d[i + 1] = s[1] + (b[1] - s[1]) * k;
+      d[i + 2] = s[2] + (b[2] - s[2]) * k;
+      d[i + 3] = 255;
+    }
+    var out = surface(W, H);
+    out.getContext('2d').putImageData(src, 0, 0);
+    return out;
+  }
+
+  /* ============================================================
+     4. STUDIO ENVIRONMENT (equirectangular, then prefiltered)
+     ============================================================ */
+
+  function studioEquirect() {
+    var W = 1024, H = 512;
+    var c = surface(W, H);
+    var x = c.getContext('2d');
+
+    /* sky to floor */
+    var g = x.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0.00, '#ffffff');
+    g.addColorStop(0.40, '#f2efe8');
+    g.addColorStop(0.50, '#a29c92');
+    g.addColorStop(0.62, '#4a4740');
+    g.addColorStop(1.00, '#141312');
+    x.fillStyle = g;
+    x.fillRect(0, 0, W, H);
+
+    /* three softboxes — the highlights that read as key, fill and rim */
+    function softbox(u, v, w, h, alpha) {
+      var px = u * W, py = v * H;
+      var rg = x.createRadialGradient(px, py, 0, px, py, Math.max(w, h));
+      rg.addColorStop(0.0, 'rgba(255,255,255,' + alpha + ')');
+      rg.addColorStop(0.5, 'rgba(255,255,255,' + (alpha * 0.42).toFixed(3) + ')');
+      rg.addColorStop(1.0, 'rgba(255,255,255,0)');
+      x.fillStyle = rg;
+      x.fillRect(px - w, py - h, w * 2, h * 2);
+    }
+    softbox(0.26, 0.22, 190, 130, 1.0);
+    softbox(0.72, 0.30, 150, 100, 0.85);
+    softbox(0.50, 0.06, 260, 90, 0.7);
+
+    /* a couple of dark blockers, so the metal has something to go
+       black against — an all-bright environment reads as plastic */
+    x.fillStyle = 'rgba(14,13,12,0.82)';
+    x.fillRect(W * 0.38, H * 0.24, W * 0.12, H * 0.30);
+    x.fillRect(W * 0.86, H * 0.20, W * 0.11, H * 0.34);
+    x.fillRect(W * 0.02, H * 0.34, W * 0.07, H * 0.22);
+
+    var tex = new THREE.CanvasTexture(c);
+    tex.mapping = THREE.EquirectangularReflectionMapping;
+    tex.encoding = THREE.sRGBEncoding;
     return tex;
   }
 
-  /* --- 1c. particle sprite: a soft round mote --- */
-
-  function makeSpriteTexture() {
-    var S = 64;
-    var cv = document.createElement('canvas');
-    cv.width = cv.height = S;
-    var g = cv.getContext('2d');
-    var rad = g.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
-    rad.addColorStop(0.0, 'rgba(255,255,255,1)');
-    rad.addColorStop(0.35, 'rgba(255,255,255,0.55)');
-    rad.addColorStop(1.0, 'rgba(255,255,255,0)');
-    g.fillStyle = rad;
-    g.fillRect(0, 0, S, S);
-    return new THREE.CanvasTexture(cv);
-  }
-
   /* ============================================================
-     2. RENDERER, SCENE, CAMERA
+     5. RENDERER / SCENE / CAMERA
      ============================================================ */
 
   var renderer;
   try {
     renderer = new THREE.WebGLRenderer({
       canvas: canvas,
-      antialias: !LOW_END,
-      alpha: false,
+      antialias: true,
+      alpha: true,                       /* the page's paper shows through */
       powerPreference: 'high-performance'
     });
-  } catch (err) {
-    bailOut('renderer-failed');
-    return;
-  }
+  } catch (err) { bailOut('renderer-failed'); return; }
 
-  var DPR_CAP = LOW_END ? 1.5 : 2;
-  var dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-  renderer.setPixelRatio(dpr);
+  var DPR_CAP = LOW_END ? 1.75 : 2;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, DPR_CAP));
   renderer.setSize(window.innerWidth, window.innerHeight, false);
-  renderer.setClearColor(C_BG, 1);
+  renderer.setClearAlpha(0);
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
 
   var scene = new THREE.Scene();
-  scene.background = new THREE.Color(C_BG);
-  scene.fog = new THREE.FogExp2(C_BG, 0.0026);
+  scene.background = null;
 
-  var camera = new THREE.PerspectiveCamera(
-    40, window.innerWidth / window.innerHeight, 0.6, 1600
-  );
-  camera.position.set(0, 7, 92);
+  var camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 60);
+  camera.position.set(0, 0, 7.2);
 
-  /* ---------- 2a. ground / data plane ---------- */
+  /* environment */
+  var pmrem = new THREE.PMREMGenerator(renderer);
+  pmrem.compileEquirectangularShader();
+  var eqTex = studioEquirect();
+  var envMap = pmrem.fromEquirectangular(eqTex).texture;
+  scene.environment = envMap;
+  eqTex.dispose();
+  pmrem.dispose();
 
-  var groundTex = makeGroundTexture();
-  var ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(1600, 1600, 1, 1),
-    new THREE.MeshBasicMaterial({ map: groundTex, fog: true })
-  );
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.set(0, 0, -150);
-  scene.add(ground);
+  /* direct light, for the moving specular the env map cannot give */
+  var key = new THREE.DirectionalLight(0xfff4e2, 2.1);
+  key.position.set(-3.2, 4.0, 5.0);
+  scene.add(key);
 
-  /* ---------- 2b. skyline ----------
-     Every building is one instance of a single unit BoxGeometry
-     driven through THREE.InstancedMesh, so the whole financial
-     district is a single draw call. Facade + window-light maps
-     come from 1a; the per-instance matrix carries the scale, so
-     window density stays plausible across very different heights
-     because the UVs are repeated per instance below.            */
-
-  var BUILDING_COUNT = LOW_END ? 210 : 430;
-  var facade = makeFacadeTextures();
-
-  var boxGeo = new THREE.BoxGeometry(1, 1, 1);
-  var buildingMat = new THREE.MeshPhongMaterial({
-    color: 0xBFD0E4,
-    map: facade.base,
-    emissive: 0xffffff,
-    emissiveMap: facade.emissive,
-    emissiveIntensity: 1.0,
-    shininess: 6,
-    specular: 0x0E1622
-  });
-
-  var buildings = new THREE.InstancedMesh(boxGeo, buildingMat, BUILDING_COUNT);
-  buildings.instanceMatrix.setUsage(THREE.StaticDrawUsage);
-
-  var dummy = new THREE.Object3D();
-  var placed = 0;
-  var guard = 0;
-  var towerAnchors = [];       /* remembered for the warm point lights */
-
-  var CORE_Z = -150;                 /* the downtown core sits back here */
-
-  while (placed < BUILDING_COUNT && guard < BUILDING_COUNT * 40) {
-    guard++;
-
-    var bx = (Math.random() - 0.5) * 340;
-    var bz = -320 + Math.random() * 325;          /* band: z in [-320, 5] */
-
-    /* An avenue runs down the middle of the district toward the
-       camera. Without it the street-level opening shot faces a
-       wall of glass instead of looking into depth; the avenue is
-       wide near the camera and narrows toward the core, which is
-       also what gives the opening frame its perspective lines.  */
-    var avenue = 40 - Math.max(0, (-bz - 40)) * 0.10;
-    if (Math.abs(bx) < Math.max(13, avenue) && bz > -190) { continue; }
-
-    /* keep the plaza the camera opens in genuinely clear */
-    var dxc = bx, dzc = bz - 70;
-    if (dxc * dxc + dzc * dzc < 62 * 62) { continue; }
-
-    /* Height is driven by distance back from the camera, not only
-       by distance from a core point: the foreground stays low-rise
-       so sky is visible over it at street level, and the towers
-       mass in the middle distance where the fog can work on them.
-       A flat random height everywhere just reads as wallpaper.   */
-    var depth = Math.max(0, Math.min(1, (10 - bz) / 300));      /* 0 near -> 1 far */
-    var lateral = Math.max(0, 1 - Math.abs(bx) / 200);
-    var coreDist = Math.sqrt(bx * bx * 0.55 + (bz - CORE_Z) * (bz - CORE_Z));
-    var falloff = Math.max(0.10, 1 - coreDist / 300);
-
-    /* foreground cap: nothing near the opening camera may tower */
-    var nearCap = 26 + 120 * Math.min(1, Math.max(0, (40 - bz) / 130));
-
-    var h = 12 + Math.pow(Math.random(), 1.9) * 150 *
-            falloff * (0.35 + 0.65 * depth) * (0.45 + 0.55 * lateral);
-    h = Math.min(h, nearCap);
-
-    var w = 8 + Math.random() * 16;
-    var d = 8 + Math.random() * 16;
-
-    dummy.position.set(bx, h / 2, bz);
-    dummy.rotation.set(0, (Math.random() - 0.5) * 0.5, 0);
-    dummy.scale.set(w, h, d);
-    dummy.updateMatrix();
-    buildings.setMatrixAt(placed, dummy.matrix);
-
-    if (h > 62 && bz < -80 && towerAnchors.length < 7) {
-      towerAnchors.push({ x: bx, y: h, z: bz });
-    }
-    placed++;
-  }
-  buildings.count = placed;
-  buildings.instanceMatrix.needsUpdate = true;
-  buildings.frustumCulled = false;
-  scene.add(buildings);
-
-  /* repeat the facade UVs so windows stay roughly window-sized
-     no matter how tall the instance was scaled */
-  facade.base.repeat.set(2, 7);
-  facade.emissive.repeat.set(2, 7);
-
-  /* ---------- 2c. drifting particles ----------
-     The reference scene's embers and leaves, reinterpreted as
-     ambient market data: sparse, slow, warm-and-cool mixed. They
-     are deliberately abstract motes — rendering readable glyphs
-     at this scale and distance would be illegible noise.        */
-
-  var P_COUNT = LOW_END ? 700 : 1500;
-  var pPos = new Float32Array(P_COUNT * 3);
-  var pCol = new Float32Array(P_COUNT * 3);
-  var pVel = new Float32Array(P_COUNT);          /* per-mote rise rate */
-  var pPhase = new Float32Array(P_COUNT);
-
-  var warmCol = new THREE.Color(C_WARM);
-  var mktCol = new THREE.Color(C_MARKET);
-  var moonCol = new THREE.Color(C_MOON);
-
-  for (var pi = 0; pi < P_COUNT; pi++) {
-    pPos[pi * 3 + 0] = (Math.random() - 0.5) * 460;
-    pPos[pi * 3 + 1] = Math.random() * 210;
-    pPos[pi * 3 + 2] = -300 + Math.random() * 420;
-
-    var roll = Math.random();
-    var col = roll < 0.45 ? warmCol : (roll < 0.72 ? mktCol : moonCol);
-    var dim = 0.45 + Math.random() * 0.55;
-    pCol[pi * 3 + 0] = col.r * dim;
-    pCol[pi * 3 + 1] = col.g * dim;
-    pCol[pi * 3 + 2] = col.b * dim;
-
-    pVel[pi] = 0.9 + Math.random() * 2.4;
-    pPhase[pi] = Math.random() * Math.PI * 2;
-  }
-
-  var pGeo = new THREE.BufferGeometry();
-  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
-  pGeo.setAttribute('color', new THREE.BufferAttribute(pCol, 3));
-
-  var points = new THREE.Points(pGeo, new THREE.PointsMaterial({
-    size: 1.5,
-    map: makeSpriteTexture(),
-    vertexColors: true,
-    transparent: true,
-    opacity: 0.85,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-    sizeAttenuation: true,
-    fog: true
-  }));
-  points.frustumCulled = false;
-  scene.add(points);
-
-  /* ---------- 2d. lighting: one cold source, several warm ---------- */
-
-  scene.add(new THREE.AmbientLight(C_MOON, 0.38));
-
-  /* key: moonlight, high and slightly to camera-left, angled so the
-     faces the camera actually sees are the ones that catch it */
-  var moon = new THREE.DirectionalLight(C_MOON, 0.70);
-  moon.position.set(-90, 215, 170);
-  scene.add(moon);
-
-  /* cool fill from camera-right, so the district does not fall into
-     an unreadable silhouette on the unlit side */
-  var fill = new THREE.DirectionalLight(0x35506E, 0.34);
-  fill.position.set(165, 95, 130);
+  var fill = new THREE.DirectionalLight(0xdfe8ff, 0.85);
+  fill.position.set(4.0, -2.2, 3.0);
   scene.add(fill);
 
-  /* faint rim from behind the skyline, keeping the far towers
-     legible against the fog rather than dissolving into it */
-  var rim = new THREE.DirectionalLight(0x2E5A7A, 0.30);
-  rim.position.set(70, 70, -280);
+  var rim = new THREE.DirectionalLight(0xffe6bd, 1.5);
+  rim.position.set(1.5, 2.0, -4.5);
   scene.add(rim);
 
-  var warmLights = [];
-  var LIGHT_BUDGET = LOW_END ? 2 : 4;
-  for (var li = 0; li < Math.min(LIGHT_BUDGET, towerAnchors.length); li++) {
-    var a = towerAnchors[li];
-    var pl = new THREE.PointLight(C_WARM, 1.5, 190, 2);
-    pl.position.set(a.x, a.y * 0.72, a.z);
-    scene.add(pl);
-    warmLights.push({ light: pl, base: 1.5, phase: Math.random() * Math.PI * 2 });
-  }
-
   /* ============================================================
-     3. CAMERA RIG — five waypoints, two CatmullRom splines
-     One waypoint per landing-page section, tagged data-cam="N".
-     The staging is the curriculum's own arc: the shot opens at
-     street level inside the district (Hero, "zero knowledge"),
-     and ends high and wide above it (Ledger, the macro view).
+     6. THE COIN
+     CylinderGeometry emits three material groups — side, top cap,
+     bottom cap — which is exactly the split a coin needs: reeded
+     edge, obverse, reverse. Rotating the geometry once puts the
+     caps on ±Z, so a rotation about X is a true end-over-end flip.
      ============================================================ */
 
+  function faceMaterial(which) {
+    var height = orientCap(faceHeight(which), which === 'obverse' ? 1 : -1);
+
+    var colour = new THREE.CanvasTexture(colourFromHeight(height, '#d3bd88', '#7a6633'));
+    colour.encoding = THREE.sRGBEncoding;
+    colour.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+    var normal = new THREE.CanvasTexture(normalFromHeight(height, 3.4));
+    normal.anisotropy = colour.anisotropy;
+
+    var rough = new THREE.CanvasTexture(roughnessFromHeight(height, 0.11, 0.36));
+    rough.anisotropy = colour.anisotropy;
+
+    return new THREE.MeshStandardMaterial({
+      map: colour,
+      normalMap: normal,
+      normalScale: new THREE.Vector2(1.15, 1.15),
+      roughnessMap: rough,
+      roughness: 1.0,
+      metalness: 1.0,
+      envMapIntensity: 1.85
+    });
+  }
+
+  function edgeMaterial() {
+    var height = edgeHeight();
+    var normal = new THREE.CanvasTexture(normalFromHeight(height, 2.6));
+    normal.wrapS = THREE.RepeatWrapping;
+    normal.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    return new THREE.MeshStandardMaterial({
+      color: 0xbfa871,
+      metalness: 1.0,
+      roughness: 0.19,
+      normalMap: normal,
+      normalScale: new THREE.Vector2(1.5, 1.5),
+      envMapIntensity: 1.9
+    });
+  }
+
+  var RADIUS = 1.0;
+  var THICKNESS = 0.15;
+
+  var geo = new THREE.CylinderGeometry(RADIUS, RADIUS, THICKNESS, SEGMENTS, 1, false);
+  geo.rotateX(Math.PI / 2);              /* caps now face +Z / -Z */
+
+  var coin = new THREE.Mesh(geo, [edgeMaterial(), faceMaterial('obverse'), faceMaterial('reverse')]);
+  var coinGroup = new THREE.Group();
+  coinGroup.add(coin);
+  scene.add(coinGroup);
+
+  /* ============================================================
+     7. SCROLL STAGING
+     The flip is scroll-linked; the coin's place on screen moves
+     through one waypoint per page section.
+     ============================================================ */
+
+  /*  The coin stays in the right margin at every settled waypoint. The
+      reading column is left/centre-aligned throughout, and dark text on a
+      gold face is low-contrast even with the text layered on top — so the
+      coin is never parked behind a title or a body block. It only sweeps
+      across content in transit, where it is moving and clearly foreground.
+      Vertical travel and the flip carry the motion; horizontal drift is
+      kept small so nothing lurches. Scales stay modest mid-page and open
+      up for the two display beats, hero and ledger.                     */
   var WAYPOINTS = [
-    /* 0 — Hero        : street level, down the avenue, looking up  */
-    { position: [   0,   7,  92 ], target: [   0,  46, -120 ], fov: 40 },
-    /* 1 — Method      : lifted to a low rooftop, drifting left     */
-    { position: [ -38,  30, 128 ], target: [  -6,  52, -130 ], fov: 42 },
-    /* 2 — Sources     : above the mid-rises, the district widening */
-    { position: [  30,  72, 182 ], target: [   4,  50, -140 ], fov: 44 },
-    /* 3 — Curriculum  : clear of every rooftop, whole grid visible */
-    { position: [ -22, 132, 258 ], target: [   0,  40, -155 ], fov: 46 },
-    /* 4 — Ledger      : the macro view, the floor seen entire      */
-    { position: [   6, 178, 318 ], target: [   0,  26, -215 ], fov: 48 }
+    { x:  1.95, y:  0.06, scale: 1.06 },   /* 0 hero       */
+    { x:  2.14, y:  0.62, scale: 0.50 },   /* 1 method     */
+    { x:  2.22, y: -0.30, scale: 0.46 },   /* 2 sources    */
+    { x:  2.20, y:  0.50, scale: 0.44 },   /* 3 curriculum */
+    { x:  1.66, y: -0.06, scale: 0.86 }    /* 4 ledger     */
   ];
 
+  var FLIPS = 4;                            /* full tumbles top to bottom */
+
   var posCurve = new THREE.CatmullRomCurve3(
-    WAYPOINTS.map(function (w) { return new THREE.Vector3(w.position[0], w.position[1], w.position[2]); }),
-    false, 'catmullrom', 0.35
-  );
-  var tgtCurve = new THREE.CatmullRomCurve3(
-    WAYPOINTS.map(function (w) { return new THREE.Vector3(w.target[0], w.target[1], w.target[2]); }),
-    false, 'catmullrom', 0.35
+    WAYPOINTS.map(function (w) { return new THREE.Vector3(w.x, w.y, 0); }),
+    false, 'catmullrom', 0.4
   );
 
+  /*  A waypoint should be "reached" while its section is being read, not
+      when its top crosses the viewport top — so each anchor is pulled up
+      by a third of a viewport. That offset is baked into the ANCHORS and
+      clamped at zero, rather than added to the scroll position: adding it
+      to the scroll would mean the first waypoint is already a third of
+      the way toward the second before the reader has scrolled at all.  */
+  var LOOK_AHEAD = 0.34;
   var camSections = [];
+
   function measureSections() {
     camSections = [];
-    var nodes = document.querySelectorAll('[data-cam]');
-    Array.prototype.forEach.call(nodes, function (el) {
+    var lead = window.innerHeight * LOOK_AHEAD;
+    Array.prototype.forEach.call(document.querySelectorAll('[data-cam]'), function (el) {
       var idx = parseInt(el.getAttribute('data-cam'), 10);
       if (isNaN(idx)) return;
-      var rect = el.getBoundingClientRect();
-      camSections.push({
-        index: idx,
-        top: rect.top + window.pageYOffset
-      });
+      var top = el.getBoundingClientRect().top + window.pageYOffset;
+      camSections.push({ index: idx, anchor: Math.max(0, top - lead) });
     });
     camSections.sort(function (a, b) { return a.index - b.index; });
   }
 
-  /* current scroll position expressed as a fractional waypoint index */
-  function waypointFraction() {
+  function sectionFraction() {
     var last = WAYPOINTS.length - 1;
-    if (camSections.length < 2) { return 0; }
-
-    /* anchor each section a third of a viewport below its own top,
-       so a waypoint is "reached" when its section is being read   */
-    var y = window.pageYOffset + window.innerHeight * 0.34;
-
-    if (y <= camSections[0].top) { return 0; }
+    if (camSections.length < 2) return 0;
+    var y = window.pageYOffset;
+    if (y <= camSections[0].anchor) return camSections[0].index;
     for (var i = 0; i < camSections.length - 1; i++) {
       var a = camSections[i], b = camSections[i + 1];
-      if (y >= a.top && y < b.top) {
-        var span = Math.max(1, b.top - a.top);
-        var local = (y - a.top) / span;
-        return Math.min(last, a.index + local * (b.index - a.index));
+      if (y >= a.anchor && y < b.anchor) {
+        return Math.min(last, a.index +
+          ((y - a.anchor) / Math.max(1, b.anchor - a.anchor)) * (b.index - a.index));
       }
     }
     return last;
   }
 
-  /* ---------- pointer parallax, hard-capped ---------- */
-
-  var PARALLAX_MAX = 5.2;                 /* world units, never more */
-  var pointerX = 0, pointerY = 0;         /* normalised, [-1, 1]     */
-  var parallax = new THREE.Vector3();
-
-  window.addEventListener('mousemove', function (e) {
-    pointerX = (e.clientX / window.innerWidth) * 2 - 1;
-    pointerY = (e.clientY / window.innerHeight) * 2 - 1;
-  }, { passive: true });
-  window.addEventListener('mouseleave', function () {
-    pointerX = 0; pointerY = 0;
-  });
-
-  /* ============================================================
-     4. BLOOM — hand-rolled, restrained
-     Bright pass at quarter resolution, three separable blur
-     iterations at widening radius, then one additive composite.
-     No film grain, no vignette (the page already carries a CSS
-     grain layer). Disabled outright on low-end and mobile, and
-     switched off at runtime by the watchdog in section 6.
-     ============================================================ */
-
-  var bloomEnabled = !LOW_END && window.innerWidth >= 900;
-
-  var FS_VERT = [
-    'varying vec2 vUv;',
-    'void main() {',
-    '  vUv = uv;',
-    '  gl_Position = vec4(position.xy, 0.0, 1.0);',
-    '}'
-  ].join('\n');
-
-  var BRIGHT_FRAG = [
-    'uniform sampler2D tDiffuse;',
-    'uniform float threshold;',
-    'varying vec2 vUv;',
-    'void main() {',
-    '  vec4 c = texture2D(tDiffuse, vUv);',
-    '  float l = dot(c.rgb, vec3(0.2126, 0.7152, 0.0722));',
-    '  float k = max(0.0, l - threshold) / max(l, 0.0001);',
-    '  gl_FragColor = vec4(c.rgb * k, 1.0);',
-    '}'
-  ].join('\n');
-
-  var BLUR_FRAG = [
-    'uniform sampler2D tDiffuse;',
-    'uniform vec2 dir;',
-    'varying vec2 vUv;',
-    'void main() {',
-    '  vec4 s = vec4(0.0);',
-    '  s += texture2D(tDiffuse, vUv + dir * -4.0) * 0.0162;',
-    '  s += texture2D(tDiffuse, vUv + dir * -3.0) * 0.0540;',
-    '  s += texture2D(tDiffuse, vUv + dir * -2.0) * 0.1216;',
-    '  s += texture2D(tDiffuse, vUv + dir * -1.0) * 0.1946;',
-    '  s += texture2D(tDiffuse, vUv               ) * 0.2270;',
-    '  s += texture2D(tDiffuse, vUv + dir *  1.0) * 0.1946;',
-    '  s += texture2D(tDiffuse, vUv + dir *  2.0) * 0.1216;',
-    '  s += texture2D(tDiffuse, vUv + dir *  3.0) * 0.0540;',
-    '  s += texture2D(tDiffuse, vUv + dir *  4.0) * 0.0162;',
-    '  gl_FragColor = s;',
-    '}'
-  ].join('\n');
-
-  var COMPOSITE_FRAG = [
-    'uniform sampler2D tBase;',
-    'uniform sampler2D tBloom;',
-    'uniform float strength;',
-    'varying vec2 vUv;',
-    'void main() {',
-    '  vec4 base = texture2D(tBase, vUv);',
-    '  vec4 glow = texture2D(tBloom, vUv);',
-    '  gl_FragColor = vec4(base.rgb + glow.rgb * strength, 1.0);',
-    '}'
-  ].join('\n');
-
-  var fsScene = new THREE.Scene();
-  var fsCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  var fsQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), null);
-  fsQuad.frustumCulled = false;
-  fsScene.add(fsQuad);
-
-  var brightMat = new THREE.ShaderMaterial({
-    uniforms: { tDiffuse: { value: null }, threshold: { value: 0.52 } },
-    vertexShader: FS_VERT, fragmentShader: BRIGHT_FRAG, depthTest: false, depthWrite: false
-  });
-  var blurMat = new THREE.ShaderMaterial({
-    uniforms: { tDiffuse: { value: null }, dir: { value: new THREE.Vector2() } },
-    vertexShader: FS_VERT, fragmentShader: BLUR_FRAG, depthTest: false, depthWrite: false
-  });
-  var compositeMat = new THREE.ShaderMaterial({
-    uniforms: {
-      tBase: { value: null }, tBloom: { value: null }, strength: { value: 0.78 }
-    },
-    vertexShader: FS_VERT, fragmentShader: COMPOSITE_FRAG, depthTest: false, depthWrite: false
-  });
-
-  var rtScene = null, rtA = null, rtB = null;
-
-  function makeTargets(w, h) {
-    [rtScene, rtA, rtB].forEach(function (t) { if (t) t.dispose(); });
-    var opts = {
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-      format: THREE.RGBAFormat,
-      depthBuffer: true,
-      stencilBuffer: false
-    };
-    rtScene = new THREE.WebGLRenderTarget(w, h, opts);
-    var qw = Math.max(2, Math.floor(w / 4));
-    var qh = Math.max(2, Math.floor(h / 4));
-    rtA = new THREE.WebGLRenderTarget(qw, qh, opts);
-    rtB = new THREE.WebGLRenderTarget(qw, qh, opts);
+  /* 0..1 down the whole document — drives the flip itself */
+  function pageProgress() {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    return max > 0 ? Math.max(0, Math.min(1, window.pageYOffset / max)) : 0;
   }
 
-  function disposeTargets() {
-    [rtScene, rtA, rtB].forEach(function (t) { if (t) t.dispose(); });
-    rtScene = rtA = rtB = null;
+  /* On a portrait viewport the coin steps back: smaller, lower, and
+     nearer the centre, so it never competes with the hero copy.  */
+  function responsive() {
+    var aspect = window.innerWidth / window.innerHeight;
+    /*  On a portrait phone the visible world half-width is barely wider than
+        the coin's own radius, and the reading column runs full width — so the
+        coin is shrunk hard and dropped into the lower-right corner, bleeding
+        off the edge, where it stays clear of the copy while still tumbling
+        down the margin as the page scrolls.                                */
+    if (aspect < 0.72) return { xMul: 0.62, scaleMul: 0.40, yOff: -0.95 };
+    if (aspect < 0.95) return { xMul: 0.66, scaleMul: 0.52, yOff: -0.78 };
+    if (aspect < 1.35) return { xMul: 0.80, scaleMul: 0.74, yOff: -0.14 };
+    return { xMul: 1, scaleMul: 1, yOff: 0 };
   }
 
-  function blit(material, target) {
-    fsQuad.material = material;
-    renderer.setRenderTarget(target || null);
-    renderer.render(fsScene, fsCamera);
-    renderer.setRenderTarget(null);
+  var pointerX = 0, pointerY = 0;
+  if (!isCoarse) {
+    window.addEventListener('mousemove', function (e) {
+      pointerX = (e.clientX / window.innerWidth) * 2 - 1;
+      pointerY = (e.clientY / window.innerHeight) * 2 - 1;
+    }, { passive: true });
   }
-
-  function renderWithBloom() {
-    renderer.setRenderTarget(rtScene);
-    renderer.clear();
-    renderer.render(scene, camera);
-    renderer.setRenderTarget(null);
-
-    brightMat.uniforms.tDiffuse.value = rtScene.texture;
-    blit(brightMat, rtA);
-
-    var qw = rtA.width, qh = rtA.height;
-    var radii = [1.0, 2.0, 3.4];
-    for (var i = 0; i < radii.length; i++) {
-      blurMat.uniforms.tDiffuse.value = rtA.texture;
-      blurMat.uniforms.dir.value.set(radii[i] / qw, 0);
-      blit(blurMat, rtB);
-
-      blurMat.uniforms.tDiffuse.value = rtB.texture;
-      blurMat.uniforms.dir.value.set(0, radii[i] / qh);
-      blit(blurMat, rtA);
-    }
-
-    compositeMat.uniforms.tBase.value = rtScene.texture;
-    compositeMat.uniforms.tBloom.value = rtA.texture;
-    blit(compositeMat, null);
-  }
-
-  /* ============================================================
-     5. RESIZE + SCROLL
-     ============================================================ */
 
   var needsMeasure = true;
-
   function resize() {
-    var w = window.innerWidth;
-    var h = window.innerHeight;
-    dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-    renderer.setPixelRatio(dpr);
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, DPR_CAP));
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
+    camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
-    if (bloomEnabled) {
-      makeTargets(Math.max(2, Math.floor(w * dpr)), Math.max(2, Math.floor(h * dpr)));
-    }
     needsMeasure = true;
   }
-
   window.addEventListener('resize', resize);
   window.addEventListener('orientationchange', resize);
-  window.addEventListener('scroll', function () { /* read in the loop */ }, { passive: true });
-
-  if (bloomEnabled) {
-    makeTargets(
-      Math.max(2, Math.floor(window.innerWidth * dpr)),
-      Math.max(2, Math.floor(window.innerHeight * dpr))
-    );
-  }
   measureSections();
 
   /* ============================================================
-     6. RENDER LOOP + FPS WATCHDOG
-     The watchdog degrades rather than stutters: bloom goes first,
-     then pixel ratio, then the particle field thins out. It never
-     tears the scene down — that path belongs to the capability
-     gate in section 0, which runs before anything is built.
+     8. RENDER
+     Under prefers-reduced-motion the coin is still struck and still
+     lit — it simply does not move. One frame, no loop, no scroll
+     binding. The preference is about motion, not about the object.
      ============================================================ */
 
-  var camPos = new THREE.Vector3().copy(camera.position);
-  var camTgt = new THREE.Vector3(0, 46, -120);
-  var wantPos = new THREE.Vector3();
-  var wantTgt = new THREE.Vector3();
-  var lookAt = new THREE.Vector3();
-
-  var lastT = performance.now();
-  var frameAcc = 0, frameCount = 0, degradeStage = 0;
+  var want = new THREE.Vector3();
+  var have = new THREE.Vector3(WAYPOINTS[0].x, WAYPOINTS[0].y, 0);
+  var haveScale = WAYPOINTS[0].scale;
+  var haveFlip = 0;
   var elapsed = 0;
+  var lastT = performance.now();
   var running = true;
+
+  function stage(smoothing, dt) {
+    var r = responsive();
+    var last = WAYPOINTS.length - 1;
+    var frac = sectionFraction();
+    var u = last > 0 ? Math.max(0, Math.min(1, frac / last)) : 0;
+
+    posCurve.getPoint(u, want);
+
+    var i = Math.min(last, Math.floor(frac));
+    var j = Math.min(last, i + 1);
+    var t = frac - i;
+    var scale = (WAYPOINTS[i].scale + (WAYPOINTS[j].scale - WAYPOINTS[i].scale) * t) * r.scaleMul;
+
+    want.x *= r.xMul;
+    want.y += r.yOff;
+    want.x += pointerX * 0.10;
+    want.y += -pointerY * 0.07;
+
+    var k = smoothing ? 1 - Math.pow(0.0022, dt) : 1;
+    have.lerp(want, k);
+    haveScale += (scale - haveScale) * k;
+
+    coinGroup.position.copy(have);
+    coinGroup.scale.setScalar(haveScale);
+
+    var flip = pageProgress() * FLIPS * TAU;
+    haveFlip += (flip - haveFlip) * (smoothing ? k : 1);
+
+    coin.rotation.x = haveFlip + (smoothing ? Math.sin(elapsed * 0.34) * 0.05 : 0);
+    coin.rotation.y = (smoothing ? Math.sin(elapsed * 0.21) * 0.16 : 0.12) + pointerX * 0.13;
+    coin.rotation.z = 0.10 + (smoothing ? Math.sin(elapsed * 0.16) * 0.03 : 0);
+  }
+
+  if (REDUCED_MOTION) {
+    root.setAttribute('data-scene', 'live');
+    root.setAttribute('data-scene-motion', 'static');
+    measureSections();
+    stage(false, 0);
+    renderer.render(scene, camera);
+    window.addEventListener('resize', function () {
+      measureSections();
+      stage(false, 0);
+      renderer.render(scene, camera);
+    });
+    return;
+  }
 
   document.addEventListener('visibilitychange', function () {
     running = !document.hidden;
@@ -693,97 +731,15 @@
   });
 
   function loop(now) {
-    if (!running) { return; }
+    if (!running) return;
     requestAnimationFrame(loop);
-
     var dt = Math.min(0.05, (now - lastT) / 1000);
     lastT = now;
     elapsed += dt;
 
     if (needsMeasure) { measureSections(); needsMeasure = false; }
-
-    /* --- camera along the two splines --- */
-    var last = WAYPOINTS.length - 1;
-    var frac = waypointFraction();
-    var u = last > 0 ? frac / last : 0;
-    u = Math.max(0, Math.min(1, u));
-
-    posCurve.getPoint(u, wantPos);
-    tgtCurve.getPoint(u, wantTgt);
-
-    /* pointer parallax, applied in view space and hard-capped so
-       it can never swing the shot off its staged framing */
-    parallax.set(pointerX * PARALLAX_MAX, -pointerY * PARALLAX_MAX * 0.55, 0);
-    if (parallax.length() > PARALLAX_MAX) { parallax.setLength(PARALLAX_MAX); }
-    wantPos.add(parallax);
-
-    /* critically-damped-ish follow, framerate independent */
-    var k = 1 - Math.pow(0.0016, dt);
-    camPos.lerp(wantPos, k);
-    camTgt.lerp(wantTgt, k);
-
-    camera.position.copy(camPos);
-    lookAt.copy(camTgt);
-    camera.lookAt(lookAt);
-
-    /* fov eased between the same waypoints */
-    var fi = Math.min(last, Math.floor(frac));
-    var fj = Math.min(last, fi + 1);
-    var ft = frac - fi;
-    var fov = WAYPOINTS[fi].fov + (WAYPOINTS[fj].fov - WAYPOINTS[fi].fov) * ft;
-    if (Math.abs(camera.fov - fov) > 0.01) {
-      camera.fov += (fov - camera.fov) * k;
-      camera.updateProjectionMatrix();
-    }
-
-    /* --- particles drift; wrap rather than respawn --- */
-    var arr = pGeo.attributes.position.array;
-    for (var i = 0; i < P_COUNT; i++) {
-      var o = i * 3;
-      arr[o + 1] += pVel[i] * dt * 2.2;
-      arr[o] += Math.sin(elapsed * 0.32 + pPhase[i]) * dt * 1.7;
-      if (arr[o + 1] > 215) {
-        arr[o + 1] = -6;
-        arr[o] = (Math.random() - 0.5) * 460;
-        arr[o + 2] = -300 + Math.random() * 420;
-      }
-    }
-    pGeo.attributes.position.needsUpdate = true;
-
-    /* --- warm window lights breathe, very slightly --- */
-    for (var wi = 0; wi < warmLights.length; wi++) {
-      var wl = warmLights[wi];
-      wl.light.intensity = wl.base * (0.86 + 0.14 * Math.sin(elapsed * 0.7 + wl.phase));
-    }
-
-    /* --- draw --- */
-    if (bloomEnabled && rtScene) {
-      renderWithBloom();
-    } else {
-      renderer.render(scene, camera);
-    }
-
-    /* --- watchdog --- */
-    frameAcc += dt * 1000;
-    frameCount++;
-    if (frameCount >= 90) {
-      var avg = frameAcc / frameCount;
-      frameAcc = 0; frameCount = 0;
-
-      if (avg > 26 && degradeStage === 0) {
-        degradeStage = 1;
-        bloomEnabled = false;
-        disposeTargets();
-      } else if (avg > 32 && degradeStage === 1) {
-        degradeStage = 2;
-        DPR_CAP = 1;
-        renderer.setPixelRatio(1);
-        renderer.setSize(window.innerWidth, window.innerHeight, false);
-      } else if (avg > 38 && degradeStage === 2) {
-        degradeStage = 3;
-        pGeo.setDrawRange(0, Math.floor(P_COUNT * 0.4));
-      }
-    }
+    stage(true, dt);
+    renderer.render(scene, camera);
   }
 
   root.setAttribute('data-scene', 'live');
