@@ -1,34 +1,67 @@
 /* ============================================================
-   PUTNAM FROM SCRATCH — chapter.css
-   Register 2B: plain paper-white book. Shared by every
-   chapterN.html. No ASCII canvas, no hard shadows, no
-   filled-black boxes.
+   PERSONAL FINANCE FROM SCRATCH — chapter.css
+   Dark reader, matched to the Phobos-inspired landing.
+
+   Charcoal ground, a warm light-grey body for comfortable
+   long-form reading, and a SEMANTIC COLOUR SYSTEM for the
+   pedagogy callouts — a distinct hue per device so the page
+   reads as colour-coded at a glance:
+
+     Definition ............ purple  (the accent)
+     Why This Matters ...... green
+     Worked Example ........ gold    (echoes the coin)
+     Common Confusion ...... rose
+     Refresher ............. teal
+     Knowledge Check ....... purple
+
+   Serif body / sans chrome / mono figures are kept — serif is
+   the right register for reading — while colour, contrast and
+   sharp (zero-radius) edges are brought into line with the
+   landing. Every selector reader.js and the module pages depend
+   on is preserved.
    ============================================================ */
 
 :root {
-  --paper: #FCFCFA;
-  --ink: #111111;
-  --panel: #EFEFEF;
-  --border: #D3D3D3;
-  --accent: #B4460A;
+  --bg:      #222222;   /* charcoal ground, matching the landing   */
+  --panel:   #2A2A27;   /* raised callouts / boxes                 */
+  --sunken:  #1B1B1A;   /* code, inputs, recessed surfaces         */
+  --border:  #38372F;   /* hairlines                               */
+  --border-2:#302F29;   /* the quieter hairline                    */
+
+  --ink:     #EDDFEE;   /* headings, strong text                   */
+  --text:    #C7C2B4;   /* body — warm light grey, easy long-form  */
+  --muted:   #8C8874;   /* meta, labels, captions                  */
+  --faint:   #6B6859;   /* faintest                                */
+
+  --accent:  #CD8DBD;   /* the accent — purple/pink; links, terms  */
+
+  /* semantic callout hues */
+  --c-def:   #CD8DBD;   /* Definition      — purple */
+  --c-why:   #86C79B;   /* Why This Matters — green */
+  --c-eg:    #D8C07F;   /* Worked Example  — gold   */
+  --c-warn:  #E39191;   /* Common Confusion — rose  */
+  --c-refr:  #8FB4CE;   /* Refresher       — teal   */
+
   --font-serif: "Source Serif 4", "Latin Modern Roman", Georgia, "Times New Roman", serif;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "Fira Code", "Courier New", Courier, monospace;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0; }
 
-html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; background: var(--bg); }
 
 body {
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font-serif);
   font-size: 1.06rem;
-  line-height: 1.72;
+  line-height: 1.74;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-a { color: var(--accent); }
+a { color: var(--accent); text-underline-offset: 2px; }
 
 a:focus-visible,
 button:focus-visible,
@@ -37,6 +70,12 @@ input:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+::selection { background: rgba(205, 141, 189, 0.26); color: var(--ink); }
+
+/* MathJax inherits the body colour, so formulas render in the light
+   body tone against the dark ground — keep it explicit. */
+mjx-container { color: var(--text); }
 
 /* ---------- slim sticky top bar ---------- */
 
@@ -48,8 +87,10 @@ input:focus-visible {
   grid-template-columns: auto auto 1fr auto;
   align-items: center;
   gap: 14px;
-  padding: 10px 20px;
-  background: var(--paper);
+  padding: 11px 20px;
+  background: rgba(34, 34, 34, 0.82);
+  backdrop-filter: saturate(140%) blur(12px);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
   border-bottom: 1px solid var(--border);
 }
 .topbar a, .topbar button {
@@ -59,7 +100,6 @@ input:focus-visible {
   color: var(--ink);
   background: none;
   border: 1px solid transparent;
-  border-radius: 4px;
   padding: 4px 9px;
   cursor: pointer;
   line-height: 1.2;
@@ -74,7 +114,7 @@ input:focus-visible {
   font-size: 0.82rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -91,13 +131,7 @@ input:focus-visible {
   margin: 0 auto;
   padding: 0 24px 80px;
 }
-
-.reading {
-  max-width: 760px;
-  width: 100%;
-  margin: 0 auto;
-  min-width: 0;
-}
+.reading { max-width: 760px; width: 100%; margin: 0 auto; min-width: 0; }
 
 /* ---------- contents sidebar ---------- */
 
@@ -112,83 +146,61 @@ input:focus-visible {
   font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #666;
+  color: var(--muted);
   margin-bottom: 10px;
 }
-.contents ol {
-  list-style: none;
-}
+.contents ol { list-style: none; }
 .contents li { margin-bottom: 2px; }
 .contents a {
   display: block;
   font-size: 0.82rem;
-  color: #444;
+  color: var(--muted);
   text-decoration: none;
-  padding: 3px 0 3px 10px;
-  border-left: 2px solid transparent;
+  padding: 3px 0 3px 12px;
+  border-left: 2px solid var(--border);
   line-height: 1.45;
+  transition: color 200ms ease, border-color 200ms ease;
 }
-.contents a:hover { color: var(--ink); }
-.contents a.current {
-  color: var(--accent);
-  border-left-color: var(--accent);
-  font-weight: 600;
-}
+.contents a:hover { color: var(--text); }
+.contents a.current { color: var(--accent); border-left-color: var(--accent); font-weight: 600; }
 .contents .mark-complete {
   margin-top: 20px;
   width: 100%;
   font-family: var(--font-sans);
   font-size: 0.8rem;
-  padding: 8px 10px;
+  padding: 9px 11px;
   border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--panel);
+  color: var(--text);
   cursor: pointer;
   text-align: left;
+  transition: border-color 200ms ease, color 200ms ease;
 }
-.mark-complete:hover { background: var(--panel); }
-.mark-complete[aria-pressed="true"] {
-  border-color: var(--accent);
-  color: var(--accent);
-  font-weight: 600;
-}
+.mark-complete:hover { border-color: var(--muted); color: var(--ink); }
+.mark-complete[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); font-weight: 600; }
 
 /* ---------- title block ---------- */
 
-.title-block {
-  text-align: center;
-  padding: 56px 0 8px;
-}
+.title-block { text-align: center; padding: 56px 0 8px; }
 .title-block .kicker {
   font-family: var(--font-sans);
-  font-variant: small-caps;
   letter-spacing: 0.22em;
-  font-size: 0.85rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
   color: var(--accent);
-  text-transform: lowercase;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 .title-block h1 {
   font-family: var(--font-serif);
   font-weight: 600;
   font-size: clamp(2rem, 5vw, 2.9rem);
-  line-height: 1.15;
+  line-height: 1.14;
+  color: var(--ink);
   margin-bottom: 18px;
+  letter-spacing: -0.01em;
 }
-.title-block .rule {
-  width: 90px;
-  height: 1px;
-  background: var(--ink);
-  margin: 0 auto 8px;
-  border: none;
-}
-.title-block .subtitle {
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  color: #555;
-  margin-top: 12px;
-}
+.title-block .rule { width: 90px; height: 1px; background: var(--accent); margin: 0 auto 8px; border: none; }
+.title-block .subtitle { font-family: var(--font-sans); font-size: 0.88rem; color: var(--muted); margin-top: 12px; }
 
 /* ---------- section headings ---------- */
 
@@ -196,33 +208,32 @@ input:focus-visible {
   font-family: var(--font-serif);
   font-weight: 600;
   font-size: 1.55rem;
-  margin: 56px 0 16px;
+  color: var(--ink);
+  margin: 58px 0 16px;
   line-height: 1.25;
+  letter-spacing: -0.01em;
 }
-.reading h3 {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  font-size: 1.18rem;
-  margin: 30px 0 10px;
-}
+.reading h3 { font-family: var(--font-serif); font-weight: 600; font-size: 1.18rem; color: var(--ink); margin: 32px 0 10px; }
+.reading h4 { font-family: var(--font-sans); font-weight: 600; font-size: 1rem; color: var(--ink); margin: 24px 0 8px; }
 .reading p { margin-bottom: 16px; }
 .reading ul, .reading ol { margin: 0 0 16px 26px; }
 .reading li { margin-bottom: 6px; }
 .reading em { font-style: italic; }
+.reading strong { color: var(--ink); font-weight: 600; }
 
-/* ---------- callout boxes ---------- */
+/* ---------- callout boxes: one hue per device ---------- */
 
-.definition-box, .tip-box, .warn-box, .example-box {
+.definition-box, .tip-box, .warn-box, .example-box, .refresher-box {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 4px;
   padding: 18px 20px 8px;
   margin: 22px 0;
 }
 .definition-box .box-label,
 .tip-box .box-label,
 .warn-box .box-label,
-.example-box .box-label {
+.example-box .box-label,
+.refresher-box .box-label {
   display: block;
   font-family: var(--font-sans);
   font-size: 0.72rem;
@@ -230,134 +241,72 @@ input:focus-visible {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   margin-bottom: 8px;
-  color: var(--ink);
-}
-.tip-box { border-left: 4px solid var(--accent); }
-.tip-box .box-label { color: var(--accent); }
-.warn-box { border-left: 4px solid #8a1c1c; }
-.warn-box .box-label { color: #8a1c1c; }
-.definition-box { border-left: 4px solid var(--ink); }
-
-/* ---------- figures ---------- */
-
-.figure {
-  margin: 24px 0;
-  text-align: center;
-}
-.figure svg {
-  max-width: 100%;
-  height: auto;
-}
-.figure figcaption {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  color: #555;
-  margin-top: 8px;
-  line-height: 1.5;
 }
 
-/* ---------- drills ---------- */
+.definition-box { border-left: 3px solid var(--c-def);  background: linear-gradient(rgba(205,141,189,0.05), rgba(205,141,189,0.05)), var(--panel); }
+.definition-box .box-label { color: var(--c-def); }
+
+.tip-box        { border-left: 3px solid var(--c-why);  background: linear-gradient(rgba(134,199,155,0.05), rgba(134,199,155,0.05)), var(--panel); }
+.tip-box .box-label { color: var(--c-why); }
+
+.example-box    { border-left: 3px solid var(--c-eg);   background: linear-gradient(rgba(216,192,127,0.05), rgba(216,192,127,0.05)), var(--panel); }
+.example-box .box-label { color: var(--c-eg); }
+
+.warn-box       { border-left: 3px solid var(--c-warn); background: linear-gradient(rgba(227,145,145,0.055), rgba(227,145,145,0.055)), var(--panel); }
+.warn-box .box-label { color: var(--c-warn); }
+
+.refresher-box  { border-left: 3px solid var(--c-refr); background: linear-gradient(rgba(143,180,206,0.05), rgba(143,180,206,0.05)), var(--panel); }
+.refresher-box .box-label { color: var(--c-refr); }
+
+/* ---------- figures (unused in these modules, kept for safety) ---------- */
+
+.figure { margin: 24px 0; text-align: center; }
+.figure svg { max-width: 100%; height: auto; }
+.figure figcaption { font-family: var(--font-sans); font-size: 0.8rem; color: var(--muted); margin-top: 8px; line-height: 1.5; }
+
+/* ---------- drills / knowledge checks ---------- */
 
 .drill {
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-left: 3px solid var(--accent);
   padding: 16px 18px;
   margin: 18px 0;
-  background: var(--paper);
+  background: var(--panel);
 }
-.drill .drill-head {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  font-family: var(--font-sans);
-  margin-bottom: 8px;
-  flex-wrap: wrap;
-}
-.drill .drill-num {
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-}
-.drill .drill-level {
-  font-size: 0.72rem;
-  color: #666;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 1px 7px;
-}
-.drill .drill-source {
-  font-size: 0.72rem;
-  color: #666;
-  font-style: italic;
-}
-.drill details {
-  margin-top: 12px;
-  border-top: 1px dashed var(--border);
-  padding-top: 10px;
-}
-.drill summary {
-  cursor: pointer;
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--accent);
-}
+.drill .drill-head { display: flex; align-items: baseline; gap: 12px; font-family: var(--font-sans); margin-bottom: 8px; flex-wrap: wrap; }
+.drill .drill-num { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: var(--accent); }
+.drill .drill-level { font-size: 0.72rem; color: var(--muted); border: 1px solid var(--border); padding: 1px 7px; }
+.drill .drill-source { font-size: 0.72rem; color: var(--muted); font-style: italic; }
+.drill details { margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 10px; }
+.drill summary { cursor: pointer; font-family: var(--font-sans); font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+.drill summary:hover { color: var(--ink); }
 .drill details > *:not(summary) { margin-top: 10px; }
-.solution-stage {
-  font-family: var(--font-sans);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #555;
-  display: block;
-  margin: 14px 0 4px;
-}
+.solution-stage { font-family: var(--font-sans); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: block; margin: 14px 0 4px; }
 
 /* ---------- sandbox & code panels ---------- */
 
 .sandbox-panel, .code-panel {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 4px;
   padding: 18px 20px;
   margin: 22px 0;
 }
-.sandbox-panel canvas {
-  display: block;
-  width: 100%;
-  background: var(--paper);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-}
-.sandbox-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 22px;
-  align-items: center;
-  margin: 14px 0 4px;
-  font-family: var(--font-sans);
-  font-size: 0.86rem;
-}
+.sandbox-panel canvas { display: block; width: 100%; background: var(--sunken); border: 1px solid var(--border); }
+.sandbox-controls { display: flex; flex-wrap: wrap; gap: 14px 22px; align-items: center; margin: 14px 0 4px; font-family: var(--font-sans); font-size: 0.86rem; }
 .sandbox-controls label { display: flex; align-items: center; gap: 8px; }
 .sandbox-controls input[type="range"] { accent-color: var(--accent); }
 .sandbox-controls button {
   font-family: var(--font-sans);
   font-size: 0.82rem;
-  padding: 6px 12px;
+  padding: 7px 13px;
   border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--paper);
+  background: var(--sunken);
+  color: var(--text);
   cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease;
 }
-.sandbox-controls button:hover { background: #e4e4e0; }
-.sandbox-readout {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  margin-top: 10px;
-  line-height: 1.7;
-}
+.sandbox-controls button:hover { border-color: var(--accent); color: var(--ink); }
+.sandbox-readout { font-family: var(--font-mono); font-size: 0.85rem; margin-top: 10px; line-height: 1.7; color: var(--text); }
 .sandbox-readout .val { color: var(--accent); font-weight: 700; }
 
 .code-panel pre {
@@ -365,49 +314,18 @@ input:focus-visible {
   font-family: var(--font-mono);
   font-size: 0.82rem;
   line-height: 1.6;
-  background: var(--paper);
+  color: var(--text);
+  background: var(--sunken);
   border: 1px solid var(--border);
-  border-radius: 3px;
   padding: 14px 16px;
 }
-.code-panel .code-caption {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  color: #555;
-  margin-top: 10px;
-}
+.code-panel .code-caption { font-family: var(--font-sans); font-size: 0.8rem; color: var(--muted); margin-top: 10px; }
 
-/* ---------- exam card ---------- */
+/* ---------- exam card (unused here, kept for safety) ---------- */
 
-.exam-card {
-  border: 2px solid var(--ink);
-  border-radius: 4px;
-  padding: 22px 24px;
-  margin: 26px 0;
-  background: var(--paper);
-}
-.exam-card .exam-tag {
-  display: inline-block;
-  font-family: var(--font-sans);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--paper);
-  background: var(--ink);
-  border-radius: 3px;
-  padding: 3px 10px;
-  margin-bottom: 14px;
-}
-.exam-card .attribution {
-  font-family: var(--font-sans);
-  font-size: 0.76rem;
-  color: #555;
-  border-top: 1px solid var(--border);
-  margin-top: 18px;
-  padding-top: 10px;
-  line-height: 1.6;
-}
+.exam-card { border: 1px solid var(--accent); padding: 22px 24px; margin: 26px 0; background: var(--panel); }
+.exam-card .exam-tag { display: inline-block; font-family: var(--font-sans); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bg); background: var(--accent); padding: 3px 10px; margin-bottom: 14px; }
+.exam-card .attribution { font-family: var(--font-sans); font-size: 0.76rem; color: var(--muted); border-top: 1px solid var(--border); margin-top: 18px; padding-top: 10px; line-height: 1.6; }
 
 /* ---------- bottom chapter nav ---------- */
 
@@ -421,7 +339,7 @@ input:focus-visible {
   font-family: var(--font-sans);
   font-size: 0.9rem;
 }
-.chapter-nav a { text-decoration: none; }
+.chapter-nav a { text-decoration: none; color: var(--accent); }
 .chapter-nav a:hover { text-decoration: underline; }
 
 /* ---------- footer ---------- */
@@ -433,7 +351,7 @@ input:focus-visible {
   text-align: center;
   font-family: var(--font-sans);
   font-size: 0.76rem;
-  color: #555;
+  color: var(--muted);
   line-height: 1.7;
 }
 
@@ -448,7 +366,6 @@ body[data-reader-size="large"]  { font-size: 1.16rem; }
   .page { grid-template-columns: 1fr; gap: 0; }
   .contents { display: none; }
 }
-
 @media (max-width: 480px) {
   .page { padding: 0 16px 60px; }
   body { font-size: 1.0rem; }
@@ -460,273 +377,95 @@ body[data-reader-size="large"]  { font-size: 1.16rem; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .contents a, .mark-complete, .sandbox-controls button { transition: none; }
 }
 
 /* ============================================================
-   ADDITIVE BLOCK — Personal Finance From Scratch
-   Everything above this line is the reference site's chapter.css,
-   byte-for-byte. Nothing above is modified. Appended below:
-
-     1. reading-column <table> styling — the reference book had no
-        tables in its chapters; this curriculum has eight.
-     2. a few widget affordances the four /widgets/*.js modules
-        need on top of the existing .sandbox-* classes.
-     3. .refresher-box — the "What You Already Half-Remember"
-        callout, a new box variant sharing the existing box chrome.
-     4. .recap-list — the closing glossary-term recap.
+   TABLES · WIDGET AFFORDANCES · RECAP · GLOSSARY
+   (all recoloured for the dark ground)
    ============================================================ */
 
-/* ---------- 1. tables in the reading column ---------- */
+/* ---------- tables in the reading column ---------- */
 
-.table-wrap {
-  overflow-x: auto;
-  margin: 22px 0;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--paper);
-  -webkit-overflow-scrolling: touch;
-}
-
-.reading table {
-  border-collapse: collapse;
-  width: 100%;
-  min-width: 460px;
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  line-height: 1.55;
-}
-
-.reading table caption {
-  caption-side: top;
-  text-align: left;
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #555;
-  padding: 12px 14px 8px;
-}
-
-.reading table th,
-.reading table td {
-  padding: 9px 14px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-
+.table-wrap { overflow-x: auto; margin: 22px 0; border: 1px solid var(--border); background: var(--panel); -webkit-overflow-scrolling: touch; }
+.reading table { border-collapse: collapse; width: 100%; min-width: 460px; font-family: var(--font-sans); font-size: 0.88rem; line-height: 1.55; color: var(--text); }
+.reading table caption { caption-side: top; text-align: left; font-family: var(--font-sans); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); padding: 12px 14px 8px; }
+.reading table th, .reading table td { padding: 9px 14px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
 .reading table thead th {
   font-weight: 700;
   font-size: 0.74rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #444;
-  background: var(--panel);
-  border-bottom: 1px solid #bfbfbf;
+  color: var(--muted);
+  background: var(--sunken);
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
-
 .reading table tbody tr:last-child td { border-bottom: none; }
-.reading table tbody tr:nth-child(even) td { background: rgba(0, 0, 0, 0.018); }
-
-.reading table td.num,
-.reading table th.num {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.reading table .total td,
-.reading table td.total,
-.reading table th[scope="row"] { font-weight: 700; }
-.reading table .total td { border-top: 1px solid #bfbfbf; }
+.reading table tbody tr:nth-child(even) td { background: rgba(255, 255, 255, 0.018); }
+.reading table td.num, .reading table th.num { font-family: var(--font-mono); font-size: 0.82rem; text-align: right; white-space: nowrap; color: var(--ink); }
+.reading table .total td, .reading table td.total, .reading table th[scope="row"] { font-weight: 700; color: var(--ink); }
+.reading table .total td { border-top: 1px solid var(--border); }
 .reading table .accent { color: var(--accent); font-weight: 700; }
 
-/* ---------- 2. widget affordances ---------- */
+/* ---------- widget affordances ---------- */
 
-.sandbox-controls label.stacked {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  min-width: 190px;
-  flex: 1 1 190px;
-}
-.sandbox-controls label.stacked .ctl-name {
-  font-size: 0.78rem;
-  color: #555;
-  letter-spacing: 0.04em;
-}
-.sandbox-controls input[type="range"] {
-  width: 100%;
-  min-width: 150px;
-  height: 26px;              /* a comfortable touch target on mobile */
-}
+.sandbox-controls label.stacked { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 190px; flex: 1 1 190px; }
+.sandbox-controls label.stacked .ctl-name { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.04em; }
+.sandbox-controls input[type="range"] { width: 100%; min-width: 150px; height: 26px; }
 .sandbox-controls input[type="number"] {
   font-family: var(--font-mono);
   font-size: 0.84rem;
-  padding: 6px 8px;
+  padding: 7px 9px;
   width: 100%;
   min-width: 96px;
   border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--paper);
+  background: var(--sunken);
   color: var(--ink);
 }
-.sandbox-controls input[type="number"]:invalid,
-.sandbox-controls input.bad { border-color: #8a1c1c; }
+.sandbox-controls input[type="number"]:focus { border-color: var(--accent); outline: none; }
+.sandbox-controls input[type="number"]:invalid, .sandbox-controls input.bad { border-color: var(--c-warn); }
 
-.sandbox-note {
-  font-family: var(--font-sans);
-  font-size: 0.8rem;
-  color: #555;
-  margin-top: 10px;
-  line-height: 1.55;
-}
+.sandbox-note { font-family: var(--font-sans); font-size: 0.8rem; color: var(--muted); margin-top: 10px; line-height: 1.55; }
 .sandbox-error {
   font-family: var(--font-sans);
   font-size: 0.84rem;
-  color: #8a1c1c;
-  background: #fbf1f1;
-  border: 1px solid #e2c4c4;
-  border-left: 4px solid #8a1c1c;
-  border-radius: 4px;
-  padding: 9px 12px;
+  color: #F0B5B5;
+  background: rgba(227, 145, 145, 0.1);
+  border: 1px solid rgba(227, 145, 145, 0.32);
+  border-left: 3px solid var(--c-warn);
+  padding: 10px 13px;
   margin-top: 12px;
 }
 .sandbox-error[hidden] { display: none; }
 
-.sandbox-scroll {
-  max-height: 340px;
-  overflow: auto;
-  margin-top: 14px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--paper);
-  -webkit-overflow-scrolling: touch;
-}
+.sandbox-scroll { max-height: 340px; overflow: auto; margin-top: 14px; border: 1px solid var(--border); background: var(--sunken); -webkit-overflow-scrolling: touch; }
 .sandbox-scroll table { min-width: 420px; margin: 0; }
-.sandbox-scroll thead th {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  background: var(--panel);
-}
+.sandbox-scroll thead th { position: sticky; top: 0; z-index: 1; background: #201F1D; }
 
-.scenario-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
-  gap: 14px;
-  margin-top: 4px;
-}
-.scenario-card {
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--paper);
-  padding: 13px 15px;
-}
-.scenario-card h4 {
-  font-family: var(--font-sans);
-  font-size: 0.74rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin-bottom: 9px;
-  color: var(--accent);
-}
-.scenario-card .scenario-field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin-bottom: 11px;
-  font-family: var(--font-sans);
-  font-size: 0.78rem;
-  color: #555;
-}
-.scenario-card .scenario-field .ctl-name {
-  display: block;
-  white-space: nowrap;
-}
-.scenario-card input[type="range"] {
-  width: 100%;
-  height: 26px;              /* a comfortable touch target on mobile */
-  accent-color: var(--accent);
-}
-.scenario-card .scenario-out {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  border-top: 1px dashed var(--border);
-  padding-top: 9px;
-  line-height: 1.65;
-}
+.scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; margin-top: 4px; }
+.scenario-card { border: 1px solid var(--border); background: var(--sunken); padding: 14px 16px; }
+.scenario-card h4 { font-family: var(--font-sans); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 9px; color: var(--accent); }
+.scenario-card .scenario-field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 11px; font-family: var(--font-sans); font-size: 0.78rem; color: var(--muted); }
+.scenario-card .scenario-field .ctl-name { display: block; white-space: nowrap; }
+.scenario-card input[type="range"] { width: 100%; height: 26px; accent-color: var(--accent); }
+.scenario-card .scenario-out { font-family: var(--font-mono); font-size: 0.85rem; border-top: 1px dashed var(--border); padding-top: 9px; line-height: 1.65; color: var(--text); }
 .scenario-card .scenario-out .val { color: var(--accent); font-weight: 700; }
 
-/* ---------- 3. refresher callout ---------- */
+/* ---------- glossary recap ---------- */
 
-.refresher-box {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-left: 4px solid #46617a;
-  border-radius: 4px;
-  padding: 18px 20px 8px;
-  margin: 22px 0;
-}
-.refresher-box .box-label {
-  display: block;
-  font-family: var(--font-sans);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  color: #46617a;
-}
-
-/* ---------- 4. glossary recap ---------- */
-
-.recap-list {
-  list-style: none;
-  margin: 18px 0 0 !important;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 10px 22px;
-}
-.recap-list li {
-  border-left: 2px solid var(--border);
-  padding: 2px 0 2px 12px;
-  font-size: 0.94rem;
-  line-height: 1.55;
-}
-.recap-list li a {
-  font-family: var(--font-sans);
-  font-size: 0.88rem;
-  font-weight: 600;
-  text-decoration: none;
-}
+.recap-list { list-style: none; margin: 18px 0 0 !important; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 10px 22px; }
+.recap-list li { border-left: 2px solid var(--border); padding: 2px 0 2px 12px; font-size: 0.94rem; line-height: 1.55; transition: border-color 200ms ease; }
+.recap-list li:hover { border-left-color: var(--accent); }
+.recap-list li a { font-family: var(--font-sans); font-size: 0.88rem; font-weight: 600; text-decoration: none; }
 .recap-list li a:hover { text-decoration: underline; }
-.recap-list li .recap-gloss { color: #555; font-size: 0.88rem; }
+.recap-list li .recap-gloss { color: var(--muted); font-size: 0.88rem; }
 
 /* ---------- glossary appendix page ---------- */
 
-.glossary-index {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 18px 0 26px;
-}
-.glossary-index a {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  text-decoration: none;
-  padding: 3px 9px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  line-height: 1.4;
-}
-.glossary-index a:hover { background: var(--panel); }
+.glossary-index { display: flex; flex-wrap: wrap; gap: 6px; margin: 18px 0 26px; }
+.glossary-index a { font-family: var(--font-mono); font-size: 0.8rem; text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); color: var(--text); line-height: 1.4; transition: border-color 200ms ease, color 200ms ease; }
+.glossary-index a:hover { border-color: var(--accent); color: var(--ink); }
 
 .reading table tr.glossary-row th {
   font-family: var(--font-sans);
@@ -740,13 +479,7 @@ body[data-reader-size="large"]  { font-size: 1.16rem; }
   width: 34%;
 }
 .reading table tr.glossary-row td { font-size: 0.9rem; }
-.reading table tr.glossary-row td .from-module {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: #777;
-  margin-top: 3px;
-}
+.reading table tr.glossary-row td .from-module { display: block; font-family: var(--font-mono); font-size: 0.72rem; color: var(--faint); margin-top: 3px; }
 
 @media (max-width: 480px) {
   .reading table { font-size: 0.82rem; }
@@ -755,20 +488,13 @@ body[data-reader-size="large"]  { font-size: 1.16rem; }
   .recap-list { grid-template-columns: 1fr; }
 }
 
-/* ---------- 5. wide display equations must scroll, not push the page ----------
-   A display equation is an atomic inline-block as far as layout is concerned:
-   it cannot wrap, so a wide one (Module 1's PV/FV pair, Module 4's NPV sum)
-   widens the whole document at narrow viewports. Giving the container its own
-   horizontal scroll keeps the formula intact and the page unscrolled.        */
+/* ---------- wide display equations scroll rather than push the page ---------- */
 
 mjx-container[display="true"] {
   overflow-x: auto;
   overflow-y: hidden;
   max-width: 100%;
-  padding-bottom: 4px;         /* room for the scrollbar, where one is drawn */
+  padding-bottom: 4px;
   -webkit-overflow-scrolling: touch;
 }
-
-/* inline math never gets its own scroller — it must stay in the text flow —
-   but it may shrink rather than force the line to overflow */
 mjx-container:not([display="true"]) { max-width: 100%; }
