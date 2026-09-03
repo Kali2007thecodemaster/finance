@@ -6,3 +6,6 @@ reference/
 # Python bytecode from the page generators in build/
 __pycache__/
 *.pyc
+
+# Generated site bundle
+personal-finance-from-scratch.zip
