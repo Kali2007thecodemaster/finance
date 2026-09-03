@@ -27,11 +27,47 @@
   --hair:    #38372F;   /* every rule on the page              */
   --hair-2:  #2C2B26;   /* the quieter half of a pair          */
 
+  /* theme-aware surfaces & controls (overridden for light below) */
+  --nav-bg:   rgba(34, 34, 34, 0.72);
+  --hover:    rgba(237, 223, 238, 0.06);
+  --row-tint: rgba(237, 223, 238, 0.028);
+  --marquee-bg: rgba(26, 26, 25, 0.5);
+  --btn1-bg: #EDE8DA;  --btn1-fg: #222222;  --btn1-bg-h: #CD8DBD;
+  --btn2-bg: #1F2D1D;  --btn2-fg: #CD8DBD;  --btn2-bg-h: #26381F;
+  --btn2-bd: #1F2D1D;  --btn2-bd-h: #CD8DBD;
+  --canary: #6FA08C;   /* the canada-specific tag hue */
+
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "Geist Mono", "Fira Code", "SFMono-Regular", ui-monospace, Menlo, monospace;
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --gut: clamp(20px, 5vw, 72px);
+}
+
+/*  Light theme — warm paper, near-black ink, a deeper purple accent
+    so links and marks keep their contrast against a bright ground.
+    The head script stamps an explicit data-theme before first paint,
+    so these overrides never flash.                                  */
+:root[data-theme="light"] {
+  --bg:      #F4F1E9;
+  --raised:  #FFFFFF;
+  --sunken:  #ECE8DD;
+  --ink:     #1C1B18;
+  --body:    #514E44;
+  --muted:   #7C7869;
+  --faint:   #A6A294;
+  --accent:  #A64D93;
+  --hair:    #DCD8CC;
+  --hair-2:  #E7E3D8;
+
+  --nav-bg:   rgba(244, 241, 233, 0.78);
+  --hover:    rgba(28, 27, 24, 0.05);
+  --row-tint: rgba(28, 27, 24, 0.035);
+  --marquee-bg: rgba(236, 232, 221, 0.6);
+  --btn1-bg: #1C1B18;  --btn1-fg: #F4F1E9;  --btn1-bg-h: #A64D93;
+  --btn2-bg: transparent; --btn2-fg: #A64D93; --btn2-bg-h: #EFE0EC;
+  --btn2-bd: #CDBBC7;  --btn2-bd-h: #A64D93;
+  --canary: #3E7C6A;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0; }
@@ -135,7 +171,7 @@ a:focus-visible, button:focus-visible {
   justify-content: space-between;
   gap: 24px;
   padding: 18px var(--gut);
-  background: rgba(34, 34, 34, 0.72);
+  background: var(--nav-bg);
   backdrop-filter: saturate(140%) blur(16px);
   -webkit-backdrop-filter: saturate(140%) blur(16px);
   border-bottom: 1px solid var(--hair-2);
@@ -160,7 +196,7 @@ a:focus-visible, button:focus-visible {
   padding: 7px 13px;
   transition: color 240ms var(--ease), background 240ms var(--ease);
 }
-.nav-links a:hover { color: var(--ink); background: rgba(237, 223, 238, 0.06); }
+.nav-links a:hover { color: var(--ink); background: var(--hover); }
 
 .nav-progress {
   font-family: var(--font-mono);
@@ -227,11 +263,11 @@ section { padding: clamp(80px, 12vw, 156px) 0; }
 .btn .arrow { display: inline-block; transition: transform 400ms var(--ease); }
 .btn:hover .arrow { transform: translateX(5px); }
 
-.btn-primary { background: var(--cream); color: #222222; }
-.btn-primary:hover { background: var(--accent); color: #222222; }
+.btn-primary { background: var(--btn1-bg); color: var(--btn1-fg); }
+.btn-primary:hover { background: var(--btn1-bg-h); color: var(--btn1-fg); }
 
-.btn-secondary { background: var(--green); color: var(--accent); border-color: var(--green); }
-.btn-secondary:hover { background: #26381f; border-color: var(--accent); }
+.btn-secondary { background: var(--btn2-bg); color: var(--btn2-fg); border-color: var(--btn2-bd); }
+.btn-secondary:hover { background: var(--btn2-bg-h); border-color: var(--btn2-bd-h); }
 
 /* ---------- hero ---------- */
 
@@ -338,7 +374,7 @@ section { padding: clamp(80px, 12vw, 156px) 0; }
   overflow: hidden;
   white-space: nowrap;
   padding: 14px 0;
-  background: rgba(26, 26, 25, 0.5);
+  background: var(--marquee-bg);
   position: relative;
   z-index: 2;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 9%, #000 91%, transparent);
@@ -471,7 +507,7 @@ section { padding: clamp(80px, 12vw, 156px) 0; }
   position: absolute;
   left: calc(var(--gut) * -1); right: calc(var(--gut) * -1);
   top: 0; bottom: 0;
-  background: rgba(237, 223, 238, 0.028);
+  background: var(--row-tint);
   opacity: 0;
   transition: opacity 360ms var(--ease);
   pointer-events: none;
@@ -629,4 +665,52 @@ footer { border-top: 1px solid var(--hair); padding: 58px 0 68px; position: rela
   .fade-up { opacity: 1; transform: none; transition: none; }
   .btn .arrow, .row-arrow, .list-row::before, .progress-fill,
   .anatomy-step, .legend-btn, .market-rail a, .market-rail a::after { transition: none; }
+}
+
+/* ============================================================
+   THEME TOGGLE — sun (light) <-> moon (dark), animated
+   ============================================================ */
+
+.nav-right { display: flex; align-items: center; gap: 16px; }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 240ms var(--ease), background 240ms var(--ease);
+}
+.theme-toggle:hover { border-color: var(--hair); background: var(--hover); }
+
+.tt-icon { width: 20px; height: 20px; display: block; color: currentColor; overflow: visible; }
+.tt-core { fill: currentColor; transition: r 400ms var(--ease); }
+.tt-moon-cut { fill: #000; transition: cx 460ms var(--ease); }
+.tt-rays {
+  transform-box: view-box;
+  transform-origin: 12px 12px;
+  transition: transform 460ms var(--ease), opacity 320ms ease;
+}
+
+/* dark theme → moon: rays retract, a crescent is carved */
+:root[data-theme="dark"] .tt-core     { r: 6; }
+:root[data-theme="dark"] .tt-moon-cut { cx: 15.5; }
+:root[data-theme="dark"] .tt-rays     { opacity: 0; transform: scale(0.4) rotate(-45deg); }
+
+/* light theme → sun: full disc, rays out */
+:root[data-theme="light"] .tt-core     { r: 5.4; }
+:root[data-theme="light"] .tt-moon-cut { cx: 24; }
+:root[data-theme="light"] .tt-rays     { opacity: 1; transform: none; }
+
+@media (max-width: 720px) {
+  .nav-right { gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-core, .tt-moon-cut, .tt-rays, .theme-toggle { transition: none; }
 }

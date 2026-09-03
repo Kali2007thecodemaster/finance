@@ -88,6 +88,15 @@ def head(title_text, description, extra_head=''):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#222222">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('pfs-finance:theme') ||
+          (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
+    })();
+  </script>
   <title>%s &middot; Personal Finance From Scratch</title>
   <meta name="description" content="%s">
 
@@ -145,6 +154,18 @@ def module_page(n, sections, widget=None):
     <button class="gear" type="button" aria-label="Cycle reading text size">&#9881;</button>
     <span class="bar-title">%s</span>
     <span>
+      <button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="true" title="Light mode">
+        <svg class="tt-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <mask id="tt-moon-mask"><rect x="0" y="0" width="24" height="24" fill="#fff"></rect><circle class="tt-moon-cut" cx="24" cy="9" r="6" fill="#000"></circle></mask>
+          <circle class="tt-core" cx="12" cy="12" r="5.6" mask="url(#tt-moon-mask)"></circle>
+          <g class="tt-rays" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+            <line x1="12" y1="1.4" x2="12" y2="3.4"></line><line x1="12" y1="20.6" x2="12" y2="22.6"></line>
+            <line x1="1.4" y1="12" x2="3.4" y2="12"></line><line x1="20.6" y1="12" x2="22.6" y2="12"></line>
+            <line x1="4.4" y1="4.4" x2="5.8" y2="5.8"></line><line x1="18.2" y1="18.2" x2="19.6" y2="19.6"></line>
+            <line x1="4.4" y1="19.6" x2="5.8" y2="18.2"></line><line x1="18.2" y1="5.8" x2="19.6" y2="4.4"></line>
+          </g>
+        </svg>
+      </button>
       <button class="heart" type="button" data-complete-toggle aria-pressed="false" aria-label="Toggle module complete">&hearts;<span data-complete-label hidden></span></button>
       <a href="%s" aria-label="Forward">&rarr;</a>
     </span>
@@ -184,6 +205,7 @@ def module_page(n, sections, widget=None):
   </footer>
 
   <script src="reader.js"></script>%s
+  <script src="theme.js"></script>
 </body>
 </html>
 """ % (n, SHORT_TITLES[n], next_href, phase_num, n, MODULE_TITLES[n], SUBTITLES[n],

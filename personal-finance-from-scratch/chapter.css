@@ -34,8 +34,10 @@
   --faint:   #6B6859;   /* faintest                                */
 
   --accent:  #CD8DBD;   /* the accent — purple/pink; links, terms  */
+  --box-line:#E7E3D6;   /* callout border — near-white in dark      */
+  --row-tint:rgba(255,255,255,0.02);  /* even table rows */
 
-  /* semantic callout hues */
+  /* semantic callout hues (label text) */
   --c-def:   #CD8DBD;   /* Definition      — purple */
   --c-why:   #86C79B;   /* Why This Matters — green */
   --c-eg:    #D8C07F;   /* Worked Example  — gold   */
@@ -45,6 +47,33 @@
   --font-serif: "Source Serif 4", "Latin Modern Roman", Georgia, "Times New Roman", serif;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "Fira Code", "Courier New", Courier, monospace;
+}
+
+/*  Light theme — warm paper, near-black ink, and the semantic hues
+    deepened so each still carries enough contrast for a coloured label
+    on a bright ground. The head script stamps an explicit data-theme
+    before first paint, so these never flash.                          */
+:root[data-theme="light"] {
+  --bg:      #F4F1E9;
+  --panel:   #FBF9F2;
+  --sunken:  #ECE8DD;
+  --border:  #DCD8CC;
+  --border-2:#E7E3D8;
+
+  --ink:     #1C1B18;
+  --text:    #46433A;
+  --muted:   #7C7869;
+  --faint:   #A6A294;
+
+  --accent:  #A64D93;
+  --box-line:#1C1B18;   /* callout border — near-black in light */
+  --row-tint:rgba(28,27,24,0.035);
+
+  --c-def:   #A64D93;
+  --c-why:   #3F8A5B;
+  --c-eg:    #927319;
+  --c-warn:  #C0504E;
+  --c-refr:  #3F7098;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0; }
@@ -224,8 +253,8 @@ mjx-container { color: var(--text); }
 /* ---------- callout boxes: one hue per device ---------- */
 
 .definition-box, .tip-box, .warn-box, .example-box, .refresher-box {
-  background: var(--panel);
-  border: 1px solid var(--border);
+  background: transparent;                 /* 100% transparent */
+  border: 1px solid var(--box-line);       /* solid minimalist frame, black/white per theme */
   padding: 18px 20px 8px;
   margin: 22px 0;
 }
@@ -243,20 +272,12 @@ mjx-container { color: var(--text); }
   margin-bottom: 8px;
 }
 
-.definition-box { border-left: 3px solid var(--c-def);  background: linear-gradient(rgba(205,141,189,0.05), rgba(205,141,189,0.05)), var(--panel); }
+/* colour survives in the labels — the frame itself stays monochrome */
 .definition-box .box-label { color: var(--c-def); }
-
-.tip-box        { border-left: 3px solid var(--c-why);  background: linear-gradient(rgba(134,199,155,0.05), rgba(134,199,155,0.05)), var(--panel); }
-.tip-box .box-label { color: var(--c-why); }
-
-.example-box    { border-left: 3px solid var(--c-eg);   background: linear-gradient(rgba(216,192,127,0.05), rgba(216,192,127,0.05)), var(--panel); }
-.example-box .box-label { color: var(--c-eg); }
-
-.warn-box       { border-left: 3px solid var(--c-warn); background: linear-gradient(rgba(227,145,145,0.055), rgba(227,145,145,0.055)), var(--panel); }
-.warn-box .box-label { color: var(--c-warn); }
-
-.refresher-box  { border-left: 3px solid var(--c-refr); background: linear-gradient(rgba(143,180,206,0.05), rgba(143,180,206,0.05)), var(--panel); }
-.refresher-box .box-label { color: var(--c-refr); }
+.tip-box .box-label        { color: var(--c-why); }
+.example-box .box-label    { color: var(--c-eg); }
+.warn-box .box-label       { color: var(--c-warn); }
+.refresher-box .box-label  { color: var(--c-refr); }
 
 /* ---------- figures (unused in these modules, kept for safety) ---------- */
 
@@ -267,11 +288,10 @@ mjx-container { color: var(--text); }
 /* ---------- drills / knowledge checks ---------- */
 
 .drill {
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
+  border: 1px solid var(--box-line);
   padding: 16px 18px;
   margin: 18px 0;
-  background: var(--panel);
+  background: transparent;
 }
 .drill .drill-head { display: flex; align-items: baseline; gap: 12px; font-family: var(--font-sans); margin-bottom: 8px; flex-wrap: wrap; }
 .drill .drill-num { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: var(--accent); }
@@ -402,7 +422,7 @@ body[data-reader-size="large"]  { font-size: 1.16rem; }
   white-space: nowrap;
 }
 .reading table tbody tr:last-child td { border-bottom: none; }
-.reading table tbody tr:nth-child(even) td { background: rgba(255, 255, 255, 0.018); }
+.reading table tbody tr:nth-child(even) td { background: var(--row-tint); }
 .reading table td.num, .reading table th.num { font-family: var(--font-mono); font-size: 0.82rem; text-align: right; white-space: nowrap; color: var(--ink); }
 .reading table .total td, .reading table td.total, .reading table th[scope="row"] { font-weight: 700; color: var(--ink); }
 .reading table .total td { border-top: 1px solid var(--border); }
@@ -441,7 +461,7 @@ body[data-reader-size="large"]  { font-size: 1.16rem; }
 
 .sandbox-scroll { max-height: 340px; overflow: auto; margin-top: 14px; border: 1px solid var(--border); background: var(--sunken); -webkit-overflow-scrolling: touch; }
 .sandbox-scroll table { min-width: 420px; margin: 0; }
-.sandbox-scroll thead th { position: sticky; top: 0; z-index: 1; background: #201F1D; }
+.sandbox-scroll thead th { position: sticky; top: 0; z-index: 1; background: var(--sunken); }
 
 .scenario-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; margin-top: 4px; }
 .scenario-card { border: 1px solid var(--border); background: var(--sunken); padding: 14px 16px; }
@@ -498,3 +518,38 @@ mjx-container[display="true"] {
   -webkit-overflow-scrolling: touch;
 }
 mjx-container:not([display="true"]) { max-width: 100%; }
+
+/* ============================================================
+   THEME TOGGLE — sun (light) <-> moon (dark), animated
+   Lives in the reader topbar; shares the landing's icon grammar.
+   ============================================================ */
+
+.topbar .theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: none;
+  border: 1px solid transparent;
+  color: var(--ink);
+  cursor: pointer;
+  line-height: 1;
+}
+.topbar .theme-toggle:hover { border-color: var(--border); background: var(--panel); }
+.tt-icon { width: 18px; height: 18px; display: block; color: currentColor; overflow: visible; }
+.tt-core { fill: currentColor; transition: r 400ms ease; }
+.tt-moon-cut { fill: #000; transition: cx 460ms ease; }
+.tt-rays { transform-box: view-box; transform-origin: 12px 12px; transition: transform 460ms ease, opacity 320ms ease; }
+
+:root[data-theme="dark"]  .tt-core     { r: 6; }
+:root[data-theme="dark"]  .tt-moon-cut { cx: 15.5; }
+:root[data-theme="dark"]  .tt-rays     { opacity: 0; transform: scale(0.4) rotate(-45deg); }
+:root[data-theme="light"] .tt-core     { r: 5.4; }
+:root[data-theme="light"] .tt-moon-cut { cx: 24; }
+:root[data-theme="light"] .tt-rays     { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tt-core, .tt-moon-cut, .tt-rays { transition: none; }
+}
