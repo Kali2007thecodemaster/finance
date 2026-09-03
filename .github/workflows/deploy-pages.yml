@@ -1,0 +1,78 @@
+# Publishes the static web-book to GitHub Pages.
+#
+# The site lives in personal-finance-from-scratch/, but that directory's
+# CONTENTS are uploaded as the Pages artifact root — so the published URL is
+# https://<owner>.github.io/finance/ rather than a nested path. Every link in
+# the site is relative, so it works unchanged at whatever base path Pages
+# serves it from.
+#
+# There is no build step: the site is plain static files. This workflow only
+# packages and deploys them.
+#
+# Prerequisite: GitHub Pages must be available for this repository. On a free
+# account that means the repository has to be public; private-repo Pages
+# requires GitHub Pro/Team/Enterprise. The configure-pages step below sets the
+# Pages source to "GitHub Actions" automatically the first time it runs, so no
+# manual settings change is needed once that prerequisite is met.
+
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'personal-finance-from-scratch/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:          # lets the site be published from any branch
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; queue instead of cancelling, so a deploy
+# already in flight is allowed to finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true    # turn Pages on if it is not already
+
+      - name: Verify the site directory looks complete
+        run: |
+          set -euo pipefail
+          cd personal-finance-from-scratch
+          missing=0
+          for f in index.html style.css scene.js three.min.js main.js \
+                   chapter.css reader.js appendix-glossary.html \
+                   widgets/tvm-calculator.js widgets/amortization.js \
+                   widgets/npv-scenario.js widgets/dcf-scenario-sandbox.js; do
+            [ -f "$f" ] || { echo "missing: $f"; missing=1; }
+          done
+          for n in 0 1 2 3 4 5 6 7 8 9; do
+            [ -f "module$n.html" ] || { echo "missing: module$n.html"; missing=1; }
+          done
+          [ "$missing" -eq 0 ] || { echo "site is incomplete; refusing to deploy"; exit 1; }
+          echo "all 12 pages and 4 widgets present"
+
+      - name: Upload the site as the Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: personal-finance-from-scratch
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

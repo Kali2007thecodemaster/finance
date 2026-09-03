@@ -65,6 +65,21 @@ python3 build/m0.py && python3 build/m1.py && python3 build/m2.py \
 `appendix-glossary.html` parses its 47 rows straight out of the source markdown
 rather than retyping them, so the appendix and the curriculum cannot drift.
 
+## Publishing
+
+`.github/workflows/deploy-pages.yml` deploys the site to GitHub Pages. It
+uploads the *contents* of `personal-finance-from-scratch/` as the Pages root,
+so the published URL is `https://<owner>.github.io/finance/` rather than a
+nested path — every link in the site is relative, so it works unchanged at
+whatever base path Pages serves from.
+
+The workflow runs on pushes to `main` that touch the site, and can be
+triggered manually against any branch. It enables Pages on first run, so no
+manual settings change is needed.
+
+**Prerequisite:** GitHub Pages needs the repository to be public on a free
+account; private-repo Pages requires GitHub Pro/Team/Enterprise.
+
 ## Progress storage
 
 Reading progress lives in `localStorage` under `pfs-finance:progress`, with
