@@ -7,6 +7,17 @@
   <meta name="description" content="A zero-knowledge personal finance curriculum, taught through the lens of investment banking. Canadian edition. Ten modules, fifty definitions, eleven worked examples, four live calculators.">
   <meta name="theme-color" content="#222222">
 
+  <script>
+    /* set the theme before first paint — no flash of the wrong mode */
+    (function () {
+      try {
+        var s = localStorage.getItem('pfs-finance:theme');
+        var t = s || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
+    })();
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -28,7 +39,28 @@
       <a href="#curriculum">Curriculum</a>
       <a href="#ledger">Ledger</a>
     </div>
-    <div class="nav-progress" id="nav-progress"><strong id="nav-progress-count">0</strong>&thinsp;/&thinsp;10</div>
+    <div class="nav-right">
+      <div class="nav-progress" id="nav-progress"><strong id="nav-progress-count">0</strong>&thinsp;/&thinsp;10</div>
+      <button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="true" title="Light mode">
+        <svg class="tt-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <mask id="tt-moon-mask">
+            <rect x="0" y="0" width="24" height="24" fill="#fff"></rect>
+            <circle class="tt-moon-cut" cx="24" cy="9" r="6" fill="#000"></circle>
+          </mask>
+          <circle class="tt-core" cx="12" cy="12" r="5.6" mask="url(#tt-moon-mask)"></circle>
+          <g class="tt-rays" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+            <line x1="12" y1="1.4" x2="12" y2="3.4"></line>
+            <line x1="12" y1="20.6" x2="12" y2="22.6"></line>
+            <line x1="1.4" y1="12" x2="3.4" y2="12"></line>
+            <line x1="20.6" y1="12" x2="22.6" y2="12"></line>
+            <line x1="4.4" y1="4.4" x2="5.8" y2="5.8"></line>
+            <line x1="18.2" y1="18.2" x2="19.6" y2="19.6"></line>
+            <line x1="4.4" y1="19.6" x2="5.8" y2="18.2"></line>
+            <line x1="18.2" y1="5.8" x2="19.6" y2="4.4"></line>
+          </g>
+        </svg>
+      </button>
+    </div>
   </nav>
 
   <main id="top">
@@ -536,5 +568,6 @@
   <script src="three.min.js"></script>
   <script src="scene.js"></script>
   <script src="main.js"></script>
+  <script src="theme.js"></script>
 </body>
 </html>

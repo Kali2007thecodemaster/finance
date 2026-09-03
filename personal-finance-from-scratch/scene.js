@@ -407,25 +407,33 @@
      4. STUDIO ENVIRONMENT (equirectangular, then prefiltered)
      ============================================================ */
 
-  function studioEquirect() {
+  function studioEquirect(theme) {
     var W = 1024, H = 512;
     var c = surface(W, H);
     var x = c.getContext('2d');
+    var light = theme === 'light';
 
-    /*  A DARK studio, to match the page's charcoal ground. Metal is
-        almost pure reflection, so the environment is what the coin
-        looks like — on a dark page it must be mostly dark, with a
-        few bright soft sources streaking across. The dark tone is
-        keyed near the page background (#222) so the coin's shadowed
-        reflections blend into the page and it feels embedded rather
-        than pasted on. This dark-dominant map is the single biggest
-        realism win over the previous bright studio.                */
+    /*  Metal is almost pure reflection, so the environment IS what the
+        coin looks like. Each theme gets a studio keyed near its own page
+        ground so the coin's mid-reflections blend into the page and it
+        feels embedded rather than pasted on: a dark-dominant studio for
+        the charcoal theme, a bright studio for the paper theme. A few
+        soft sources streak across either way to give the gold its
+        highlights.                                                     */
     var g = x.createLinearGradient(0, 0, 0, H);
-    g.addColorStop(0.00, '#3a3a38');     /* dim ceiling glow  */
-    g.addColorStop(0.34, '#262625');
-    g.addColorStop(0.52, '#1b1b1a');     /* horizon, ~page bg */
-    g.addColorStop(0.72, '#161615');
-    g.addColorStop(1.00, '#0d0d0c');     /* dark floor        */
+    if (light) {
+      g.addColorStop(0.00, '#ffffff');
+      g.addColorStop(0.36, '#f3efe6');
+      g.addColorStop(0.52, '#e9e4d7');   /* horizon, ~paper bg */
+      g.addColorStop(0.74, '#cfc9ba');
+      g.addColorStop(1.00, '#a49d8c');   /* soft floor         */
+    } else {
+      g.addColorStop(0.00, '#3a3a38');   /* dim ceiling glow   */
+      g.addColorStop(0.34, '#262625');
+      g.addColorStop(0.52, '#1b1b1a');   /* horizon, ~page bg  */
+      g.addColorStop(0.72, '#161615');
+      g.addColorStop(1.00, '#0d0d0c');   /* dark floor         */
+    }
     x.fillStyle = g;
     x.fillRect(0, 0, W, H);
 
@@ -452,6 +460,22 @@
     /* a thin overhead strip light, for a moving linear glint */
     x.fillStyle = 'rgba(255,252,244,0.5)';
     x.fillRect(W * 0.30, H * 0.045, W * 0.42, H * 0.02);
+
+    if (light) {
+      /* soft dark blockers — a polished coin needs darks to reflect even
+         in a bright room, or the metal flattens into plastic */
+      function blocker(u, v, w, h, a) {
+        var px = u * W, py = v * H;
+        var rg = x.createRadialGradient(px, py, 0, px, py, Math.max(w, h));
+        rg.addColorStop(0.0, 'rgba(40,38,34,' + a + ')');
+        rg.addColorStop(1.0, 'rgba(40,38,34,0)');
+        x.fillStyle = rg;
+        x.fillRect(px - w, py - h, w * 2, h * 2);
+      }
+      blocker(0.50, 0.30, 150, 120, 0.5);
+      blocker(0.90, 0.42, 120, 150, 0.42);
+      blocker(0.08, 0.40, 90, 120, 0.4);
+    }
 
     var tex = new THREE.CanvasTexture(c);
     tex.mapping = THREE.EquirectangularReflectionMapping;
@@ -487,14 +511,26 @@
   var camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 60);
   camera.position.set(0, 0, 7.2);
 
-  /* environment */
-  var pmrem = new THREE.PMREMGenerator(renderer);
-  pmrem.compileEquirectangularShader();
-  var eqTex = studioEquirect();
-  var envMap = pmrem.fromEquirectangular(eqTex).texture;
-  scene.environment = envMap;
-  eqTex.dispose();
-  pmrem.dispose();
+  /* environment — rebuildable, so the coin re-lights when the theme
+     toggles between the paper and charcoal studios */
+  var currentEnv = null;
+  function buildEnvironment(theme) {
+    var pmrem = new THREE.PMREMGenerator(renderer);
+    pmrem.compileEquirectangularShader();
+    var eqTex = studioEquirect(theme);
+    var envTex = pmrem.fromEquirectangular(eqTex).texture;
+    eqTex.dispose();
+    pmrem.dispose();
+    if (currentEnv) { currentEnv.dispose(); }
+    currentEnv = envTex;
+    scene.environment = envTex;
+  }
+
+  function readTheme() {
+    return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  }
+
+  buildEnvironment(readTheme());
 
   /* direct light, for the moving specular the env map cannot give */
   var key = new THREE.DirectionalLight(0xfff2dc, 2.35);
@@ -515,6 +551,34 @@
   var rim2 = new THREE.DirectionalLight(0xffe0b0, 0.9);
   rim2.position.set(-2.2, -2.6, -3.5);
   scene.add(rim2);
+
+  /*  Per-theme exposure and rim balance. On the bright paper theme the
+      studio already carries most of the light, so the direct rig is
+      pulled back and exposure trimmed; on charcoal it is pushed. */
+  function applyThemeLook(theme) {
+    if (theme === 'light') {
+      renderer.toneMappingExposure = 0.94;
+      key.intensity = 1.9;
+      rim.intensity = 1.1;
+      rim2.intensity = 0.6;
+    } else {
+      renderer.toneMappingExposure = 1.08;
+      key.intensity = 2.35;
+      rim.intensity = 1.8;
+      rim2.intensity = 0.9;
+    }
+  }
+  applyThemeLook(readTheme());
+
+  /* re-light the coin when the toggle fires (theme.js dispatches this) */
+  window.addEventListener('themechange', function (e) {
+    var t = (e && e.detail && e.detail.theme) === 'light' ? 'light' : 'dark';
+    buildEnvironment(t);
+    applyThemeLook(t);
+    /* repaint immediately — under prefers-reduced-motion there is no
+       render loop running to pick the new lighting up on its own */
+    try { renderer.render(scene, camera); } catch (err) { /* not ready yet */ }
+  });
 
   /* ============================================================
      6. THE COIN

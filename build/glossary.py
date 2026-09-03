@@ -123,6 +123,18 @@ page = head('Appendix &mdash; Glossary',
     <button class="gear" type="button" aria-label="Cycle reading text size">&#9881;</button>
     <span class="bar-title">Appendix &mdash; Glossary</span>
     <span>
+      <button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="true" title="Light mode">
+        <svg class="tt-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <mask id="tt-moon-mask"><rect x="0" y="0" width="24" height="24" fill="#fff"></rect><circle class="tt-moon-cut" cx="24" cy="9" r="6" fill="#000"></circle></mask>
+          <circle class="tt-core" cx="12" cy="12" r="5.6" mask="url(#tt-moon-mask)"></circle>
+          <g class="tt-rays" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+            <line x1="12" y1="1.4" x2="12" y2="3.4"></line><line x1="12" y1="20.6" x2="12" y2="22.6"></line>
+            <line x1="1.4" y1="12" x2="3.4" y2="12"></line><line x1="20.6" y1="12" x2="22.6" y2="12"></line>
+            <line x1="4.4" y1="4.4" x2="5.8" y2="5.8"></line><line x1="18.2" y1="18.2" x2="19.6" y2="19.6"></line>
+            <line x1="4.4" y1="19.6" x2="5.8" y2="18.2"></line><line x1="18.2" y1="5.8" x2="19.6" y2="4.4"></line>
+          </g>
+        </svg>
+      </button>
       <a href="index.html" aria-label="Back to curriculum">&rarr;</a>
     </span>
   </nav>
@@ -162,6 +174,7 @@ page = head('Appendix &mdash; Glossary',
   </footer>
 
   <script src="reader.js"></script>
+  <script src="theme.js"></script>
 </body>
 </html>
 """ % (intro, index, gloss_table)
