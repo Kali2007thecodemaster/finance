@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 01 &mdash; ECON 201/202 Refresher, and the Time Value of Money &middot; Personal Finance From Scratch</title>
+  <meta name="description" content="The Time Value of Money — module 01 of Personal Finance From Scratch.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="chapter.css">
+</head>
+<body data-chapter="1">
+
+  <nav class="topbar" aria-label="Reader controls">
+    <a href="index.html" aria-label="Back to curriculum">&larr;</a>
+    <button class="gear" type="button" aria-label="Cycle reading text size">&#9881;</button>
+    <span class="bar-title">The Time Value of Money</span>
+    <span>
+      <button class="heart" type="button" data-complete-toggle aria-pressed="false" aria-label="Toggle module complete">&hearts;<span data-complete-label hidden></span></button>
+      <a href="module2.html" aria-label="Forward">&rarr;</a>
+    </span>
+  </nav>
+
+  <div class="page">
+    <main class="reading">
+
+      <header class="title-block">
+        <p class="kicker">phase I &middot; module 01</p>
+        <h1>ECON 201/202 Refresher, and the Time Value of Money</h1>
+        <hr class="rule">
+        <p class="subtitle">Studied from DeFusco et al., <em>Quantitative Investment Analysis</em>, with an ECON&nbsp;201/202 refresher &middot; written from scratch</p>
+      </header>
+
+      <!-- ============ 1. THE HOOK ============ -->
+      <section id="hook">
+        <h2>1. The Hook: One Formula, Rearranged Forever</h2>
+        <p>
+          Everything after this module &mdash; the amortization schedule in
+          <a href="module3.html">Module&nbsp;03</a>, the net present value in
+          <a href="module4.html">Module&nbsp;04</a>, the discounted cash flow in
+          <a href="module7.html#definitions">Module&nbsp;7.3</a> &mdash; is one formula, rearranged.
+          This is that formula.
+        </p>
+        <p>
+          Two ideas carry it. The first is that a dollar has a date attached to it, and that moving the
+          date changes what it is worth. The second is that interest paid on interest already earned
+          compounds, so the change is not linear. The module opens with a refresher on the two
+          background facts it leans on, then builds both ideas from nothing.
+        </p>
+      </section>
+
+      <!-- ============ 2. WHAT YOU ALREADY HALF-REMEMBER ============ -->
+      <section id="refresher">
+        <h2>2. What You Already Half-Remember</h2>
+        <div class="refresher-box">
+          <span class="box-label">What You Already Half-Remember &mdash; ECON 201</span>
+          <p>
+            Every decision has an <strong>opportunity cost</strong> &mdash; the value of the next-best
+            thing given up.
+          </p>
+        </div>
+        <div class="refresher-box">
+          <span class="box-label">What You Already Half-Remember &mdash; ECON 202</span>
+          <p>
+            <strong>Inflation</strong> erodes purchasing power over time; the <strong>Bank of
+            Canada</strong>'s target rate ripples through every rate you'll encounter.
+          </p>
+        </div>
+        <p>
+          Both come back later and by name: opportunity cost is what makes a non-yielding asset
+          expensive to hold in <a href="module7.html#definitions">Module&nbsp;7.2</a>, and inflation is
+          what turns a nominal rate into a real one in
+          <a href="module8.html">Module&nbsp;08</a>.
+        </p>
+      </section>
+
+      <!-- ============ 3. DEFINITIONS ============ -->
+      <section id="definitions">
+        <h2>3. Definitions</h2>
+        <h3>1.1 The Time Value of Money</h3>
+        <div class="definition-box">
+          <span class="box-label">Definition 1.1 &mdash; TVM</span>
+          <p>
+            A dollar today is worth more than a dollar later, because today's dollar can be invested
+            immediately.
+          </p>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 1.2 &amp; 1.3 &mdash; Present Value (PV) / Future Value (FV)</span>
+          <p>
+            The source names these two together, because neither is meaningful alone: each is the
+            other, moved across $n$ years at rate $r$. The formula below is the move, written in both
+            directions.
+          </p>
+          <p>$$FV = PV \times (1+r)^n \qquad \Longleftrightarrow \qquad PV = \frac{FV}{(1+r)^n}$$</p>
+        </div>
+        <h3>1.2 Compound Interest</h3>
+        <div class="definition-box">
+          <span class="box-label">Definition 1.4 &mdash; Compound Interest</span>
+          <p>Interest earned on previously earned interest.</p>
+        </div>
+      </section>
+
+      <!-- ============ 4. WORKED EXAMPLES ============ -->
+      <section id="worked-examples">
+        <h2>4. Worked Examples</h2>
+        <h3>From 1.1 &mdash; Moving a dollar in both directions</h3>
+        <div class="example-box">
+          <span class="box-label">Worked Example</span>
+          <p>
+            \$1,000 at 5%/year, 3 years: $FV = 1000 \times 1.05^3 = \$1,157.63$. Reversed, \$1,157.63
+            in 3 years at 5% is worth exactly \$1,000 today.
+          </p>
+        </div>
+        <h3>From 1.2 &mdash; Three years of interest-on-interest</h3>
+        <p>
+          The table below is the source's compound-growth example at 7%. The
+          <a href="#sandbox">sandbox</a> further down regenerates exactly this table live, at whatever
+          principal, rate and term you set &mdash; the static version is here so you can check the live
+          one against it.
+        </p>
+        <div class="table-wrap">
+          <table>
+          <caption>Compound growth, \$1,000 at 7%</caption>
+            <thead><tr><th scope="col">Year</th><th scope="col">Start</th><th scope="col">Interest</th><th scope="col">End</th></tr></thead>
+            <tbody>
+            <tr><td>1</td><td>\$1,000.00</td><td>\$70.00</td><td>\$1,070.00</td></tr>
+            <tr><td>2</td><td>\$1,070.00</td><td>\$74.90</td><td>\$1,144.90</td></tr>
+            <tr><td>3</td><td>\$1,144.90</td><td>\$80.14</td><td>\$1,225.04</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Year 2's interest exceeds Year 1's with no new deposit &mdash; interest-on-interest, the real
+          reason &ldquo;start early&rdquo; matters.
+        </p>
+      </section>
+
+      <!-- ============ 5. COMMON CONFUSIONS ============ -->
+      <section id="common-confusions">
+        <h2>5. Common Confusions</h2>
+        <div class="warn-box">
+          <span class="box-label">Common Confusion</span>
+          <p>
+            A higher discount rate shrinks PV <em>fast</em> because of the exponent &mdash; always
+            sanity-check the rate assumption.
+          </p>
+        </div>
+        <p>
+          This one is worth feeling rather than reading. In the <a href="#sandbox">sandbox</a>, hold the
+          principal and term fixed and drag the rate: the future value does not rise along a line, it
+          bends. The same bend, pointed the other way, is what makes
+          <a href="module4.html#sandbox">Module&nbsp;4's NPV</a> so sensitive to its discount-rate
+          assumption.
+        </p>
+      </section>
+
+      <!-- ============ 6. KNOWLEDGE CHECKS ============ -->
+      <section id="knowledge-checks">
+        <h2>6. Knowledge Checks</h2>
+        <div class="drill">
+          <div class="drill-head">
+            <span class="drill-num">KNOWLEDGE CHECK 1.1</span>
+            <span class="drill-source">Module 1.1 &middot; present value</span>
+          </div>
+          <p>At 6%, \$500 in 1 year vs. \$520 in 2 years &mdash; which is worth more today?</p>
+          <details data-drill="1.1">
+            <summary>Show Answer</summary>
+            <p>$PV_1=471.70$, $PV_2=462.85$ &mdash; the sooner payment wins.</p>
+          </details>
+        </div>
+      </section>
+
+      <!-- ============ 7. SANDBOX ============ -->
+      <section id="sandbox">
+        <h2>7. Sandbox: The Live TVM Calculator</h2>
+        <p>
+          The static table in <a href="#worked-examples">&sect;4</a> is one row of assumptions. This is
+          the same table, live. Set the principal, the annual rate and the term; the future value and
+          the full year-by-year compound-growth schedule regenerate as you drag. It opens on
+          <strong>\$1,000 at 7% over 3 years</strong> &mdash; the source's own numbers &mdash; so the
+          first thing you see reproduces the worked example exactly, and every change from there is a
+          change you made.
+        </p>
+        <div class="sandbox-panel" id="tvm-sandbox" data-widget="tvm">
+          <noscript>
+            <p class="sandbox-note">
+              This sandbox needs JavaScript. The worked example it extends is complete and
+              self-contained in <a href="#worked-examples">&sect;4</a> above.
+            </p>
+          </noscript>
+        </div>
+      </section>
+
+      <!-- ============ 8. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <section id="recap">
+        <h2>8. Recap &amp; Glossary Terms</h2>
+        <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
+        <ul class="recap-list">
+          <li><a href="appendix-glossary.html#g-time-value-of-money">Time Value of Money</a><span class="recap-gloss"> &mdash; A dollar today &gt; a dollar later</span></li>
+          <li><a href="appendix-glossary.html#g-present-future-value">Present/Future Value</a><span class="recap-gloss"> &mdash; What a future/present sum is worth at another point in time</span></li>
+          <li><a href="appendix-glossary.html#g-compound-interest">Compound Interest</a><span class="recap-gloss"> &mdash; Interest earned on previous interest</span></li>
+        </ul>
+      </section>
+
+      <nav class="chapter-nav">
+        <a href="module0.html">&larr; Module 00 &mdash; The Absolute Basics</a>
+        <a href="module2.html">Module 02 &mdash; Your Personal Financial Statements &rarr;</a>
+      </nav>
+
+    </main>
+
+    <aside class="contents" aria-label="Module contents">
+      <p class="contents-label">Contents</p>
+      <ol>
+        <li><a href="#hook">1. The Hook</a></li>
+        <li><a href="#refresher">2. What You Already Half-Remember</a></li>
+        <li><a href="#definitions">3. Definitions</a></li>
+        <li><a href="#worked-examples">4. Worked Examples</a></li>
+        <li><a href="#common-confusions">5. Common Confusions</a></li>
+        <li><a href="#knowledge-checks">6. Knowledge Checks</a></li>
+        <li><a href="#sandbox">7. Sandbox</a></li>
+        <li><a href="#recap">8. Recap &amp; Glossary Terms</a></li>
+      </ol>
+      <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
+        <span data-complete-label>Mark module complete</span>
+      </button>
+    </aside>
+  </div>
+
+  <footer class="book-footer">
+    PERSONAL FINANCE FROM SCRATCH &mdash; a zero-knowledge curriculum, Canadian edition. Educational material, not financial advice.
+  </footer>
+
+  <script src="reader.js"></script>
+  <script src="widgets/tvm-calculator.js"></script>
+</body>
+</html>

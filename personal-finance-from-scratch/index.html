@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personal Finance From Scratch — a free interactive web-book</title>
+  <meta name="description" content="A zero-knowledge personal finance curriculum, taught through the lens of investment banking. Canadian edition. Ten modules, fifty definitions, eleven worked examples, four live calculators.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#curriculum">Skip to curriculum</a>
+
+  <canvas id="scene-canvas" aria-hidden="true"></canvas>
+  <div class="scene-static" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <nav class="topnav" aria-label="Main">
+    <a class="brand" href="#top">PERSONAL<span class="slash">/</span>FINANCE<span class="slash">/</span>FROM<span class="slash">/</span>SCRATCH</a>
+    <div class="nav-links">
+      <a href="#method">Method</a>
+      <a href="#sources">Sources</a>
+      <a href="#curriculum">Curriculum</a>
+      <a href="#ledger">Ledger</a>
+    </div>
+    <div class="nav-progress" id="nav-progress"><strong id="nav-progress-count">0</strong> / 10 complete</div>
+  </nav>
+
+  <main id="top">
+
+    <!-- ================= HERO ================= -->
+    <header class="hero" data-rail="top" data-cam="0">
+      <div class="wrap">
+        <span class="kicker">A free interactive web-book</span>
+        <h1>Personal Finance<br>From <span class="warm">Scratch</span></h1>
+        <p class="lede">
+          A zero-knowledge curriculum, taught through the lens of <strong>investment banking</strong> —
+          Canadian edition. For someone who has <em>heard</em> the words &ldquo;APR,&rdquo;
+          &ldquo;diversification,&rdquo; and &ldquo;balance sheet&rdquo; but couldn't confidently explain
+          any of them out loud. Nothing is assumed. Every term is defined the first time it is used, and
+          every formula gets an analogy before it gets symbols.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-warm" href="module0.html">Start Module 00 &rarr;</a>
+          <a class="btn" href="#sources">How it's sourced</a>
+        </div>
+
+        <div class="stat-strip">
+          <div class="stat">
+            <div class="num"><span class="warm">10</span></div>
+            <div class="label">Modules, 00&ndash;09</div>
+          </div>
+          <div class="stat">
+            <div class="num"><span class="warm">50</span></div>
+            <div class="label">Definitions, all on first use</div>
+          </div>
+          <div class="stat">
+            <div class="num"><span class="warm">11</span></div>
+            <div class="label">Worked examples, by hand</div>
+          </div>
+          <div class="stat">
+            <div class="num"><span class="market">4</span></div>
+            <div class="label">Live calculators</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= MARQUEE ================= -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marquee-track">
+        <span>Time Value of Money</span><span class="sep">&#36;</span>
+        <span>Net Present Value</span><span class="sep">&#36;</span>
+        <span>Compound Interest</span><span class="sep">&#36;</span>
+        <span>Diversification</span><span class="sep">&#36;</span>
+        <span>Core&ndash;Satellite Strategy</span><span class="sep">&#36;</span>
+        <span>All-in-One ETF</span><span class="sep">&#36;</span>
+        <span>Discounted Cash Flow</span><span class="sep">&#36;</span>
+        <span>Beta</span><span class="sep">&#36;</span>
+        <span>Real Interest Rate</span><span class="sep">&#36;</span>
+        <span>Operating Leverage</span><span class="sep">&#36;</span>
+        <span>Withholding Tax</span><span class="sep">&#36;</span>
+        <span>Rebalancing</span><span class="sep">&#36;</span>
+        <span>Tracking Difference</span><span class="sep">&#36;</span>
+        <span>Scenario Analysis</span><span class="sep">&#36;</span>
+        <span>Loss Aversion</span><span class="sep">&#36;</span>
+      </div>
+    </div>
+
+    <!-- ================= METHOD ================= -->
+    <section id="method" data-rail="method" data-cam="1">
+      <div class="wrap">
+        <div class="section-kicker fade-up">&sect; The Method</div>
+        <h2 class="section-title fade-up">Five devices, used relentlessly</h2>
+        <div class="panel fade-up" style="margin-bottom: 36px;">
+          <span class="mono-tag">How to read this book</span>
+          <p>
+            This curriculum assumes nothing. Every term is defined the first time it is used, and every
+            formula gets an analogy before it gets symbols. Five devices do all the work, and they repeat
+            in the same order in every module &mdash; so once you have read one module, you already know
+            how to read the other nine. There is no prose here that isn't one of these five things.
+          </p>
+        </div>
+        <div class="anatomy-grid">
+          <div class="anatomy-step fade-up">
+            <span class="step-id">#definitions</span>
+            <h4>Definition</h4>
+            <p>A term, defined precisely, at first use. Every one of the fifty is also in the Glossary at the end.</p>
+          </div>
+          <div class="anatomy-step fade-up">
+            <span class="step-id">Why This Matters</span>
+            <h4>Why This Matters</h4>
+            <p>Before any formula, a plain-English reason you would ever care &mdash; usually an analogy you already have intuition for.</p>
+          </div>
+          <div class="anatomy-step fade-up">
+            <span class="step-id">#worked-examples</span>
+            <h4>Worked Example</h4>
+            <p>Real numbers, done by hand. Eleven of them across the ten modules, every figure carried through explicitly.</p>
+          </div>
+          <div class="anatomy-step fade-up">
+            <span class="step-id">#common-confusions</span>
+            <h4>Common Confusion</h4>
+            <p>The specific way beginners get this wrong, named explicitly rather than left as a trap. Ten of them.</p>
+          </div>
+          <div class="anatomy-step fade-up">
+            <span class="step-id">#knowledge-checks</span>
+            <h4>Knowledge Check</h4>
+            <p>A question with the answer hidden below it. Don't peek until you've tried &mdash; opening one logs it as attempted toward your progress here.</p>
+          </div>
+          <div class="anatomy-step fade-up">
+            <span class="step-id">#refresher</span>
+            <h4>What You Already Half-Remember</h4>
+            <p>ECON&nbsp;201, ECON&nbsp;202 and BUS&nbsp;100 are treated as refreshers, not as prerequisites assumed retained cold. Modules&nbsp;1&ndash;4 each open by rebuilding what's needed in one paragraph before building on it.</p>
+          </div>
+          <div class="anatomy-step fade-up">
+            <span class="step-id">#sandbox</span>
+            <h4>Sandbox</h4>
+            <p>Four modules replace their static worked example with a live one: a TVM calculator, an amortization generator, an NPV scenario tool, and a DCF bull/base/bear sandbox.</p>
+          </div>
+          <div class="anatomy-step fade-up">
+            <span class="step-id">#recap</span>
+            <h4>Recap</h4>
+            <p>Each module closes with the Glossary terms it introduced, every one linked through to its full entry in the consolidated appendix.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SOURCES ================= -->
+    <section id="sources" data-rail="sources" data-cam="2">
+      <div class="wrap">
+        <div class="section-kicker fade-up">&sect; Sources</div>
+        <h2 class="section-title fade-up">Three texts, plus the part no textbook covers</h2>
+
+        <div class="source-grid">
+          <div class="panel fade-up">
+            <span class="mono-tag">Intuition &amp; financial-statement backbone</span>
+            <h3>Desai &mdash; <em>How Finance Works</em></h3>
+            <p>
+              The plain-English layer. Balance sheets as a snapshot and income statements as a video,
+              cash flow versus profit, the time value of money as an idea before a formula, capital
+              budgeting, and why a valuation is reasoned estimation rather than measurement. This book
+              supplies the <em>why you'd ever care</em> half of every module.
+            </p>
+          </div>
+          <div class="panel fade-up">
+            <span class="mono-tag">Markets &amp; portfolio backbone</span>
+            <h3>Bodie, Kane &amp; Marcus &mdash; <em>Investments</em></h3>
+            <p>
+              The instruments and the portfolio. Equities and bonds as contracts, risk read as
+              volatility rather than as &ldquo;chance of ruin,&rdquo; diversification, index funds,
+              beta, market-cap versus equal weighting, and the behavioural finance that Module&nbsp;9
+              closes on. This book supplies the <em>what the market actually is</em> layer.
+            </p>
+          </div>
+          <div class="panel fade-up">
+            <span class="mono-tag">Quantitative machinery</span>
+            <h3>DeFusco, McLeavey, Pinto &amp; Runkle &mdash; <em>Quantitative Investment Analysis</em></h3>
+            <p>
+              The arithmetic done properly. Discounting and compounding, present and future value,
+              net present value, real versus nominal rates, and scenario analysis as multiple
+              internally consistent narratives rather than one point forecast. This book supplies the
+              <em>show your working</em> layer, from Module&nbsp;1's exponent to Module&nbsp;7's DCF.
+            </p>
+          </div>
+        </div>
+
+        <!-- ===== signature element: source-weight legend ===== -->
+        <div class="legend fade-up" id="legend">
+          <span class="mono-tag">Signature control &mdash; the source-weight legend</span>
+          <h3>Which text carries each topic &mdash; and where none of them do</h3>
+          <p class="legend-copy">
+            Every topic tag in the curriculum below is coloured by its evidence.
+            <strong>DESAI</strong> marks the intuition-and-statements layer;
+            <strong>BODIE</strong> marks market and portfolio mechanics;
+            <strong>QUANT</strong> marks material whose weight is the arithmetic itself.
+            The fourth colour is the honest one: <strong>CANADA</strong> marks topics that none
+            of the three texts covers, because they are jurisdictional &mdash; TFSA, RRSP and FHSA
+            account placement, the Canada&ndash;US tax treaty's withholding exemption, the dividend
+            tax credit, SEDAR+ filings, and the Canadian-listed all-in-one ETFs of Module&nbsp;6.3.
+            Those come from Canadian regulation and fund documentation, not from a textbook, and
+            saying so is more useful than pretending otherwise. Filter by evidence &mdash;
+            non-matching tags dim.
+          </p>
+          <div class="legend-bar" role="group" aria-label="Filter topic tags by source">
+            <button class="legend-btn active" data-filter="all" aria-pressed="true">All topics</button>
+            <button class="legend-btn" data-filter="desai" aria-pressed="false"><span class="swatch" aria-hidden="true"></span>Desai</button>
+            <button class="legend-btn" data-filter="bkm" aria-pressed="false"><span class="swatch" aria-hidden="true"></span>Bodie&nbsp;et&nbsp;al.</button>
+            <button class="legend-btn" data-filter="quant" aria-pressed="false"><span class="swatch" aria-hidden="true"></span>DeFusco&nbsp;et&nbsp;al.</button>
+            <button class="legend-btn" data-filter="canada" aria-pressed="false"><span class="swatch" aria-hidden="true"></span>Canada-specific</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CURRICULUM ================= -->
+    <section id="curriculum" data-cam="3">
+      <div class="wrap">
+        <div class="section-kicker fade-up">&sect; Curriculum</div>
+        <h2 class="section-title fade-up">Ten modules, four phases, zero assumed knowledge</h2>
+
+        <!-- ===== PHASE I ===== -->
+        <div class="phase" id="phase-1" data-rail="phase-1" data-phase="1">
+          <div class="phase-marker fade-up">
+            <span class="phase-num">PHASE I</span>
+            <span class="phase-name">Foundations</span>
+            <span class="phase-weeks">Modules 00&ndash;02</span>
+            <span class="phase-dot" aria-label="Phase completion indicator"></span>
+          </div>
+          <p class="phase-sourcing fade-up">
+            The absolute basics, then the one formula the rest of the book is built on. Desai carries
+            this phase almost entirely &mdash; net worth, statements, cash flow &mdash; with DeFusco
+            supplying the time-value arithmetic and one Bank of Canada note that no textbook provides.
+            Modules&nbsp;01 and&nbsp;02 open with an ECON/BUS refresher box rather than assuming the
+            course content was retained cold.
+          </p>
+
+          <a class="list-row fade-up" href="module0.html" data-chapter="0">
+            <div class="row-head">
+              <span class="ch-num">MOD 00</span>
+              <span class="ch-title">The Absolute Basics</span>
+              <span class="done-dot" aria-hidden="true"></span>
+            </div>
+            <p class="ch-desc">
+              What money functionally <em>is</em>: assets, liabilities, and the one subtraction that
+              tells the truth when a bank balance won't. Then interest, defined as the price of using
+              someone else's money &mdash; which is literally what a bank is.
+            </p>
+            <div class="tag-row">
+              <span class="tag" data-source="desai">assets &amp; liabilities</span>
+              <span class="tag" data-source="desai">net worth</span>
+              <span class="tag" data-source="desai">interest</span>
+              <span class="tag" data-source="quant">4 definitions &middot; 2 worked examples</span>
+            </div>
+          </a>
+
+          <a class="list-row fade-up" href="module1.html" data-chapter="1">
+            <div class="row-head">
+              <span class="ch-num">MOD 01</span>
+              <span class="ch-title">ECON 201/202 Refresher, and the Time Value of Money</span>
+              <span class="done-dot" aria-hidden="true"></span>
+            </div>
+            <p class="ch-desc">
+              A dollar today is worth more than a dollar later, because today's dollar can be invested
+              immediately. Present value, future value, and the exponent that makes a discount rate
+              bite &mdash; plus compound interest, the real reason &ldquo;start early&rdquo; matters.
+              Ships with a live TVM calculator.
+            </p>
+            <div class="tag-row">
+              <span class="tag" data-source="quant">time value of money</span>
+              <span class="tag" data-source="quant">present &amp; future value</span>
+              <span class="tag" data-source="quant">compound interest</span>
+              <span class="tag" data-source="desai">opportunity cost</span>
+              <span class="tag" data-source="canada">Bank of Canada policy rate</span>
+            </div>
+          </a>
+
+          <a class="list-row fade-up" href="module2.html" data-chapter="2">
+            <div class="row-head">
+              <span class="ch-num">MOD 02</span>
+              <span class="ch-title">BUS 100 (Ch. 17) Refresher: Your Personal Financial Statements</span>
+              <span class="done-dot" aria-hidden="true"></span>
+            </div>
+            <p class="ch-desc">
+              A balance sheet is a snapshot; an income statement is a video. Build both for yourself,
+              read liquidity honestly, and see why a raise that expenses rise to match leaves cash flow
+              exactly where it was.
+            </p>
+            <div class="tag-row">
+              <span class="tag" data-source="desai">balance sheet</span>
+              <span class="tag" data-source="desai">income statement</span>
+              <span class="tag" data-source="desai">cash flow</span>
+              <span class="tag" data-source="bkm">liquid vs. illiquid assets</span>
+            </div>
+          </a>
+
+          <div class="milestone fade-up">
+            <span class="milestone-kicker">Phase exit</span>
+            <p>You can write your own balance sheet and one-month income statement from memory, state your net worth and monthly cash flow as two separate numbers, and explain out loud why the second matters month-to-month and the first year-to-year.</p>
+          </div>
+        </div>
+
+        <!-- ===== PHASE II ===== -->
+        <div class="phase" id="phase-2" data-rail="phase-2" data-phase="2">
+          <div class="phase-marker fade-up">
+            <span class="phase-num">PHASE II</span>
+            <span class="phase-name">Credit &amp; Capital Decisions</span>
+            <span class="phase-weeks">Modules 03&ndash;05</span>
+            <span class="phase-dot" aria-label="Phase completion indicator"></span>
+          </div>
+          <p class="phase-sourcing fade-up">
+            The same compounding arithmetic from Module&nbsp;01, now running against you (credit) and
+            then deployed deliberately (capital budgeting). Modules&nbsp;03 and&nbsp;04 each open with
+            their BUS&nbsp;100 refresher box. Module&nbsp;05 has none &mdash; it starts from absolute
+            zero on markets and needs no prior course to rebuild.
+          </p>
+
+          <a class="list-row fade-up" href="module3.html" data-chapter="3">
+            <div class="row-head">
+              <span class="ch-num">MOD 03</span>
+              <span class="ch-title">BUS 100 (Ch. 18) Refresher: Banking and Credit</span>
+              <span class="done-dot" aria-hidden="true"></span>
+            </div>
+            <p class="ch-desc">
+              Credit risk is priced directly into the rate you are charged &mdash; which is why a card
+              rate and a mortgage rate differ by more than a decade of market conditions could explain.
+              Secured versus unsecured, made concrete. Ships with a live amortization generator.
+            </p>
+            <div class="tag-row">
+              <span class="tag" data-source="desai">fractional reserve banking</span>
+              <span class="tag" data-source="bkm">credit risk</span>
+              <span class="tag" data-source="quant">secured vs. unsecured pricing</span>
+              <span class="tag" data-source="quant">amortization</span>
+            </div>
+          </a>
+
+          <a class="list-row fade-up" href="module4.html" data-chapter="4">
+            <div class="row-head">
+              <span class="ch-num">MOD 04</span>
+              <span class="ch-title">BUS 100 (Ch. 19) Refresher: Capital Budgeting for Your Own Life</span>
+              <span class="done-dot" aria-hidden="true"></span>
+            </div>
+            <p class="ch-desc">
+              Companies decide whether future cash from a project is worth more, today, than its cost
+              now. So can you. Net present value, applied to a certification you are considering paying
+              for &mdash; and an honest look at how completely the answer depends on your inputs. Ships
+              with a live NPV scenario tool.
+            </p>
+            <div class="tag-row">
+              <span class="tag" data-source="desai">capital budgeting</span>
+              <span class="tag" data-source="quant">net present value</span>
+              <span class="tag" data-source="quant">discount rate sensitivity</span>
+            </div>
+          </a>
+
+          <a class="list-row fade-up" href="module5.html" data-chapter="5">
+            <div class="row-head">
+              <span class="ch-num">MOD 05</span>
+              <span class="ch-title">Investment Markets, From Absolute Zero</span>
+              <span class="done-dot" aria-hidden="true"></span>
+            </div>
+            <p class="ch-desc">
+              A stock is a slice of a bakery &mdash; upside and downside both flow to you. A bond is
+              lending the owner money, a contractual return regardless of how business goes. Then
+              diversification, and the single product that delivers it in one purchase.
+            </p>
+            <div class="tag-row">
+              <span class="tag" data-source="bkm">stocks &amp; equity</span>
+              <span class="tag" data-source="bkm">bonds, principal &amp; coupons</span>
+              <span class="tag" data-source="bkm">diversification</span>
+              <span class="tag" data-source="bkm">index funds &amp; ETFs</span>
+            </div>
+          </a>
+
+          <div class="milestone fade-up">
+            <span class="milestone-kicker">Phase exit</span>
+            <p>Given any borrowing or spending decision, you reach for a discount rate before an opinion &mdash; and you can say, without hedging, why paying down a 20% balance usually outranks investing the same dollar.</p>
+          </div>
+        </div>
+
+        <!-- ===== PHASE III ===== -->
+        <div class="phase" id="phase-3" data-rail="phase-3" data-phase="3">
+          <div class="phase-marker fade-up">
+            <span class="phase-num">PHASE III</span>
+            <span class="phase-name">Strategy &amp; Institutional Analysis</span>
+            <span class="phase-weeks">Modules 06&ndash;07</span>
+            <span class="phase-dot" aria-label="Phase completion indicator"></span>
+          </div>
+          <p class="phase-sourcing fade-up">
+            The two long modules, and the only place this book becomes jurisdictional. Bodie, Kane &amp;
+            Marcus carries the portfolio theory; the account-placement rules, the withholding-tax
+            treatment and the Canadian-listed ETF line-up come from Canadian regulation and fund
+            documentation instead, and are tagged as such. Module&nbsp;07 runs gold mining as its
+            worked example throughout, then reads a real ETF fact sheet end to end.
+          </p>
+
+          <a class="list-row fade-up" href="module6.html" data-chapter="6">
+            <div class="row-head">
+              <span class="ch-num">MOD 06</span>
+              <span class="ch-title">Building a Canadian Investment Strategy: ETFs as a Core, Stocks as a Satellite</span>
+              <span class="done-dot" aria-hidden="true"></span>
+            </div>
+            <p class="ch-desc">
+              Most of a portfolio's long-run outcome comes from structure, not from which stock got
+              picked. Seven sections: why structure beats skill, the core&ndash;satellite split, the
+              Canadian all-in-one ETF glide path, account placement, satellite sizing, rebalancing
+              mechanics, and a full worked portfolio blueprint.
+            </p>
+            <div class="tag-row">
+              <span class="tag" data-source="bkm">risk as volatility</span>
+              <span class="tag" data-source="bkm">core&ndash;satellite strategy</span>
+              <span class="tag" data-source="bkm">rebalancing</span>
+              <span class="tag" data-source="canada">all-in-one ETFs (VEQT/XEQT)</span>
+              <span class="tag" data-source="canada">TFSA / RRSP / FHSA placement</span>
+              <span class="tag" data-source="canada">withholding tax treaty</span>
+              <span class="tag" data-source="canada">dividend tax credit</span>
+            </div>
+          </a>
+
+          <a class="list-row fade-up" href="module7.html" data-chapter="7">
+            <div class="row-head">
+              <span class="ch-num">MOD 07</span>
+              <span class="ch-title">Institutional-Grade Equity &amp; Sector Analysis</span>
+              <span class="done-dot" aria-hidden="true"></span>
+            </div>
+            <p class="ch-desc">
+              From reading a single stock quote to a full sector research thesis, the way a junior
+              equity research analyst would on day one. Twenty-six definitions, the four-pillar
+              framework, a DCF, a practical filings checklist, and a real Global X PAVE fact sheet read
+              line by line &mdash; including the tracking difference its expense ratio actually
+              produced. Ships with a live bull/base/bear DCF sandbox.
+            </p>
+            <div class="tag-row">
+              <span class="tag" data-source="bkm">market cap, EPS, P/E</span>
+              <span class="tag" data-source="bkm">beta</span>
+              <span class="tag" data-source="bkm">index weighting mechanics</span>
+              <span class="tag" data-source="quant">real interest rates</span>
+              <span class="tag" data-source="quant">scenario analysis</span>
+              <span class="tag" data-source="desai">discounted cash flow</span>
+              <span class="tag" data-source="desai">MD&amp;A</span>
+              <span class="tag" data-source="canada">SEDAR+ filings</span>
+            </div>
+          </a>
+
+          <div class="milestone fade-up">
+            <span class="milestone-kicker">Phase exit</span>
+            <p>You can size a satellite sleeve <em>before</em> picking anything to put in it, run any candidate through all four pillars, and read an ETF fact sheet's sector breakdown to check whether its hundred holdings are real diversification or a hundred versions of one bet.</p>
+          </div>
+        </div>
+
+        <!-- ===== PHASE IV ===== -->
+        <div class="phase" id="phase-4" data-rail="phase-4" data-phase="4">
+          <div class="phase-marker fade-up">
+            <span class="phase-num">PHASE IV</span>
+            <span class="phase-name">Macro &amp; Discipline</span>
+            <span class="phase-weeks">Modules 08&ndash;09</span>
+            <span class="phase-dot" aria-label="Phase completion indicator"></span>
+          </div>
+          <p class="phase-sourcing fade-up">
+            Two short modules, deliberately. Both close loops opened much earlier rather than
+            introducing new machinery, and neither is padded out to match the length of the phase
+            before it.
+          </p>
+
+          <a class="list-row fade-up" href="module8.html" data-chapter="8">
+            <div class="row-head">
+              <span class="ch-num">MOD 08</span>
+              <span class="ch-title">Macro Reconnection</span>
+              <span class="done-dot" aria-hidden="true"></span>
+            </div>
+            <p class="ch-desc">
+              The ECON 202 refresher, restated where it finally pays off: subtract inflation from a
+              nominal rate and a comfortable-sounding savings account turns into roughly one percent
+              real &mdash; which is why &ldquo;just save&rdquo; often underperforms investing over long
+              horizons.
+            </p>
+            <div class="tag-row">
+              <span class="tag" data-source="quant">real vs. nominal rates</span>
+              <span class="tag" data-source="quant">inflation</span>
+              <span class="tag" data-source="bkm">real return</span>
+            </div>
+          </a>
+
+          <a class="list-row fade-up" href="module9.html" data-chapter="9">
+            <div class="row-head">
+              <span class="ch-num">MOD 09</span>
+              <span class="ch-title">Professional Discipline: Behavior and Ethics</span>
+              <span class="done-dot" aria-hidden="true"></span>
+            </div>
+            <p class="ch-desc">
+              Losses feel roughly twice as painful as equal gains feel good, which is what makes people
+              sell at the exact worst moment. The consequence, tied straight back to Module&nbsp;6.2: a
+              portfolio you can psychologically hold beats a theoretically superior one you abandon.
+            </p>
+            <div class="tag-row">
+              <span class="tag" data-source="bkm">loss aversion</span>
+              <span class="tag" data-source="bkm">behavioural finance</span>
+              <span class="tag" data-source="desai">matching risk to horizon</span>
+            </div>
+          </a>
+
+          <div class="milestone fade-up">
+            <span class="milestone-kicker">The standing milestone</span>
+            <p>
+              You hold your allocation through a real double-digit drawdown without changing it, because
+              you chose it against a time horizon rather than against a mood &mdash; and you can say
+              which module you would re-read if you ever felt the urge to change it mid-fall.
+            </p>
+          </div>
+        </div>
+
+        <div class="start-here fade-up">
+          <span class="mono-tag">Where to start</span>
+          <p>
+            Module&nbsp;00 assumes nothing at all, and takes about fifteen minutes. If you already know
+            what net worth means, start at Module&nbsp;01 &mdash; every module after it leans on that
+            one formula. The full Glossary of all forty-seven terms is available at any point.
+          </p>
+          <div class="cta-row" style="margin-bottom:0;">
+            <a class="btn btn-warm" href="module0.html">Start Module 00 &rarr;</a>
+            <a class="btn" href="appendix-glossary.html">Open the Glossary</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= LEDGER ================= -->
+    <section id="ledger" data-rail="ledger" data-cam="4">
+      <div class="wrap">
+        <div class="section-kicker fade-up">&sect; Ledger</div>
+        <h2 class="section-title fade-up">What's in the book, honestly counted</h2>
+
+        <div class="progress-wrap fade-up" aria-label="Overall progress" style="margin-bottom: 26px;">
+          <div class="progress-label">
+            <span>Modules complete</span>
+            <span><span id="progress-count">0</span> / 10</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+        <p class="ledger-count fade-up">
+          Progress is stored in this browser only, under <strong>pfs-finance:progress</strong>.
+          Nothing is uploaded anywhere, and clearing your site data resets it.
+        </p>
+
+        <div class="ledger-table-wrap fade-up">
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th scope="col">Phase</th>
+                <th scope="col">Modules</th>
+                <th scope="col">Definitions</th>
+                <th scope="col">Examples</th>
+                <th scope="col">Checks</th>
+                <th scope="col">Exit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono"><span class="warm">I</span> Foundations</td>
+                <td class="mono">00&ndash;02</td>
+                <td class="mono">10</td>
+                <td class="mono">4</td>
+                <td class="mono">2</td>
+                <td>Your own balance sheet and income statement, from memory.</td>
+              </tr>
+              <tr>
+                <td class="mono"><span class="warm">II</span> Credit &amp; Capital</td>
+                <td class="mono">03&ndash;05</td>
+                <td class="mono">6</td>
+                <td class="mono">3</td>
+                <td class="mono">0</td>
+                <td>A discount rate reached for before an opinion.</td>
+              </tr>
+              <tr>
+                <td class="mono"><span class="warm">III</span> Strategy &amp; Analysis</td>
+                <td class="mono">06&ndash;07</td>
+                <td class="mono">33</td>
+                <td class="mono">4</td>
+                <td class="mono">4</td>
+                <td>A satellite sized before anything is picked to fill it.</td>
+              </tr>
+              <tr>
+                <td class="mono"><span class="warm">IV</span> Macro &amp; Discipline</td>
+                <td class="mono">08&ndash;09</td>
+                <td class="mono">1</td>
+                <td class="mono">0</td>
+                <td class="mono">0</td>
+                <td>An allocation held through a real drawdown.</td>
+              </tr>
+              <tr>
+                <td class="mono"><span class="warm">&mdash;</span> Appendix</td>
+                <td class="mono">Glossary</td>
+                <td class="mono">47</td>
+                <td class="mono">&mdash;</td>
+                <td class="mono">&mdash;</td>
+                <td>Every term in the book, consolidated and cross-linked.</td>
+              </tr>
+              <tr>
+                <td class="mono"><span class="warm">&Sigma;</span> Total</td>
+                <td class="mono">10</td>
+                <td class="mono">50</td>
+                <td class="mono">11</td>
+                <td class="mono">6</td>
+                <td>Plus 10 named common confusions and 4 live calculators.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="appendix-note fade-up" style="margin-top: 22px;">
+          <span class="mono-tag">Honest note on scope</span>
+          <p>
+            Modules&nbsp;08 and&nbsp;09 are short, and are meant to be. Each closes a loop opened
+            earlier &mdash; the real-rate identity from Module&nbsp;01's inflation note, and the
+            risk-tolerance argument from Module&nbsp;6.2 &mdash; and neither has been padded out to
+            look proportionate to Module&nbsp;07. Length here tracks how much genuinely new machinery
+            a module introduces, nothing else. Nothing on this page is financial advice; it is a
+            curriculum.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= MARKET RAIL ================= -->
+  <aside class="market-rail" aria-label="Page sections">
+    <span class="rail-title">Market Rail</span>
+    <a href="#top" data-target="top">&#8962; Top</a>
+    <a href="#method" data-target="method">Method</a>
+    <a href="#sources" data-target="sources">Sources</a>
+    <a href="#phase-1" data-target="phase-1">I &middot; Foundations</a>
+    <a href="#phase-2" data-target="phase-2">II &middot; Credit</a>
+    <a href="#phase-3" data-target="phase-3">III &middot; Strategy</a>
+    <a href="#phase-4" data-target="phase-4">IV &middot; Discipline</a>
+    <a href="#ledger" data-target="ledger">Ledger</a>
+  </aside>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <div class="wrap">
+      <p class="footer-line">
+        PERSONAL FINANCE FROM SCRATCH <span class="warm">&mdash;</span> A zero-knowledge curriculum, Canadian edition.
+      </p>
+      <p class="attrib">
+        Conceptual structure is studied from Desai, <em>How Finance Works</em>; Bodie, Kane &amp;
+        Marcus, <em>Investments</em>; and DeFusco, McLeavey, Pinto &amp; Runkle, <em>Quantitative
+        Investment Analysis</em>. Canadian account, tax-treaty and filing details come from Canadian
+        regulation and published fund documentation, and are tagged separately throughout. The
+        Module&nbsp;7.6 fact-sheet walkthrough uses figures published by Global X for its PAVE ETF.
+        All explanatory prose here is original. This is educational material, not financial advice.
+      </p>
+    </div>
+  </footer>
+
+  <script src="three.min.js"></script>
+  <script src="scene.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 07 &mdash; Institutional-Grade Equity &amp; Sector Analysis &middot; Personal Finance From Scratch</title>
+  <meta name="description" content="Equity and Sector Analysis — module 07 of Personal Finance From Scratch.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="chapter.css">
+</head>
+<body data-chapter="7">
+
+  <nav class="topbar" aria-label="Reader controls">
+    <a href="index.html" aria-label="Back to curriculum">&larr;</a>
+    <button class="gear" type="button" aria-label="Cycle reading text size">&#9881;</button>
+    <span class="bar-title">Equity &amp; Sector Analysis</span>
+    <span>
+      <button class="heart" type="button" data-complete-toggle aria-pressed="false" aria-label="Toggle module complete">&hearts;<span data-complete-label hidden></span></button>
+      <a href="module8.html" aria-label="Forward">&rarr;</a>
+    </span>
+  </nav>
+
+  <div class="page">
+    <main class="reading">
+
+      <header class="title-block">
+        <p class="kicker">phase III &middot; module 07</p>
+        <h1>Institutional-Grade Equity &amp; Sector Analysis</h1>
+        <hr class="rule">
+        <p class="subtitle">Studied from Bodie, Kane &amp; Marcus, <em>Investments</em> and Desai, <em>How Finance Works</em>, with fact-sheet figures published by Global X for PAVE &middot; written from scratch</p>
+      </header>
+
+      <!-- ============ 1. THE HOOK ============ -->
+      <section id="hook">
+        <h2>1. The Hook: Driving the Engine</h2>
+        <p>
+          Everything above is the engine; this module is how you drive it, the way a junior equity
+          research analyst would on day one. Gold mining runs as the example throughout.
+        </p>
+        <p>
+          Six sections, and the shape is the shape of an actual research process: the vocabulary of a
+          quote (7.1), the four-pillar framework that turns a quote into a thesis (7.2), the valuation
+          method that framework feeds (7.3), the documents you have to read to fill it in (7.4), the
+          tools that get you there and their limits (7.5), and a real ETF fact sheet read line by line
+          (7.6).
+        </p>
+        <p>
+          One thing to hold in mind throughout: <a href="module6.html#definitions">Module&nbsp;6.5</a>
+          already decided how much money any conclusion reached here is allowed to move. This module
+          tells you what to buy; it does not tell you how much, because that was settled before you
+          opened it.
+        </p>
+      </section>
+
+      <!-- ============ 2. DEFINITIONS ============ -->
+      <section id="definitions">
+        <h2>2. Definitions</h2>
+        <h3>7.1 How to Read a Stock</h3>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.1 &mdash; Ticker</span>
+          <p>The short code identifying a stock on an exchange.</p>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.2 &mdash; Market Capitalization</span>
+          <p>$\text{Share Price} \times \text{Shares Outstanding}$.</p>
+        </div>
+        <div class="tip-box">
+          <span class="box-label">Why This Matters</span>
+          <p>
+            Price alone tells you almost nothing about size &mdash; always think in market cap, never
+            raw price.
+          </p>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.3 &mdash; EPS</span>
+          <p>$\text{Net Income} / \text{Shares Outstanding}$.</p>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.4 &mdash; P/E Ratio</span>
+          <p>
+            $\text{Share Price}/EPS$ &mdash; roughly, years of unchanged profit to &ldquo;earn
+            back&rdquo; the price. High P/E &rarr; growth expectations (or expensive); low P/E &rarr;
+            cheap, or declining-profit expectations. P/E alone never tells you which.
+          </p>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.5 &mdash; Dividend Yield</span>
+          <p>$\text{Annual Dividend per Share}/\text{Share Price}$.</p>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.6 &mdash; Beta ($\beta$)</span>
+          <p>
+            Sensitivity to overall market moves. Its worked example &mdash; a miner with
+            $\beta=1.8$ against a 10% TSX move &mdash; is in
+            <a href="#worked-examples">&sect;4</a>.
+          </p>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.7 &amp; 7.8 &mdash; 52-Week Range and Volume</span>
+          <p>
+            A big move on low volume is a weaker signal than the same move on high volume.
+          </p>
+        </div>
+
+        <h3>7.2 The Four-Pillar Institutional Research Framework</h3>
+
+        <h4>Pillar 1 &mdash; Macroeconomic Environment</h4>
+        <p><em>What's the broad backdrop doing to this asset?</em></p>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.9 &mdash; Real Interest Rate</span>
+          <p>$r_{\text{real}} \approx r_{\text{nominal}} - \pi$.</p>
+        </div>
+        <p>
+          Gold is non-yielding &mdash; holding it costs the interest given up elsewhere (its opportunity
+          cost = the real rate). Real rates fall &rarr; gold demand tends to rise. Track: central bank
+          policy path (and its <em>expected future direction</em>), geopolitical risk premium, currency
+          strength (DXY &mdash; a weaker USD tends to support USD-priced commodities).
+        </p>
+        <p>
+          That &ldquo;opportunity cost&rdquo; is
+          <a href="module1.html#refresher">Module&nbsp;1's ECON&nbsp;201 refresher</a>, arriving with
+          real money attached; the identity itself returns as
+          <a href="module8.html">Module&nbsp;08</a>.
+        </p>
+
+        <h4>Pillar 2 &mdash; Industry &amp; Fundamental Drivers</h4>
+        <p><em>What's happening at the industry level?</em></p>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.10 &mdash; Operating Leverage</span>
+          <p>
+            Profit changes disproportionately to revenue because costs are largely fixed. Its worked
+            example &mdash; a \$1,200/oz fixed cost against a 10% gold move &mdash; is in
+            <a href="#worked-examples">&sect;4</a>.
+          </p>
+        </div>
+        <p>
+          Track supply/demand mapping and M&amp;A consolidation trends (majors acquiring juniors when
+          exploration budgets shrink).
+        </p>
+
+        <h4>Pillar 3 &mdash; Structural Asset &amp; Index Mechanics</h4>
+        <p><em>Does the actual instrument behave the way the thesis suggests?</em></p>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.11 &amp; 7.12 &mdash; Market-Cap-Weighted Index vs. Equal-Weighted Index</span>
+          <p>
+            A market-cap-weighted miners ETF behaves mostly like its largest few names; an
+            equal-weighted version (e.g., the index behind [TSE:ZGD]) gives mid-tier miners equal say
+            &mdash; typically higher volatility, stronger upside capture in a rally, sharper downside in
+            a downturn. Neither is &ldquo;better&rdquo; &mdash; they express different bets.
+          </p>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.13 &mdash; Stock Split</span>
+          <p>
+            Always use <strong>split-adjusted</strong> price data; an unadjusted chart can show a fake
+            &ldquo;90% crash&rdquo; on a split date.
+          </p>
+        </div>
+
+        <h4>Pillar 4 &mdash; Predictive Frameworks &amp; Scenario Modeling</h4>
+        <p><em>What are the plausible forward paths?</em></p>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.14 &mdash; Scenario Analysis</span>
+          <p>
+            Multiple internally consistent narratives (bull/base/bear) instead of one point forecast
+            &mdash; the same DCF (<a href="#definitions">7.3</a>), run multiple times under different
+            assumptions.
+          </p>
+        </div>
+        <div class="table-wrap">
+          <table>
+          <caption>The bull / base / bear scenario table</caption>
+            <thead><tr><th scope="col">Scenario</th><th scope="col">Macro (Pillar 1)</th><th scope="col">Industry (Pillar 2)</th><th scope="col">Thesis</th></tr></thead>
+            <tbody>
+            <tr><td>Bull</td><td>Faster rate cuts, elevated geopolitical premium</td><td>Continued central bank accumulation, constrained supply</td><td>Price and margins expand; equal-weighted outperforms</td></tr>
+            <tr><td>Base</td><td>Slow, expected easing</td><td>Moderate demand/supply growth</td><td>Range-bound; performance driven by execution</td></tr>
+            <tr><td>Bear</td><td>Resilience delays cuts, elevated real rates</td><td>Demand stalls</td><td>Underperformance; high-beta names hit hardest</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          The <a href="#sandbox">sandbox</a> in &sect;7 makes this table live: each of the three
+          scenarios gets its own editable growth and discount rate, feeding a simplified DCF, so the
+          <em>range</em> across scenarios becomes a number rather than three sentences.
+        </p>
+
+        <h3>7.3 Valuation Core: Discounted Cash Flow (DCF)</h3>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.15 &mdash; Valuation</span>
+          <p>Estimating true worth vs. current price.</p>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.16 &mdash; DCF</span>
+          <p>
+            Forecasting future cash, discounting each year to present value
+            (<a href="module1.html#definitions">Module&nbsp;1's formula</a>), summing.
+          </p>
+          <p>$$\text{Company Value} = \sum_{t=1}^{n} \frac{FCF_t}{(1+r)^t}$$</p>
+        </div>
+        <p>
+          That sum is <a href="module4.html#definitions">Module&nbsp;4's NPV</a> with free cash flow in
+          the numerator and no initial cost subtracted. The book has now used the same discounting
+          operation four times &mdash; a savings account, a loan, a certification, and a company
+          &mdash; without ever introducing a second one.
+        </p>
+
+        <h3>7.4 A Practical Reading Checklist</h3>
+        <ol>
+          <li>
+            Annual report / 10-K (US) or SEDAR+ filing (Canada) &mdash; management's narrative, risk
+            factors, audited statements.
+          </li>
+          <li>
+            Revenue/margin trend, 3-5 years &mdash; improving, flat, or deteriorating, and why (per
+            management).
+          </li>
+          <li>
+            Balance sheet health &mdash; debt relative to cash flow
+            (<a href="module2.html">Module&nbsp;2's</a> ratios).
+          </li>
+          <li>
+            Free cash flow, not just net income &mdash; harder to manipulate via accounting choices.
+          </li>
+          <li>
+            Peer comparison &mdash; does a P/E/margin/growth gap make sense given Pillars&nbsp;1-4, or
+            is it a pricing anomaly?
+          </li>
+        </ol>
+
+        <h3>7.5 Using Google Finance in Practice (With Google One)</h3>
+        <p>
+          <strong>Good for:</strong> real-time-ish quotes/charting (the 7.1 vocabulary), watchlists
+          (sync via Google One), news-per-ticker, quick peer P/E comparison.
+        </p>
+        <p>
+          <strong>Not built for &mdash; go elsewhere instead:</strong> deep historical financials
+          &rarr; <strong>SEDAR+</strong> (Canada) / <strong>EDGAR</strong> (US); custom screening
+          &rarr; <strong>TradingView</strong> / <strong>Yahoo Finance</strong> screeners;
+          corporate-actions/split auditing &rarr; exchange announcements or Yahoo's historical export;
+          DCF modeling &rarr; your own spreadsheet, using filing data as inputs.
+        </p>
+        <p>
+          <strong>Workflow:</strong> watchlist in Google Finance &rarr; pull filings from SEDAR+/EDGAR
+          for interesting names &rarr; screen peers on TradingView/Yahoo &rarr; build your own
+          DCF/scenario table.
+        </p>
+
+        <h3>7.6 Reading an ETF Fact Sheet, Financial Reports, and News</h3>
+        <p>Worked using Global X's <strong>PAVE</strong> (U.S. Infrastructure Development ETF) fact sheet.</p>
+
+        <h4>Header/category</h4>
+        <p>&ldquo;Equity - Thematic - Infrastructure &amp; Environment.&rdquo;</p>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.17 &mdash; Thematic ETF</span>
+          <p>Built around a narrative/trend, not a broad market segment.</p>
+        </div>
+        <div class="tip-box">
+          <span class="box-label">Why This Matters</span>
+          <p>
+            A thematic ETF is never core-portfolio material
+            (<a href="module6.html#definitions">Module&nbsp;6.2</a>) &mdash; by definition it's
+            concentrated, not structurally diversified. It belongs in the satellite sleeve, sized and
+            researched like a stock pick.
+          </p>
+        </div>
+
+        <h4>Key Information</h4>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.18 &mdash; Inception Date</span>
+          <p>
+            PAVE: 03/06/2017, ~9-year track record &mdash; a fund under 3 years old has little history
+            worth weighting.
+          </p>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.19 &mdash; Underlying Index</span>
+          <p>
+            PAVE tracks the Indxx U.S. Infrastructure Development Index &mdash; the ETF follows this
+            rulebook, it doesn't invent its own holdings.
+          </p>
+        </div>
+        <p>
+          <strong>Number of Holdings (100):</strong> diversified <em>within the theme</em>, not across
+          the whole economy.
+        </p>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.20 &mdash; AUM</span>
+          <p>\$14.57B &mdash; higher AUM &rarr; better liquidity, lower shutdown risk.</p>
+        </div>
+        <p>
+          <strong>Total Expense Ratio (0.47%):</strong> roughly double a
+          <a href="module6.html#definitions">Module&nbsp;6.3</a> all-in-one ETF &mdash; the cost of a
+          narrower, curated exposure.
+        </p>
+
+        <h4>Trading Details</h4>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.21 &mdash; CUSIP</span>
+          <p>
+            A security's unique &ldquo;serial number.&rdquo; Listing on Cboe BZX (vs. NYSE/Nasdaq) says
+            nothing about quality &mdash; just a different legitimate venue.
+          </p>
+        </div>
+
+        <h4>Performance table (real PAVE numbers)</h4>
+        <div class="table-wrap">
+          <table>
+          <caption>PAVE, 1-year returns as published</caption>
+            <thead><tr><th scope="col"></th><th scope="col">1Y</th></tr></thead>
+            <tbody>
+            <tr><td>NAV</td><td>36.30%</td></tr>
+            <tr><td>Market Price</td><td>36.36%</td></tr>
+            <tr><td>Index</td><td>36.93%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.22-7.24 &mdash; NAV, Market Price return, Tracking Difference</span>
+          <p>
+            Here: Index 36.93% vs. NAV 36.30% &rarr; <strong>&minus;0.63pp tracking difference</strong>,
+            mostly explained by the 0.47% expense ratio &mdash; the fee's drag, made visible on a real
+            sheet.
+          </p>
+        </div>
+        <p>
+          The Knowledge Check in <a href="#knowledge-checks">&sect;6</a> generalises exactly this
+          arithmetic.
+        </p>
+
+        <h4>Holdings/sector breakdown</h4>
+        <p>
+          Top holding (Quanta Services) is only 4.06% &mdash; no single-name dominance &mdash; but
+          sector breakdown shows 73.34% Industrials, confirming the &ldquo;Thematic&rdquo;
+          concentration despite 100 nominal holdings. <strong>This is how you check whether
+          diversification (<a href="module5.html#definitions">Module&nbsp;5.2</a>) is real or
+          superficial</strong> &mdash; holdings count alone can overstate it.
+        </p>
+
+        <h4>The fine print</h4>
+        <p>
+          Risk disclosures (&ldquo;narrowly focused investments typically exhibit higher
+          volatility,&rdquo; specific regulatory/construction-financing/environmental risks) are
+          effectively the fund manager's own pre-written Pillar&nbsp;1/2 risk factors &mdash; never skip
+          this section.
+        </p>
+
+        <h4>Reading financial reports &mdash; extending 7.4</h4>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.25 &mdash; MD&amp;A</span>
+          <p>
+            Management's own explanation of <em>why</em> the numbers moved, not just what they are. Two
+            companies can post identical revenue growth for very different (and very differently
+            durable) reasons &mdash; MD&amp;A is where you find out which. Read it as management's
+            framing, not a neutral account; cross-check specific claims against the statements
+            themselves.
+          </p>
+        </div>
+
+        <h4>Reading financial news &mdash; a filter, not a trigger</h4>
+        <div class="definition-box">
+          <span class="box-label">Definition 7.26 &mdash; News Flow</span>
+          <p>The ongoing stream of headlines about a company, sector or economy.</p>
+        </div>
+        <ol>
+          <li>Which pillar does this headline actually touch?</li>
+          <li>
+            Does it change your bull/base/bear table, or was it already priced in? (Markets react to
+            <em>surprises relative to expectations</em>, not confirmations.)
+          </li>
+          <li>
+            Is it a single data point or a trend? Update the thesis &mdash; don't discard or blindly
+            confirm it on one headline.
+          </li>
+        </ol>
+      </section>
+
+      <!-- ============ 3. WORKED EXAMPLES ============ -->
+      <section id="worked-examples">
+        <h2>3. Worked Examples</h2>
+        <h3>From 7.1 &mdash; Beta, and why miners are leveraged plays</h3>
+        <div class="example-box">
+          <span class="box-label">Worked Example</span>
+          <p>
+            TSX +10%, a miner with $\beta=1.8$ &rarr; roughly 18% expected move same direction &mdash;
+            why mining equities are &ldquo;leveraged plays&rdquo; on their commodity.
+          </p>
+        </div>
+        <h3>From 7.2 &mdash; Operating leverage on a gold miner's margin</h3>
+        <div class="example-box">
+          <span class="box-label">Worked Example</span>
+          <p>
+            Fixed cost \$1,200/oz, gold \$2,000&rarr;\$2,200 (+10%) &rarr; margin
+            \$800&rarr;\$1,000/oz (+25%) &mdash; why miner equities often out-move the commodity
+            itself.
+          </p>
+        </div>
+        <p>
+          Read the two together and they are the same phenomenon seen from two levels. Beta measures the
+          amplification statistically, from price history; operating leverage explains where the
+          amplification physically comes from, in the cost structure. A thesis that cites one without
+          the other is only half a thesis.
+        </p>
+      </section>
+
+      <!-- ============ 4. COMMON CONFUSIONS ============ -->
+      <section id="common-confusions">
+        <h2>4. Common Confusions</h2>
+        <h3>From 7.1 &mdash; &ldquo;Cheap&rdquo; is not a share price</h3>
+        <div class="warn-box">
+          <span class="box-label">Common Confusion</span>
+          <p>
+            Treating a low nominal share price as &ldquo;cheap.&rdquo; Always normalize through market
+            cap and P/E.
+          </p>
+        </div>
+        <h3>From 7.2 &mdash; The base case is not the prediction</h3>
+        <div class="warn-box">
+          <span class="box-label">Common Confusion</span>
+          <p>
+            Treating &ldquo;base case&rdquo; as the prediction. The <em>range</em> across scenarios, and
+            sensitivity to key assumptions, often matters more than any single point estimate.
+          </p>
+        </div>
+        <h3>From 7.3 &mdash; A DCF produces <em>a</em> value, not <em>the</em> value</h3>
+        <div class="warn-box">
+          <span class="box-label">Common Confusion</span>
+          <p>
+            A DCF doesn't produce &ldquo;the&rdquo; correct value &mdash; it produces <em>a</em> value,
+            entirely dependent on your assumptions. Valuation is reasoned estimation, not precise
+            measurement.
+          </p>
+        </div>
+        <h3>From 7.6 &mdash; Volume of coverage is not importance</h3>
+        <div class="warn-box">
+          <span class="box-label">Common Confusion</span>
+          <p>
+            News <em>volume</em> &ne; news <em>importance</em> &mdash; go back to step 1 rather than
+            reacting to how loudly something is covered.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 5. KNOWLEDGE CHECKS ============ -->
+      <section id="knowledge-checks">
+        <h2>5. Knowledge Checks</h2>
+        <div class="drill">
+          <div class="drill-head">
+            <span class="drill-num">KNOWLEDGE CHECK 7.1</span>
+            <span class="drill-source">Module 7.2, Pillar 1 &middot; real rates and gold</span>
+          </div>
+          <p>Fed signals faster rate cuts &mdash; first-order effect on gold?</p>
+          <details data-drill="7.1">
+            <summary>Show Answer</summary>
+            <p>
+              Real rates expected to fall further &rarr; opportunity cost of holding gold falls &rarr;
+              demand (and typically price) tends to rise, all else equal &mdash; &ldquo;all else
+              equal&rdquo; being exactly what Pillars&nbsp;2-4 unpack.
+            </p>
+          </details>
+        </div>
+        <div class="drill">
+          <div class="drill-head">
+            <span class="drill-num">KNOWLEDGE CHECK 7.2</span>
+            <span class="drill-source">Module 7.6 &middot; expense ratio and tracking difference</span>
+          </div>
+          <p>
+            Two ETFs on the same index, 0.10% vs. 0.80% expense ratio &mdash; which shows a bigger
+            negative tracking difference over 5 years?
+          </p>
+          <details data-drill="7.2">
+            <summary>Show Answer</summary>
+            <p>
+              The 0.80% fund &mdash; a bigger structural drag, compounding the same way
+              <a href="module1.html#worked-examples">Module&nbsp;1.2's math</a> works, in reverse.
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <!-- ============ 6. SANDBOX ============ -->
+      <section id="sandbox">
+        <h2>6. Sandbox: The DCF / Scenario Table</h2>
+        <p>
+          The scenario table in <a href="#definitions">7.2</a> is three narratives. This turns them into
+          three numbers.
+        </p>
+        <p>
+          Each of bull, base and bear gets its own growth-rate and discount-rate input, feeding the
+          simplified DCF of <a href="#definitions">7.3</a> &mdash; a five-year free-cash-flow forecast
+          discounted back and summed. The three outputs sit side by side, with the spread between bull
+          and bear reported underneath.
+        </p>
+        <p>
+          That spread is the point. <a href="#common-confusions">&sect;5's second Common
+          Confusion</a> says the range across scenarios often matters more than any single point
+          estimate; this is where you can check how quickly that range widens when you move a
+          discount rate by a single percentage point.
+        </p>
+        <div class="sandbox-panel" id="dcf-sandbox" data-widget="dcf">
+          <noscript>
+            <p class="sandbox-note">
+              This sandbox needs JavaScript. The scenario table it operationalises is complete in
+              <a href="#definitions">&sect;3</a> above.
+            </p>
+          </noscript>
+        </div>
+      </section>
+
+      <!-- ============ 7. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <section id="recap">
+        <h2>7. Recap &amp; Glossary Terms</h2>
+        <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
+        <ul class="recap-list">
+          <li><a href="appendix-glossary.html#g-ticker">Ticker</a><span class="recap-gloss"> &mdash; Short code identifying a stock on an exchange</span></li>
+          <li><a href="appendix-glossary.html#g-market-cap">Market Cap</a><span class="recap-gloss"> &mdash; Share price &times; shares outstanding</span></li>
+          <li><a href="appendix-glossary.html#g-eps">EPS</a><span class="recap-gloss"> &mdash; Net income &divide; shares outstanding</span></li>
+          <li><a href="appendix-glossary.html#g-p-e-ratio">P/E Ratio</a><span class="recap-gloss"> &mdash; Share price &divide; EPS</span></li>
+          <li><a href="appendix-glossary.html#g-dividend-yield">Dividend Yield</a><span class="recap-gloss"> &mdash; Annual dividend per share &divide; share price</span></li>
+          <li><a href="appendix-glossary.html#g-beta">Beta</a><span class="recap-gloss"> &mdash; A stock's sensitivity to overall market moves</span></li>
+          <li><a href="appendix-glossary.html#g-operating-leverage">Operating Leverage</a><span class="recap-gloss"> &mdash; Profit changing disproportionately to revenue due to fixed costs</span></li>
+          <li><a href="appendix-glossary.html#g-market-cap-weighted-index">Market-Cap-Weighted Index</a><span class="recap-gloss"> &mdash; Index weighted by company size</span></li>
+          <li><a href="appendix-glossary.html#g-equal-weighted-index">Equal-Weighted Index</a><span class="recap-gloss"> &mdash; Index weighting all holdings equally</span></li>
+          <li><a href="appendix-glossary.html#g-stock-split">Stock Split</a><span class="recap-gloss"> &mdash; Share count up, price per share down proportionally</span></li>
+          <li><a href="appendix-glossary.html#g-scenario-analysis">Scenario Analysis</a><span class="recap-gloss"> &mdash; Multiple forward narratives (bull/base/bear) instead of one forecast</span></li>
+          <li><a href="appendix-glossary.html#g-valuation">Valuation</a><span class="recap-gloss"> &mdash; Estimating true worth vs. current price</span></li>
+          <li><a href="appendix-glossary.html#g-dcf">DCF</a><span class="recap-gloss"> &mdash; Valuing something by discounting its future cash flows</span></li>
+          <li><a href="appendix-glossary.html#g-thematic-etf">Thematic ETF</a><span class="recap-gloss"> &mdash; An ETF built around a narrative/trend rather than a broad market segment</span></li>
+          <li><a href="appendix-glossary.html#g-inception-date">Inception Date</a><span class="recap-gloss"> &mdash; The date a fund began trading</span></li>
+          <li><a href="appendix-glossary.html#g-underlying-index">Underlying Index</a><span class="recap-gloss"> &mdash; The rulebook an ETF is built to track</span></li>
+          <li><a href="appendix-glossary.html#g-aum">AUM</a><span class="recap-gloss"> &mdash; Total dollar value currently invested in a fund</span></li>
+          <li><a href="appendix-glossary.html#g-cusip">CUSIP</a><span class="recap-gloss"> &mdash; A unique identifying &ldquo;serial number&rdquo; for a security</span></li>
+          <li><a href="appendix-glossary.html#g-nav">NAV</a><span class="recap-gloss"> &mdash; The theoretical per-share value of everything a fund holds</span></li>
+          <li><a href="appendix-glossary.html#g-market-price-return">Market Price Return</a><span class="recap-gloss"> &mdash; What you'd actually earn trading the ETF on-exchange</span></li>
+          <li><a href="appendix-glossary.html#g-tracking-difference">Tracking Difference</a><span class="recap-gloss"> &mdash; The gap between a fund's actual return and its index's return</span></li>
+          <li><a href="appendix-glossary.html#g-md-and-a">MD&amp;A</a><span class="recap-gloss"> &mdash; Management's own written explanation of why the numbers moved</span></li>
+          <li><a href="appendix-glossary.html#g-news-flow">News Flow</a><span class="recap-gloss"> &mdash; The ongoing stream of headlines about a company/sector/economy</span></li>
+        </ul>
+      </section>
+
+      <nav class="chapter-nav">
+        <a href="module6.html">&larr; Module 06 &mdash; A Canadian Investment Strategy</a>
+        <a href="module8.html">Module 08 &mdash; Macro Reconnection &rarr;</a>
+      </nav>
+
+    </main>
+
+    <aside class="contents" aria-label="Module contents">
+      <p class="contents-label">Contents</p>
+      <ol>
+        <li><a href="#hook">1. The Hook</a></li>
+        <li><a href="#definitions">2. Definitions</a></li>
+        <li><a href="#worked-examples">3. Worked Examples</a></li>
+        <li><a href="#common-confusions">4. Common Confusions</a></li>
+        <li><a href="#knowledge-checks">5. Knowledge Checks</a></li>
+        <li><a href="#sandbox">6. Sandbox</a></li>
+        <li><a href="#recap">7. Recap &amp; Glossary Terms</a></li>
+      </ol>
+      <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
+        <span data-complete-label>Mark module complete</span>
+      </button>
+    </aside>
+  </div>
+
+  <footer class="book-footer">
+    PERSONAL FINANCE FROM SCRATCH &mdash; a zero-knowledge curriculum, Canadian edition. Educational material, not financial advice.
+  </footer>
+
+  <script src="reader.js"></script>
+  <script src="widgets/dcf-scenario-sandbox.js"></script>
+</body>
+</html>

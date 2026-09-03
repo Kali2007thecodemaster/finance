@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 03 &mdash; BUS 100 (Ch. 18) Refresher: Banking and Credit &middot; Personal Finance From Scratch</title>
+  <meta name="description" content="Banking and Credit — module 03 of Personal Finance From Scratch.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="chapter.css">
+</head>
+<body data-chapter="3">
+
+  <nav class="topbar" aria-label="Reader controls">
+    <a href="index.html" aria-label="Back to curriculum">&larr;</a>
+    <button class="gear" type="button" aria-label="Cycle reading text size">&#9881;</button>
+    <span class="bar-title">Banking and Credit</span>
+    <span>
+      <button class="heart" type="button" data-complete-toggle aria-pressed="false" aria-label="Toggle module complete">&hearts;<span data-complete-label hidden></span></button>
+      <a href="module4.html" aria-label="Forward">&rarr;</a>
+    </span>
+  </nav>
+
+  <div class="page">
+    <main class="reading">
+
+      <header class="title-block">
+        <p class="kicker">phase II &middot; module 03</p>
+        <h1>BUS 100 (Ch. 18) Refresher: Banking and Credit</h1>
+        <hr class="rule">
+        <p class="subtitle">Studied from Desai, <em>How Finance Works</em> and Bodie, Kane &amp; Marcus, <em>Investments</em>, with a BUS&nbsp;100 (Ch.&nbsp;18) refresher &middot; written from scratch</p>
+      </header>
+
+      <!-- ============ 1. THE HOOK ============ -->
+      <section id="hook">
+        <h2>1. The Hook: Compounding, Pointed the Other Way</h2>
+        <p>
+          <a href="module1.html">Module&nbsp;01</a> showed compounding working for you. This module is
+          the same arithmetic pointed the other way, and it is the reason a single sentence about
+          credit &mdash; &ldquo;pay the high-interest balance first&rdquo; &mdash; is not folk wisdom
+          but a direct consequence of the exponent.
+        </p>
+        <p>
+          It also answers a question most people never ask out loud: why <em>are</em> a credit card and
+          a mortgage priced so differently, when the same bank is lending in both cases to the same
+          person?
+        </p>
+      </section>
+
+      <!-- ============ 2. WHAT YOU ALREADY HALF-REMEMBER ============ -->
+      <section id="refresher">
+        <h2>2. What You Already Half-Remember</h2>
+        <div class="refresher-box">
+          <span class="box-label">What You Already Half-Remember &mdash; BUS 100</span>
+          <p>
+            <strong>Fractional reserve banking</strong> &mdash; banks lend out most deposits and share
+            a slice of what they earn with depositors.
+          </p>
+        </div>
+        <p>
+          That slice is the 4% from <a href="module0.html#worked-examples">Module&nbsp;0.2's worked
+          example</a>, seen from the bank's side of the counter.
+        </p>
+      </section>
+
+      <!-- ============ 3. DEFINITIONS ============ -->
+      <section id="definitions">
+        <h2>3. Definitions</h2>
+        <div class="definition-box">
+          <span class="box-label">Definition 3.1 &mdash; Credit Risk</span>
+          <p>The risk a borrower won't repay; priced directly into the rate charged.</p>
+        </div>
+        <p>
+          &ldquo;Priced directly into the rate charged&rdquo; is the load-bearing half of that
+          definition, and the Common Confusion in <a href="#common-confusions">&sect;5</a> is what it
+          looks like in practice.
+        </p>
+      </section>
+
+      <!-- ============ 4. WORKED EXAMPLES ============ -->
+      <section id="worked-examples">
+        <h2>4. Worked Examples</h2>
+        <div class="example-box">
+          <span class="box-label">Worked Example</span>
+          <p>
+            \$1,000 at 20% APR untouched a year &rarr; \$1,200 owed &mdash; the same compounding math
+            as <a href="module1.html#definitions">Module&nbsp;1</a>, working against you. Why paying
+            off high-interest debt usually outranks investing.
+          </p>
+        </div>
+        <p>
+          Set that against <a href="module1.html#worked-examples">Module&nbsp;1's worked example</a>
+          &mdash; \$1,000 growing to \$1,157.63 over three years at 5% &mdash; and the comparison is
+          stark: the debt gains \$200 in one year while the investment gains \$157.63 in three. That
+          gap, not a moral argument, is the case for clearing high-interest debt first.
+        </p>
+        <p>
+          The <a href="#sandbox">sandbox</a> below extends this into the form the decision usually
+          actually arrives in: a loan with a schedule, where you can see exactly how much of each
+          payment is interest and what an extra payment per month is worth.
+        </p>
+      </section>
+
+      <!-- ============ 5. COMMON CONFUSIONS ============ -->
+      <section id="common-confusions">
+        <h2>5. Common Confusions</h2>
+        <div class="warn-box">
+          <span class="box-label">Common Confusion</span>
+          <p>
+            A credit card rate (20%+) vs. a mortgage rate (5-7%) isn't arbitrary &mdash; mortgages are
+            <strong>secured</strong> (collateral seizable), cards are <strong>unsecured</strong>
+            (nothing to seize but a promise).
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 6. KNOWLEDGE CHECKS ============ -->
+      <section id="knowledge-checks">
+        <h2>6. Knowledge Checks</h2>
+        <p>
+          Module&nbsp;03 has no Knowledge Check in the source curriculum. Its check is the sandbox below, which is meant to be run against your own
+          loan rather than answered from a page. The next Knowledge Checks appear in
+          <a href="module6.html#knowledge-checks">Module&nbsp;06</a>.
+        </p>
+      </section>
+
+      <!-- ============ 7. SANDBOX ============ -->
+      <section id="sandbox">
+        <h2>7. Sandbox: The Amortization Generator</h2>
+        <p>
+          A loan is Module&nbsp;1's formula run monthly, in reverse, until the balance reaches zero.
+          Enter an amount, an APR and a term, and the full amortization schedule generates below
+          &mdash; every payment split into the part that services interest and the part that actually
+          reduces what you owe.
+        </p>
+        <p>
+          The second input is the interesting one. Add an extra amount to each monthly payment and the
+          tool recomputes total interest paid and the time saved. On a high-APR balance the numbers
+          are usually larger than people expect, and that is the module's worked example generalised:
+          the arithmetic that makes debt expensive is the same arithmetic that makes early repayment
+          valuable.
+        </p>
+        <p>
+          It opens on <strong>\$1,000 at 20% APR over one year</strong> &mdash; the worked example's
+          own figures. The first line it prints is that example restated exactly: left untouched,
+          \$1,000 becomes \$1,200. Everything below that line is what happens instead if you pay it
+          down, priced against the \$200 that doing nothing costs.
+        </p>
+        <div class="sandbox-panel" id="amortization-sandbox" data-widget="amortization">
+          <noscript>
+            <p class="sandbox-note">
+              This sandbox needs JavaScript. The worked example it extends is complete in
+              <a href="#worked-examples">&sect;4</a> above.
+            </p>
+          </noscript>
+        </div>
+      </section>
+
+      <!-- ============ 8. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <section id="recap">
+        <h2>8. Recap &amp; Glossary Terms</h2>
+        <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
+        <ul class="recap-list">
+          <li><a href="appendix-glossary.html#g-credit-risk">Credit Risk</a><span class="recap-gloss"> &mdash; The risk a borrower won't repay</span></li>
+        </ul>
+      </section>
+
+      <nav class="chapter-nav">
+        <a href="module2.html">&larr; Module 02 &mdash; Your Personal Financial Statements</a>
+        <a href="module4.html">Module 04 &mdash; Capital Budgeting for Your Own Life &rarr;</a>
+      </nav>
+
+    </main>
+
+    <aside class="contents" aria-label="Module contents">
+      <p class="contents-label">Contents</p>
+      <ol>
+        <li><a href="#hook">1. The Hook</a></li>
+        <li><a href="#refresher">2. What You Already Half-Remember</a></li>
+        <li><a href="#definitions">3. Definitions</a></li>
+        <li><a href="#worked-examples">4. Worked Examples</a></li>
+        <li><a href="#common-confusions">5. Common Confusions</a></li>
+        <li><a href="#knowledge-checks">6. Knowledge Checks</a></li>
+        <li><a href="#sandbox">7. Sandbox</a></li>
+        <li><a href="#recap">8. Recap &amp; Glossary Terms</a></li>
+      </ol>
+      <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
+        <span data-complete-label>Mark module complete</span>
+      </button>
+    </aside>
+  </div>
+
+  <footer class="book-footer">
+    PERSONAL FINANCE FROM SCRATCH &mdash; a zero-knowledge curriculum, Canadian edition. Educational material, not financial advice.
+  </footer>
+
+  <script src="reader.js"></script>
+  <script src="widgets/amortization.js"></script>
+</body>
+</html>

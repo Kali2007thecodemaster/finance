@@ -1,0 +1,893 @@
+/* ============================================================
+   PERSONAL FINANCE FROM SCRATCH — landing page stylesheet
+   Register 2A, re-skinned: the same neubrutalist structure as the
+   reference site, inverted onto a night trading floor. Every class
+   the landing page uses is inherited unchanged; only the palette
+   tokens are re-bound, and new tokens + hero-scene rules are
+   appended at the end of this file.
+
+   Typography is deliberately unchanged from the reference site
+   (Playfair Display + Fira Code) so the landing page and the
+   chapter reader still read as one publication.
+   ============================================================ */
+
+:root {
+  /* --- re-bound brand tokens: the same four names, night values --- */
+  --bg-color: #0A0E14;       /* charcoal-navy, the trading floor at night */
+  --text-color: #E9EEF5;     /* cool near-white — borders, rules, body */
+  --accent-color: #172231;   /* raised panel / hover tone */
+  --accent-warm: #E36414;    /* UNCHANGED from the reference site's accent */
+
+  /* --- the plan's named tokens, aliased onto the above --- */
+  --ink: #0A0E14;            /* the base ink of the night sheet */
+  --bg:  #0A0E14;
+  --warm: #E36414;           /* highlighter ink: emphasis, CTAs, window light */
+  --market: #3ADB76;         /* cold "data" accent — never used for body text */
+
+  /* --- neutrals kept from the reference so the reader stays coherent --- */
+  --paper: #F3F0E6;          /* the reference site's original paper tone */
+  --dim: #8A97A8;            /* muted body text on the dark ground */
+  --line: #253044;           /* hairline rules inside dark panels */
+
+  --font-ui: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", Roboto, sans-serif;
+  --font-academic: "Latin Modern", "Playfair Display", Georgia, serif;
+  --font-mono: "Fira Code", "Courier New", Courier, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-ui);
+  line-height: 1.55;
+  overflow-x: hidden;
+}
+
+/* ---------- background layers ---------- */
+
+#scene-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.055;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ---------- accessibility ---------- */
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--text-color);
+  color: var(--bg-color);
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  z-index: 200;
+}
+.skip-link:focus { left: 8px; top: 8px; }
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--accent-warm);
+  outline-offset: 3px;
+}
+
+/* ---------- sticky top nav ---------- */
+
+.topnav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 28px;
+  background: var(--bg-color);
+  border-bottom: 3px solid var(--text-color);
+}
+
+.topnav .brand {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: var(--text-color);
+}
+.topnav .brand .slash { color: var(--accent-warm); }
+
+.topnav .nav-links {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.topnav .nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text-color);
+  padding: 6px 12px;
+  border: 3px solid transparent;
+}
+.topnav .nav-links a:hover {
+  background: var(--accent-color);
+  border-color: var(--text-color);
+}
+
+.nav-progress {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  padding: 6px 12px;
+  border: 3px solid var(--text-color);
+  background: var(--bg-color);
+  white-space: nowrap;
+}
+.nav-progress strong { color: var(--accent-warm); }
+
+/* ---------- layout scaffolding ---------- */
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+main { position: relative; z-index: 1; }
+
+section { padding: 72px 0; }
+
+.section-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+  margin-bottom: 10px;
+}
+
+.section-title {
+  font-family: var(--font-academic);
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+  line-height: 1.1;
+  margin-bottom: 22px;
+}
+
+/* ---------- hero ---------- */
+
+.hero { padding: 96px 0 56px; }
+
+.hero .kicker {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 3px solid var(--text-color);
+  padding: 6px 14px;
+  background: var(--bg-color);
+  box-shadow: 6px 6px 0 var(--text-color);
+  margin-bottom: 26px;
+}
+
+.hero h1 {
+  font-family: var(--font-academic);
+  font-size: clamp(2.6rem, 8vw, 5.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  margin-bottom: 20px;
+}
+.hero h1 .warm { color: var(--accent-warm); }
+
+.hero .lede {
+  max-width: 640px;
+  font-size: 1.12rem;
+  margin-bottom: 30px;
+}
+
+.cta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 44px; }
+
+.btn {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text-color);
+  background: var(--bg-color);
+  border: 3px solid var(--text-color);
+  padding: 14px 22px;
+  box-shadow: 8px 8px 0 var(--text-color);
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+.btn:hover {
+  transform: translate(8px, 8px);
+  box-shadow: -8px -8px 0 var(--text-color);
+  background: var(--accent-color);
+}
+.btn.btn-warm { background: var(--accent-warm); color: var(--bg-color); }
+.btn.btn-warm:hover { background: var(--text-color); }
+
+/* stat strip */
+
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 3px solid var(--text-color);
+  background: var(--bg-color);
+  box-shadow: 12px 12px 0 var(--text-color);
+  margin-bottom: 22px;
+}
+.stat {
+  padding: 18px 16px;
+  border-right: 3px solid var(--text-color);
+}
+.stat:last-child { border-right: none; }
+.stat .num {
+  font-family: var(--font-academic);
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+.stat .num .warm { color: var(--accent-warm); }
+.stat .label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* progress bar */
+
+.progress-wrap {
+  border: 3px solid var(--text-color);
+  background: var(--bg-color);
+  padding: 12px 14px;
+}
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.progress-track {
+  height: 14px;
+  border: 2px solid var(--text-color);
+  background: var(--bg-color);
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent-warm);
+  transition: width 400ms ease;
+}
+
+/* ---------- marquee ---------- */
+
+.marquee {
+  border-top: 3px solid var(--text-color);
+  border-bottom: 3px solid var(--text-color);
+  background: var(--bg-color);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 10px 0;
+}
+.marquee-track {
+  display: inline-block;
+  animation: marquee 36s linear infinite;
+}
+.marquee-track span {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-right: 14px;
+}
+.marquee-track .sep { color: var(--accent-warm); }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ---------- neubrutalist panels ---------- */
+
+.panel {
+  border: 3px solid var(--text-color);
+  background: var(--bg-color);
+  box-shadow: 12px 12px 0 var(--text-color);
+  padding: 26px 28px;
+}
+
+.panel h3 {
+  font-family: var(--font-academic);
+  font-size: 1.35rem;
+  margin-bottom: 10px;
+}
+
+.panel p { font-size: 0.98rem; }
+
+.panel .mono-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* method: chapter anatomy steps */
+
+.anatomy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 28px;
+  margin-top: 8px;
+}
+.anatomy-step {
+  border: 3px solid var(--text-color);
+  background: var(--bg-color);
+  box-shadow: 8px 8px 0 var(--text-color);
+  padding: 18px 20px;
+}
+.anatomy-step .step-id {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent-warm);
+  display: block;
+  margin-bottom: 6px;
+}
+.anatomy-step h4 {
+  font-family: var(--font-academic);
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+.anatomy-step p { font-size: 0.88rem; }
+
+/* sources */
+
+.source-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-bottom: 44px;
+}
+
+/* ---------- source-weight legend (signature element) ---------- */
+
+.legend {
+  border: 3px solid var(--text-color);
+  background: var(--bg-color);
+  box-shadow: 12px 12px 0 var(--text-color);
+  padding: 24px 26px;
+}
+.legend .legend-copy { max-width: 720px; margin-bottom: 18px; font-size: 0.96rem; }
+.legend .legend-copy strong { color: var(--accent-warm); }
+
+.legend-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.legend-btn {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-color);
+  background: var(--bg-color);
+  border: 3px solid var(--text-color);
+  padding: 10px 16px;
+  box-shadow: 5px 5px 0 var(--text-color);
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+.legend-btn:hover { background: var(--accent-color); }
+.legend-btn.active {
+  transform: translate(5px, 5px);
+  box-shadow: -5px -5px 0 var(--text-color);
+  background: var(--text-color);
+  color: var(--bg-color);
+}
+.legend-btn .swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 8px;
+  border: 2px solid currentColor;
+}
+.legend-btn[data-filter="both"]  .swatch { background: var(--accent-warm); }
+.legend-btn[data-filter="gelca"] .swatch { background: var(--text-color); }
+.legend-btn[data-filter="zeitz"] .swatch { background: var(--accent-color); }
+.legend-btn.active[data-filter="gelca"] .swatch { background: var(--bg-color); }
+
+/* ---------- curriculum ---------- */
+
+.phase { margin-bottom: 64px; }
+
+.phase-marker {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  border: 3px solid var(--text-color);
+  background: var(--text-color);
+  color: var(--bg-color);
+  padding: 14px 20px;
+  margin-bottom: 14px;
+}
+.phase-marker .phase-num {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  color: var(--accent-warm);
+}
+.phase-marker .phase-name {
+  font-family: var(--font-academic);
+  font-size: 1.35rem;
+  flex: 1 1 auto;
+}
+.phase-marker .phase-weeks {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.phase-dot {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--bg-color);
+  border-radius: 50%;
+  background: transparent;
+}
+.phase-dot.filled { background: var(--accent-warm); border-color: var(--accent-warm); }
+
+.phase-sourcing {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  border-left: 6px solid var(--accent-warm);
+  padding: 8px 0 8px 16px;
+  margin: 0 0 22px 2px;
+  max-width: 820px;
+}
+
+/* chapter rows */
+
+.list-row {
+  display: block;
+  text-decoration: none;
+  color: var(--text-color);
+  border: 3px solid var(--text-color);
+  background: var(--bg-color);
+  box-shadow: 6px 6px 0 var(--text-color);
+  padding: 18px 20px;
+  margin-bottom: 22px;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+.list-row:hover {
+  transform: translate(6px, 6px);
+  box-shadow: -6px -6px 0 var(--text-color);
+  background: var(--accent-color);
+}
+.row-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+.row-head .ch-num {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent-warm);
+}
+.row-head .ch-title {
+  font-family: var(--font-academic);
+  font-size: 1.25rem;
+  flex: 1 1 auto;
+}
+.done-dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--text-color);
+  border-radius: 50%;
+  background: transparent;
+  flex: 0 0 auto;
+  align-self: center;
+}
+.done-dot.done { background: var(--accent-warm); border-color: var(--accent-warm); }
+
+.list-row .ch-desc { font-size: 0.94rem; margin-bottom: 10px; max-width: 780px; }
+
+.tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 2px solid var(--text-color);
+  padding: 3px 8px;
+  transition: opacity 150ms ease;
+}
+.tag[data-source="both"]  { background: var(--accent-warm); color: var(--bg-color); border-color: var(--text-color); }
+.tag[data-source="gelca"] { background: var(--text-color); color: var(--bg-color); }
+.tag[data-source="zeitz"] { background: var(--accent-color); color: var(--text-color); }
+.tag.dim { opacity: 0.18; }
+
+/* milestone / crux box per phase */
+
+.milestone {
+  border: 3px solid var(--text-color);
+  border-left: 14px solid var(--accent-warm);
+  background: var(--bg-color);
+  box-shadow: 8px 8px 0 var(--text-color);
+  padding: 16px 20px;
+  margin-top: 4px;
+}
+.milestone .milestone-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+  display: block;
+  margin-bottom: 6px;
+}
+.milestone p { font-size: 0.95rem; }
+
+.appendix-note {
+  border: 3px dashed var(--text-color);
+  padding: 16px 20px;
+  font-size: 0.92rem;
+  max-width: 860px;
+}
+.appendix-note .mono-tag { color: var(--accent-warm); font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+
+/* ---------- pacing ledger ---------- */
+
+.ledger-table-wrap {
+  border: 3px solid var(--text-color);
+  background: var(--bg-color);
+  box-shadow: 12px 12px 0 var(--text-color);
+  overflow-x: auto;
+}
+table.ledger {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 640px;
+}
+table.ledger th, table.ledger td {
+  border-bottom: 2px solid var(--text-color);
+  padding: 12px 16px;
+  text-align: left;
+  vertical-align: top;
+}
+table.ledger th {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--text-color);
+  color: var(--bg-color);
+}
+table.ledger tr:last-child td { border-bottom: none; }
+table.ledger td.mono { font-family: var(--font-mono); font-size: 0.8rem; white-space: nowrap; }
+table.ledger td .warm { color: var(--accent-warm); font-weight: 700; }
+
+/* ---------- proof rail (right-hand fixed scrollspy) ---------- */
+
+.market-rail {
+  position: fixed;
+  top: 50%;
+  right: 22px;
+  transform: translateY(-50%);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 3px solid var(--text-color);
+  background: var(--bg-color);
+  box-shadow: 6px 6px 0 var(--text-color);
+  padding: 10px 8px;
+  max-height: 78vh;
+  overflow-y: auto;
+}
+.market-rail .rail-title {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 2px 8px 6px;
+  border-bottom: 2px solid var(--text-color);
+  margin-bottom: 4px;
+}
+.market-rail a {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text-color);
+  padding: 3px 8px;
+  border-left: 4px solid transparent;
+  white-space: nowrap;
+}
+.market-rail a:hover { background: var(--accent-color); }
+.market-rail a.current {
+  border-left-color: var(--accent-warm);
+  font-weight: 700;
+}
+
+/* ---------- footer ---------- */
+
+footer {
+  border-top: 3px solid var(--text-color);
+  padding: 34px 0 46px;
+  background: var(--bg-color);
+}
+footer .footer-line {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  line-height: 1.7;
+}
+footer .footer-line .warm { color: var(--accent-warm); }
+footer .attrib {
+  margin-top: 14px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  opacity: 0.75;
+  max-width: 860px;
+}
+
+/* ---------- fade-up reveal ---------- */
+
+.fade-up {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 500ms ease, transform 500ms ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1240px) {
+  .market-rail { display: none; }
+}
+
+@media (max-width: 760px) {
+  .stat-strip { grid-template-columns: repeat(2, 1fr); }
+  .stat:nth-child(2) { border-right: none; }
+  .stat:nth-child(1), .stat:nth-child(2) { border-bottom: 3px solid var(--text-color); }
+  .topnav { padding: 12px 16px; }
+  .topnav .nav-links { display: none; }
+  .wrap { padding: 0 18px; }
+  .hero { padding: 64px 0 44px; }
+  .panel, .legend { box-shadow: 8px 8px 0 var(--text-color); }
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .marquee-track { animation: none; }
+  .fade-up { opacity: 1; transform: none; transition: none; }
+  .btn, .list-row, .legend-btn { transition: none; }
+  .btn:hover, .list-row:hover, .legend-btn.active { transform: none; box-shadow: 6px 6px 0 var(--text-color); }
+  .progress-fill { transition: none; }
+}
+
+/* ============================================================
+   APPENDED — Personal Finance From Scratch
+   Everything above is the reference site's landing stylesheet with
+   its four brand tokens re-bound to the night palette. Nothing has
+   been stripped. Appended below:
+
+     1. hero-scene layout + the mandatory no-WebGL / reduced-motion
+        static gradient fallback
+     2. dark-ground legibility adjustments (the inherited rules are
+        all structurally correct once inverted; these tune contrast)
+     3. the four new source-weight tags for this project's texts
+     4. small additions: the market-rail ticker, curriculum meta
+   ============================================================ */
+
+/* ---------- 1. hero scene + mandatory fallback ---------- */
+
+/*  The <body> background propagates to the viewport canvas, which
+    paints BEHIND #scene-canvas (z-index: -2). So the gradient below
+    is what a reader sees whenever scene.js declines to initialise —
+    on prefers-reduced-motion, or with no WebGL context available.
+    No class toggle is required for the fallback to be correct; it is
+    the element's own painted background, and the WebGL drawing
+    buffer simply covers it when a scene does start.                */
+
+#scene-canvas {
+  display: block;
+  background:
+    radial-gradient(1100px 620px at 50% 108%,
+                    rgba(227, 100, 20, 0.20) 0%,
+                    rgba(227, 100, 20, 0.06) 38%,
+                    rgba(227, 100, 20, 0) 68%),
+    radial-gradient(760px 520px at 82% 6%,
+                    rgba(58, 219, 118, 0.10) 0%,
+                    rgba(58, 219, 118, 0) 62%),
+    linear-gradient(180deg,
+                    #060910 0%,
+                    #0A0E14 42%,
+                    #101827 78%,
+                    #16202F 100%);
+}
+
+/*  A horizon line + faint market grid for the static fallback, so the
+    no-WebGL page still reads as "a floor you are standing on" rather
+    than a flat wash. Drawn in CSS only — no asset, no script.        */
+.scene-static {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 700ms ease;
+  background-image:
+    linear-gradient(to right, rgba(233, 238, 245, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(233, 238, 245, 0.055) 1px, transparent 1px);
+  background-size: 74px 74px;
+  background-position: center 62%;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 52%, #000 78%, transparent 100%);
+          mask-image: linear-gradient(to bottom, transparent 52%, #000 78%, transparent 100%);
+}
+/* scene.js sets data-scene="fallback" on <html> when it does not start */
+html[data-scene="fallback"] .scene-static { opacity: 1; }
+html[data-scene="live"]     .scene-static { opacity: 0; }
+
+.grain { opacity: 0.045; mix-blend-mode: screen; }
+
+/* The hero sits over the scene; give its text a soft ground so the
+   skyline can never eat the headline's legibility.                 */
+.hero .wrap { position: relative; }
+.hero .lede, .hero .kicker { text-shadow: 0 2px 18px rgba(6, 9, 16, 0.85); }
+.hero h1 { text-shadow: 0 4px 30px rgba(6, 9, 16, 0.9); }
+
+/* ---------- 2. dark-ground legibility ---------- */
+
+body { -webkit-font-smoothing: antialiased; }
+
+.hero .lede { color: #C6D0DC; }
+.panel p, .list-row .ch-desc, .phase-sourcing,
+.milestone p, .legend .legend-copy, .appendix-note p { color: #B9C4D2; }
+.anatomy-step p { color: #AAB6C6; }
+footer .attrib { color: #98A5B4; }
+
+.panel, .legend, .stat-strip, .progress-wrap,
+.marquee, .list-row, .milestone, .ledger-table-wrap {
+  background: rgba(16, 23, 35, 0.92);          /* lets the scene glow through */
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.appendix-note { background: rgba(16, 23, 35, 0.72); }
+
+.list-row:hover { background: rgba(23, 34, 49, 0.96); }
+.topnav { background: rgba(10, 14, 20, 0.94); backdrop-filter: blur(8px); }
+.market-rail { background: rgba(10, 14, 20, 0.86); backdrop-filter: blur(6px); }
+footer { background: rgba(6, 9, 16, 0.96); }
+
+/* the progress track reads better as a recessed slot on dark */
+.progress-track { background: #060910; }
+.progress-fill {
+  background: linear-gradient(90deg, var(--warm) 0%, #F0872F 100%);
+  box-shadow: 0 0 14px rgba(227, 100, 20, 0.5);
+}
+
+/* "data" moments — the one place the cold accent is allowed.
+   (Deliberately not .ch-num / .phase-num: the reference already
+   colours those through higher-specificity selectors, and adding
+   a losing rule here would only read as dead CSS.)              */
+.stat .num .market { color: var(--market); }
+.done-dot.done { box-shadow: 0 0 10px rgba(227, 100, 20, 0.55); }
+.phase-dot.filled { box-shadow: 0 0 10px rgba(227, 100, 20, 0.55); }
+
+/* ---------- 3. source-weight tags for this project's texts ---------- */
+
+.tag[data-source="desai"]   { background: var(--accent-warm); color: var(--bg-color); border-color: var(--text-color); }
+.tag[data-source="bkm"]     { background: var(--text-color);  color: var(--bg-color); }
+.tag[data-source="quant"]   { background: var(--accent-color); color: var(--text-color); }
+.tag[data-source="canada"]  { background: transparent; color: var(--market); border-color: var(--market); }
+
+.legend-btn[data-filter="desai"]  .swatch { background: var(--accent-warm); }
+.legend-btn[data-filter="bkm"]    .swatch { background: var(--text-color); }
+.legend-btn[data-filter="quant"]  .swatch { background: var(--accent-color); }
+.legend-btn[data-filter="canada"] .swatch { background: var(--market); }
+.legend-btn.active[data-filter="bkm"] .swatch { background: var(--bg-color); }
+
+/* ---------- 4. small additions ---------- */
+
+/* the marquee separator, restyled from the reference's QED box */
+.marquee-track .sep { color: var(--warm); font-weight: 700; }
+
+/* .phase-marker is a deliberately inverted bar — light ground,
+   dark text — so its meta line needs a dark slate, not --dim.  */
+.phase-marker .phase-weeks { color: #4A5872; }
+
+/* the curriculum row's module number badge */
+.row-head .ch-num { letter-spacing: 0.1em; }
+
+/* the ledger's live count, echoing the hero stat treatment */
+.ledger-count {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 18px;
+}
+.ledger-count strong { color: var(--warm); font-size: 1.05rem; }
+
+/* the "start here" call-out under the curriculum list */
+.start-here {
+  border: 3px solid var(--warm);
+  background: rgba(227, 100, 20, 0.07);
+  padding: 22px 24px;
+  margin-top: 40px;
+}
+.start-here .mono-tag {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--warm);
+  margin-bottom: 8px;
+}
+.start-here p { color: #C6D0DC; font-size: 0.96rem; margin-bottom: 16px; }
+
+/* MathJax on the dark ground inherits the light body colour */
+mjx-container { color: inherit; }
+
+@media (max-width: 760px) {
+  .hero h1 { text-shadow: 0 3px 20px rgba(6, 9, 16, 0.95); }
+  .scene-static { background-size: 52px 52px; }
+
+  /* The reference brand was PUTNAM/FROM/SCRATCH; this one is a word longer,
+     and at mono 0.95rem with 0.08em tracking it alone overruns a 390px
+     viewport. Let the topnav wrap and tighten the brand rather than clip it. */
+  .topnav { flex-wrap: wrap; row-gap: 8px; padding: 10px 14px; }
+  .topnav .brand { font-size: 0.72rem; letter-spacing: 0.04em; }
+  .nav-progress { font-size: 0.7rem; padding: 5px 9px; border-width: 2px; }
+}
+
+@media (max-width: 420px) {
+  .topnav .brand { font-size: 0.64rem; }
+  .stat-strip { box-shadow: 8px 8px 0 var(--text-color); }
+  .start-here { padding: 18px 16px; }
+}
+
+/* the fallback gradient must still be the ground with motion reduced */
+@media (prefers-reduced-motion: reduce) {
+  .scene-static { transition: none; }
+  .progress-fill { box-shadow: none; }
+}
