@@ -1,0 +1,8 @@
+# The unzipped "Putnam From Scratch" site (Website.zip) lives here as a
+# read-only architectural reference. It is not part of this project's
+# deliverable and is deliberately not committed.
+reference/
+
+# Python bytecode from the page generators in build/
+__pycache__/
+*.pyc

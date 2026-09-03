@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 04 &mdash; BUS 100 (Ch. 19) Refresher: Capital Budgeting for Your Own Life &middot; Personal Finance From Scratch</title>
+  <meta name="description" content="Capital Budgeting for Your Own Life — module 04 of Personal Finance From Scratch.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <script>
+    MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="chapter.css">
+</head>
+<body data-chapter="4">
+
+  <nav class="topbar" aria-label="Reader controls">
+    <a href="index.html" aria-label="Back to curriculum">&larr;</a>
+    <button class="gear" type="button" aria-label="Cycle reading text size">&#9881;</button>
+    <span class="bar-title">Capital Budgeting for Your Own Life</span>
+    <span>
+      <button class="heart" type="button" data-complete-toggle aria-pressed="false" aria-label="Toggle module complete">&hearts;<span data-complete-label hidden></span></button>
+      <a href="module5.html" aria-label="Forward">&rarr;</a>
+    </span>
+  </nav>
+
+  <div class="page">
+    <main class="reading">
+
+      <header class="title-block">
+        <p class="kicker">phase II &middot; module 04</p>
+        <h1>BUS 100 (Ch. 19) Refresher: Capital Budgeting for Your Own Life</h1>
+        <hr class="rule">
+        <p class="subtitle">Studied from DeFusco et al., <em>Quantitative Investment Analysis</em>, with a BUS&nbsp;100 (Ch.&nbsp;19) refresher &middot; written from scratch</p>
+      </header>
+
+      <!-- ============ 1. THE HOOK ============ -->
+      <section id="hook">
+        <h2>1. The Hook: Should You Pay for the Certification?</h2>
+        <p>
+          You are considering paying for a certification. It costs money now and might earn you more
+          later. Should you?
+        </p>
+        <p>
+          That question has a formal answer, and companies have used it for decades to decide whether
+          to build a factory. It is the same question, at a different scale, and
+          <a href="module1.html#definitions">Module&nbsp;1's formula</a> is already most of the
+          machinery. This module supplies the rest &mdash; and then is honest about the fact that the
+          machinery is only ever as good as the guesses you feed it.
+        </p>
+      </section>
+
+      <!-- ============ 2. WHAT YOU ALREADY HALF-REMEMBER ============ -->
+      <section id="refresher">
+        <h2>2. What You Already Half-Remember</h2>
+        <div class="refresher-box">
+          <span class="box-label">What You Already Half-Remember &mdash; BUS 100</span>
+          <p>
+            Companies use <strong>capital budgeting</strong> to decide if future cash from a project is
+            worth more, today, than its cost now.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 3. DEFINITIONS ============ -->
+      <section id="definitions">
+        <h2>3. Definitions</h2>
+        <div class="definition-box">
+          <span class="box-label">Definition 4.1 &mdash; NPV</span>
+          <p>Present value of future benefits minus present cost.</p>
+          <p>$$NPV = \left(\sum_{t=1}^{n} \frac{CF_t}{(1+r)^t}\right) - \text{Initial Cost}$$</p>
+        </div>
+        <p>
+          Read the sum slowly: it is <a href="module1.html#definitions">Module&nbsp;1's present-value
+          formula</a> applied once per year and added up. Nothing new has been introduced &mdash; only
+          repeated. The same sum reappears, with free cash flow in the numerator, as the discounted
+          cash flow of <a href="module7.html#definitions">Module&nbsp;7.3</a>.
+        </p>
+      </section>
+
+      <!-- ============ 4. WORKED EXAMPLES ============ -->
+      <section id="worked-examples">
+        <h2>4. Worked Examples</h2>
+        <div class="example-box">
+          <span class="box-label">Worked Example</span>
+          <p>\$2,000 certification, +\$3,000/year for 3 years, 6% discount rate:</p>
+          <p>$$NPV = 2830.19+2669.99+2518.86-2000=\$6{,}019.04$$</p>
+          <p>
+            Strongly positive on these assumptions &mdash; the answer hinges entirely on honest input
+            estimates.
+          </p>
+        </div>
+        <p>
+          The three numbers being added are the three annual \$3,000 benefits, each discounted back by
+          one, two and three years respectively at 6%. Notice how much smaller the third one is than
+          the first: that shrinkage is the exponent from
+          <a href="module1.html#common-confusions">Module&nbsp;1's Common Confusion</a>, and it is why
+          the discount rate is the assumption worth arguing about.
+        </p>
+        <p>
+          The <a href="#sandbox">sandbox</a> below opens on exactly these numbers, so you can test that
+          last sentence rather than take it on trust.
+        </p>
+      </section>
+
+      <!-- ============ 5. COMMON CONFUSIONS ============ -->
+      <section id="common-confusions">
+        <h2>5. Common Confusions</h2>
+        <p>
+          Module&nbsp;04 carries no Common Confusion callout in the source curriculum. The section is
+          kept in place so every module has the same eight-part anatomy and the same anchors &mdash;
+          the trap here is not conceptual but arithmetic honesty, and the
+          worked example names it directly: the answer hinges entirely on honest input estimates. The
+          nearest named confusion is
+          <a href="module7.html#common-confusions">Module&nbsp;7.3's</a>, which says the same thing
+          about a DCF in stronger terms &mdash; a valuation does not produce &ldquo;the&rdquo; correct
+          value, it produces <em>a</em> value, entirely dependent on your assumptions.
+        </p>
+      </section>
+
+      <!-- ============ 6. KNOWLEDGE CHECKS ============ -->
+      <section id="knowledge-checks">
+        <h2>6. Knowledge Checks</h2>
+        <p>
+          Module&nbsp;04 has no Knowledge Check in the source curriculum. Its check is the sandbox: change one assumption at a time and watch
+          the conclusion move. The next Knowledge Checks appear in
+          <a href="module6.html#knowledge-checks">Module&nbsp;06</a>.
+        </p>
+      </section>
+
+      <!-- ============ 7. SANDBOX ============ -->
+      <section id="sandbox">
+        <h2>7. Sandbox: The NPV Scenario Tool</h2>
+        <p>
+          The worked example's conclusion &mdash; &ldquo;strongly positive&rdquo; &mdash; is a
+          conclusion about a specific set of assumptions, not about certifications. This tool lets you
+          break it.
+        </p>
+        <p>
+          It opens on the worked example's own figures: <strong>\$2,000 cost, \$3,000 per year for
+          three years, 6% discount rate</strong>, producing the same \$6,019.04. Every cash flow is
+          editable and the discount rate is a slider. Push the rate up, or cut the third year's
+          benefit, and watch how far the assumptions have to move before the answer changes sign
+          &mdash; that distance, not the headline number, is what tells you how safe the decision is.
+        </p>
+        <div class="sandbox-panel" id="npv-sandbox" data-widget="npv">
+          <noscript>
+            <p class="sandbox-note">
+              This sandbox needs JavaScript. The worked example it extends is complete in
+              <a href="#worked-examples">&sect;4</a> above.
+            </p>
+          </noscript>
+        </div>
+      </section>
+
+      <!-- ============ 8. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <section id="recap">
+        <h2>8. Recap &amp; Glossary Terms</h2>
+        <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
+        <ul class="recap-list">
+          <li><a href="appendix-glossary.html#g-npv">NPV</a><span class="recap-gloss"> &mdash; Present value of benefits minus present cost</span></li>
+        </ul>
+      </section>
+
+      <nav class="chapter-nav">
+        <a href="module3.html">&larr; Module 03 &mdash; Banking and Credit</a>
+        <a href="module5.html">Module 05 &mdash; Investment Markets, From Absolute Zero &rarr;</a>
+      </nav>
+
+    </main>
+
+    <aside class="contents" aria-label="Module contents">
+      <p class="contents-label">Contents</p>
+      <ol>
+        <li><a href="#hook">1. The Hook</a></li>
+        <li><a href="#refresher">2. What You Already Half-Remember</a></li>
+        <li><a href="#definitions">3. Definitions</a></li>
+        <li><a href="#worked-examples">4. Worked Examples</a></li>
+        <li><a href="#common-confusions">5. Common Confusions</a></li>
+        <li><a href="#knowledge-checks">6. Knowledge Checks</a></li>
+        <li><a href="#sandbox">7. Sandbox</a></li>
+        <li><a href="#recap">8. Recap &amp; Glossary Terms</a></li>
+      </ol>
+      <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
+        <span data-complete-label>Mark module complete</span>
+      </button>
+    </aside>
+  </div>
+
+  <footer class="book-footer">
+    PERSONAL FINANCE FROM SCRATCH &mdash; a zero-knowledge curriculum, Canadian edition. Educational material, not financial advice.
+  </footer>
+
+  <script src="reader.js"></script>
+  <script src="widgets/npv-scenario.js"></script>
+</body>
+</html>

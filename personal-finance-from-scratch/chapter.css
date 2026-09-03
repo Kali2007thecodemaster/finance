@@ -1,0 +1,774 @@
+/* ============================================================
+   PUTNAM FROM SCRATCH — chapter.css
+   Register 2B: plain paper-white book. Shared by every
+   chapterN.html. No ASCII canvas, no hard shadows, no
+   filled-black boxes.
+   ============================================================ */
+
+:root {
+  --paper: #FCFCFA;
+  --ink: #111111;
+  --panel: #EFEFEF;
+  --border: #D3D3D3;
+  --accent: #B4460A;
+  --font-serif: "Source Serif 4", "Latin Modern Roman", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Fira Code", "Courier New", Courier, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  font-size: 1.06rem;
+  line-height: 1.72;
+}
+
+a { color: var(--accent); }
+
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ---------- slim sticky top bar ---------- */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 20px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+}
+.topbar a, .topbar button {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--ink);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 4px 9px;
+  cursor: pointer;
+  line-height: 1.2;
+}
+.topbar a:hover, .topbar button:hover {
+  border-color: var(--border);
+  background: var(--panel);
+}
+.topbar .bar-title {
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.topbar .heart[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+
+/* ---------- page layout ---------- */
+
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 48px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+.reading {
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  min-width: 0;
+}
+
+/* ---------- contents sidebar ---------- */
+
+.contents {
+  position: sticky;
+  top: 76px;
+  align-self: start;
+  padding-top: 44px;
+  font-family: var(--font-sans);
+}
+.contents .contents-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 10px;
+}
+.contents ol {
+  list-style: none;
+}
+.contents li { margin-bottom: 2px; }
+.contents a {
+  display: block;
+  font-size: 0.82rem;
+  color: #444;
+  text-decoration: none;
+  padding: 3px 0 3px 10px;
+  border-left: 2px solid transparent;
+  line-height: 1.45;
+}
+.contents a:hover { color: var(--ink); }
+.contents a.current {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+.contents .mark-complete {
+  margin-top: 20px;
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+.mark-complete:hover { background: var(--panel); }
+.mark-complete[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---------- title block ---------- */
+
+.title-block {
+  text-align: center;
+  padding: 56px 0 8px;
+}
+.title-block .kicker {
+  font-family: var(--font-sans);
+  font-variant: small-caps;
+  letter-spacing: 0.22em;
+  font-size: 0.85rem;
+  color: var(--accent);
+  text-transform: lowercase;
+  margin-bottom: 14px;
+}
+.title-block h1 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  line-height: 1.15;
+  margin-bottom: 18px;
+}
+.title-block .rule {
+  width: 90px;
+  height: 1px;
+  background: var(--ink);
+  margin: 0 auto 8px;
+  border: none;
+}
+.title-block .subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  color: #555;
+  margin-top: 12px;
+}
+
+/* ---------- section headings ---------- */
+
+.reading h2 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.55rem;
+  margin: 56px 0 16px;
+  line-height: 1.25;
+}
+.reading h3 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.18rem;
+  margin: 30px 0 10px;
+}
+.reading p { margin-bottom: 16px; }
+.reading ul, .reading ol { margin: 0 0 16px 26px; }
+.reading li { margin-bottom: 6px; }
+.reading em { font-style: italic; }
+
+/* ---------- callout boxes ---------- */
+
+.definition-box, .tip-box, .warn-box, .example-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px 20px 8px;
+  margin: 22px 0;
+}
+.definition-box .box-label,
+.tip-box .box-label,
+.warn-box .box-label,
+.example-box .box-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.tip-box { border-left: 4px solid var(--accent); }
+.tip-box .box-label { color: var(--accent); }
+.warn-box { border-left: 4px solid #8a1c1c; }
+.warn-box .box-label { color: #8a1c1c; }
+.definition-box { border-left: 4px solid var(--ink); }
+
+/* ---------- figures ---------- */
+
+.figure {
+  margin: 24px 0;
+  text-align: center;
+}
+.figure svg {
+  max-width: 100%;
+  height: auto;
+}
+.figure figcaption {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+/* ---------- drills ---------- */
+
+.drill {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px 18px;
+  margin: 18px 0;
+  background: var(--paper);
+}
+.drill .drill-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-family: var(--font-sans);
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.drill .drill-num {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+.drill .drill-level {
+  font-size: 0.72rem;
+  color: #666;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 1px 7px;
+}
+.drill .drill-source {
+  font-size: 0.72rem;
+  color: #666;
+  font-style: italic;
+}
+.drill details {
+  margin-top: 12px;
+  border-top: 1px dashed var(--border);
+  padding-top: 10px;
+}
+.drill summary {
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.drill details > *:not(summary) { margin-top: 10px; }
+.solution-stage {
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #555;
+  display: block;
+  margin: 14px 0 4px;
+}
+
+/* ---------- sandbox & code panels ---------- */
+
+.sandbox-panel, .code-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 18px 20px;
+  margin: 22px 0;
+}
+.sandbox-panel canvas {
+  display: block;
+  width: 100%;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+.sandbox-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 22px;
+  align-items: center;
+  margin: 14px 0 4px;
+  font-family: var(--font-sans);
+  font-size: 0.86rem;
+}
+.sandbox-controls label { display: flex; align-items: center; gap: 8px; }
+.sandbox-controls input[type="range"] { accent-color: var(--accent); }
+.sandbox-controls button {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--paper);
+  cursor: pointer;
+}
+.sandbox-controls button:hover { background: #e4e4e0; }
+.sandbox-readout {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  margin-top: 10px;
+  line-height: 1.7;
+}
+.sandbox-readout .val { color: var(--accent); font-weight: 700; }
+
+.code-panel pre {
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.6;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 14px 16px;
+}
+.code-panel .code-caption {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+/* ---------- exam card ---------- */
+
+.exam-card {
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  padding: 22px 24px;
+  margin: 26px 0;
+  background: var(--paper);
+}
+.exam-card .exam-tag {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--paper);
+  background: var(--ink);
+  border-radius: 3px;
+  padding: 3px 10px;
+  margin-bottom: 14px;
+}
+.exam-card .attribution {
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  color: #555;
+  border-top: 1px solid var(--border);
+  margin-top: 18px;
+  padding-top: 10px;
+  line-height: 1.6;
+}
+
+/* ---------- bottom chapter nav ---------- */
+
+.chapter-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--border);
+  margin-top: 60px;
+  padding-top: 22px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+}
+.chapter-nav a { text-decoration: none; }
+.chapter-nav a:hover { text-decoration: underline; }
+
+/* ---------- footer ---------- */
+
+.book-footer {
+  border-top: 1px solid var(--border);
+  margin-top: 48px;
+  padding: 26px 24px 40px;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  color: #555;
+  line-height: 1.7;
+}
+
+/* ---------- font-size preference (gear control) ---------- */
+
+body[data-reader-size="small"]  { font-size: 0.97rem; }
+body[data-reader-size="large"]  { font-size: 1.16rem; }
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1100px) {
+  .page { grid-template-columns: 1fr; gap: 0; }
+  .contents { display: none; }
+}
+
+@media (max-width: 480px) {
+  .page { padding: 0 16px 60px; }
+  body { font-size: 1.0rem; }
+  .drill { padding: 13px 14px; }
+  .exam-card { padding: 16px 16px; }
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* ============================================================
+   ADDITIVE BLOCK — Personal Finance From Scratch
+   Everything above this line is the reference site's chapter.css,
+   byte-for-byte. Nothing above is modified. Appended below:
+
+     1. reading-column <table> styling — the reference book had no
+        tables in its chapters; this curriculum has eight.
+     2. a few widget affordances the four /widgets/*.js modules
+        need on top of the existing .sandbox-* classes.
+     3. .refresher-box — the "What You Already Half-Remember"
+        callout, a new box variant sharing the existing box chrome.
+     4. .recap-list — the closing glossary-term recap.
+   ============================================================ */
+
+/* ---------- 1. tables in the reading column ---------- */
+
+.table-wrap {
+  overflow-x: auto;
+  margin: 22px 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--paper);
+  -webkit-overflow-scrolling: touch;
+}
+
+.reading table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 460px;
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.reading table caption {
+  caption-side: top;
+  text-align: left;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #555;
+  padding: 12px 14px 8px;
+}
+
+.reading table th,
+.reading table td {
+  padding: 9px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.reading table thead th {
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #444;
+  background: var(--panel);
+  border-bottom: 1px solid #bfbfbf;
+  white-space: nowrap;
+}
+
+.reading table tbody tr:last-child td { border-bottom: none; }
+.reading table tbody tr:nth-child(even) td { background: rgba(0, 0, 0, 0.018); }
+
+.reading table td.num,
+.reading table th.num {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.reading table .total td,
+.reading table td.total,
+.reading table th[scope="row"] { font-weight: 700; }
+.reading table .total td { border-top: 1px solid #bfbfbf; }
+.reading table .accent { color: var(--accent); font-weight: 700; }
+
+/* ---------- 2. widget affordances ---------- */
+
+.sandbox-controls label.stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 190px;
+  flex: 1 1 190px;
+}
+.sandbox-controls label.stacked .ctl-name {
+  font-size: 0.78rem;
+  color: #555;
+  letter-spacing: 0.04em;
+}
+.sandbox-controls input[type="range"] {
+  width: 100%;
+  min-width: 150px;
+  height: 26px;              /* a comfortable touch target on mobile */
+}
+.sandbox-controls input[type="number"] {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  padding: 6px 8px;
+  width: 100%;
+  min-width: 96px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.sandbox-controls input[type="number"]:invalid,
+.sandbox-controls input.bad { border-color: #8a1c1c; }
+
+.sandbox-note {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 10px;
+  line-height: 1.55;
+}
+.sandbox-error {
+  font-family: var(--font-sans);
+  font-size: 0.84rem;
+  color: #8a1c1c;
+  background: #fbf1f1;
+  border: 1px solid #e2c4c4;
+  border-left: 4px solid #8a1c1c;
+  border-radius: 4px;
+  padding: 9px 12px;
+  margin-top: 12px;
+}
+.sandbox-error[hidden] { display: none; }
+
+.sandbox-scroll {
+  max-height: 340px;
+  overflow: auto;
+  margin-top: 14px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--paper);
+  -webkit-overflow-scrolling: touch;
+}
+.sandbox-scroll table { min-width: 420px; margin: 0; }
+.sandbox-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--panel);
+}
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+  gap: 14px;
+  margin-top: 4px;
+}
+.scenario-card {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--paper);
+  padding: 13px 15px;
+}
+.scenario-card h4 {
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 9px;
+  color: var(--accent);
+}
+.scenario-card .scenario-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 11px;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: #555;
+}
+.scenario-card .scenario-field .ctl-name {
+  display: block;
+  white-space: nowrap;
+}
+.scenario-card input[type="range"] {
+  width: 100%;
+  height: 26px;              /* a comfortable touch target on mobile */
+  accent-color: var(--accent);
+}
+.scenario-card .scenario-out {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  border-top: 1px dashed var(--border);
+  padding-top: 9px;
+  line-height: 1.65;
+}
+.scenario-card .scenario-out .val { color: var(--accent); font-weight: 700; }
+
+/* ---------- 3. refresher callout ---------- */
+
+.refresher-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-left: 4px solid #46617a;
+  border-radius: 4px;
+  padding: 18px 20px 8px;
+  margin: 22px 0;
+}
+.refresher-box .box-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: #46617a;
+}
+
+/* ---------- 4. glossary recap ---------- */
+
+.recap-list {
+  list-style: none;
+  margin: 18px 0 0 !important;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 10px 22px;
+}
+.recap-list li {
+  border-left: 2px solid var(--border);
+  padding: 2px 0 2px 12px;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.recap-list li a {
+  font-family: var(--font-sans);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.recap-list li a:hover { text-decoration: underline; }
+.recap-list li .recap-gloss { color: #555; font-size: 0.88rem; }
+
+/* ---------- glossary appendix page ---------- */
+
+.glossary-index {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 18px 0 26px;
+}
+.glossary-index a {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  text-decoration: none;
+  padding: 3px 9px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  line-height: 1.4;
+}
+.glossary-index a:hover { background: var(--panel); }
+
+.reading table tr.glossary-row th {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: none;
+  letter-spacing: 0;
+  background: none;
+  color: var(--ink);
+  white-space: normal;
+  width: 34%;
+}
+.reading table tr.glossary-row td { font-size: 0.9rem; }
+.reading table tr.glossary-row td .from-module {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: #777;
+  margin-top: 3px;
+}
+
+@media (max-width: 480px) {
+  .reading table { font-size: 0.82rem; }
+  .reading table th, .reading table td { padding: 8px 10px; }
+  .scenario-grid { grid-template-columns: 1fr; }
+  .recap-list { grid-template-columns: 1fr; }
+}
+
+/* ---------- 5. wide display equations must scroll, not push the page ----------
+   A display equation is an atomic inline-block as far as layout is concerned:
+   it cannot wrap, so a wide one (Module 1's PV/FV pair, Module 4's NPV sum)
+   widens the whole document at narrow viewports. Giving the container its own
+   horizontal scroll keeps the formula intact and the page unscrolled.        */
+
+mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  padding-bottom: 4px;         /* room for the scrollbar, where one is drawn */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* inline math never gets its own scroller — it must stay in the text flow —
+   but it may shrink rather than force the line to overflow */
+mjx-container:not([display="true"]) { max-width: 100%; }
