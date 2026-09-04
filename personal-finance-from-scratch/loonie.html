@@ -30,21 +30,30 @@
       border: 1px solid #333; padding: 7px 12px; border-radius: 0;
     }
     .back:hover { border-color: #CD8DBD; color: #fff; }
-    #warn {
-      position: fixed; right: 22px; top: 20px; z-index: 5; max-width: 320px;
-      font-size: 12px; line-height: 1.6; color: #E0B0B0;
-      background: rgba(60,30,30,0.5); border: 1px solid #6a3a3a; padding: 10px 12px;
+    #status {
+      position: fixed; right: 22px; top: 20px; z-index: 5; max-width: 340px;
+      font-size: 12px; line-height: 1.6; color: #cbb8c6;
+      background: rgba(40,30,40,0.5); border: 1px solid #4a3a48; padding: 10px 12px;
       display: none;
     }
+    #status.err { color: #E0B0B0; background: rgba(60,30,30,0.5); border-color: #6a3a3a; }
+    #status code { color: #EDE8DA; }
+    #loader {
+      position: fixed; left: 50%; top: 50%; transform: translate(-50%,-50%); z-index: 4;
+      font-size: 13px; letter-spacing: 0.08em; color: #9a9a9a; text-transform: uppercase;
+    }
+    #loader .bar { margin-top: 10px; width: 180px; height: 2px; background: #2a2a2a; }
+    #loader .bar i { display: block; height: 100%; width: 0%; background: #CD8DBD; transition: width .15s ease; }
   </style>
 </head>
 <body>
   <a class="back" href="index.html">&larr; Back to site</a>
   <div class="hud">
     <b>Canadian Loonie</b> &middot; <span class="accent">drag to orbit</span> &middot; scroll to zoom<br>
-    11-sided &middot; PBR gold &middot; image-textured obverse / reverse
+    GLB model &middot; Blender animation &middot; PBR studio lighting
   </div>
-  <div id="warn"></div>
+  <div id="status"></div>
+  <div id="loader">Loading model<div class="bar"><i></i></div></div>
   <div id="app"></div>
 
   <!-- three.js (ESM) + addons, vendored locally so nothing is fetched at runtime -->
@@ -61,27 +70,38 @@
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/OrbitControls.js';
     import { RoomEnvironment } from 'three/addons/RoomEnvironment.js';
+    import { GLTFLoader } from 'three/addons/GLTFLoader.js';
+    import { DRACOLoader } from 'three/addons/DRACOLoader.js';
+    import { MeshoptDecoder } from 'three/addons/meshopt_decoder.module.js';
 
     /* ============================================================
-       Canadian Loonie — image-textured, per spec.
-       The coin's details are NOT drawn in code: the loon, the
-       Queen and the lettering all come from the supplied image
-       maps (colour / normal / roughness) for each face. This
-       file only builds the geometry, materials, environment and
-       controls, and loads those images.
+       Canadian Loonie — real 3D model (GLB, exported from Blender).
 
-       Drop six files in ./textures/loonie/ :
-         obverse_color.jpg      reverse_color.jpg
-         obverse_normal.jpg     reverse_normal.jpg
-         obverse_roughness.jpg  reverse_roughness.jpg
-       Each should be a SQUARE crop with the coin centred and
-       filling the frame (the cap UVs sample the inscribed disc,
-       so square corners are never shown).
+       The coin geometry, materials and animation all live inside the
+       .glb file. This page only builds the renderer, a studio
+       environment and controls, then loads the model and plays any
+       embedded animation clip. If the model has no animation we spin
+       it slowly on Y ourselves; if the file is missing entirely we
+       show a plain placeholder coin plus a notice, so the page never
+       renders blank.
+
+       ---- Where the model goes ----
+       Put the file at:  ./models/loonie_2003.glb
+       (or host it as a GitHub Release asset and set MODEL_URL below.)
+       See models/README.md for upload / compression instructions —
+       the raw Blender export is usually far too heavy for GitHub
+       Pages, so it must be Draco/meshopt-compressed or Release-hosted.
+       Both Draco- and meshopt-compressed GLBs are supported here.
        ============================================================ */
 
-    const TEX_DIR = './textures/loonie/';
+    // Point this at a Release asset URL to serve a heavy model off-repo, e.g.
+    //   const MODEL_URL = 'https://github.com/<owner>/<repo>/releases/download/coin-v1/loonie_2003.glb';
+    const MODEL_URL = './models/loonie_2003.glb';
+
     const app = document.getElementById('app');
-    const warn = document.getElementById('warn');
+    const statusEl = document.getElementById('status');
+    const loaderEl = document.getElementById('loader');
+    const loaderBar = loaderEl.querySelector('.bar i');
 
     /* ---------- renderer ---------- */
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
@@ -103,7 +123,7 @@
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-    /* ---------- lighting to catch the normal maps ---------- */
+    /* ---------- lighting (also lights the fallback coin) ---------- */
     const key = new THREE.DirectionalLight(0xffffff, 2.2);
     key.position.set(-3, 4, 5);
     scene.add(key);
@@ -115,66 +135,104 @@
     scene.add(rim);
     scene.add(new THREE.AmbientLight(0xffffff, 0.15));
 
-    /* ---------- textures ---------- */
-    const loader = new THREE.TextureLoader();
-    const missing = [];
-
-    /*  CylinderGeometry cap UVs are rotated a quarter turn relative to an
-        upright image, and the bottom cap is additionally mirrored. These
-        transforms put a normally-oriented photo the right way up on each
-        face. Tweak `rot` / `flip` here if a face lands sideways.        */
-    function faceTexture(name, { srgb = false, rot = -Math.PI / 2, flipX = false } = {}) {
-      const url = TEX_DIR + name;
-      const tex = loader.load(url, undefined, undefined, () => { missing.push(name); showWarn(); });
-      tex.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace;
-      // r149 fallbacks for the encoding property name
-      if (srgb && 'encoding' in tex) tex.encoding = THREE.sRGBEncoding;
-      tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-      tex.center.set(0.5, 0.5);
-      tex.rotation = rot;
-      tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
-      if (flipX) tex.repeat.x = -1;
-      return tex;
-    }
-
-    function faceMaterial(side, flipX) {
-      return new THREE.MeshStandardMaterial({
-        map:          faceTexture(side + '_color.jpg',     { srgb: true, flipX }),
-        normalMap:    faceTexture(side + '_normal.jpg',    { flipX }),
-        roughnessMap: faceTexture(side + '_roughness.jpg', { flipX }),
-        normalScale:  new THREE.Vector2(1.0, 1.0),
-        color:        0xffffff,
-        metalness:    1.0,
-        roughness:    1.0,           /* modulated by the roughness map */
-        envMapIntensity: 1.35
-      });
-    }
-
-    /*  the reeded-looking edge is just polished aureate gold — the loonie's
-        edge is plain, and a solid metal reads better than a stretched map  */
-    const edgeMaterial = new THREE.MeshStandardMaterial({
-      color: 0xC8A22E, metalness: 1.0, roughness: 0.34, envMapIntensity: 1.5, flatShading: true
-    });
-
-    /* the obverse maps to the top cap (+Z after the rotate), reverse to the
-       bottom cap (-Z). The bottom cap's UV mirror is corrected with flipX. */
-    const materials = [ edgeMaterial, faceMaterial('obverse', false), faceMaterial('reverse', true) ];
-
-    /* ---------- geometry: 11-sided coin ---------- */
-    const RADIUS = 1.2, THICKNESS = 0.15, SIDES = 11;
-    const geo = new THREE.CylinderGeometry(RADIUS, RADIUS, THICKNESS, SIDES, 1, false);
-    geo.rotateX(Math.PI / 2);        /* caps face the camera (±Z) */
-
-    const coin = new THREE.Mesh(geo, materials);
-    scene.add(coin);
-
     /* ---------- controls ---------- */
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
     controls.minDistance = 2.2;
     controls.maxDistance = 8;
-    controls.autoRotate = false;     /* we spin the coin itself, below */
+    controls.target.set(0, 0, 0);
+
+    /* ---------- model root + animation ---------- */
+    const root = new THREE.Group();
+    scene.add(root);
+    let mixer = null;          // AnimationMixer if the GLB has clips
+    let spin = true;           // spin ourselves only when there's no clip
+    let model = null;
+
+    /* Fit any loaded object to a consistent on-screen size and centre it. */
+    function frameObject(obj, targetSize = 2.4) {
+      const box = new THREE.Box3().setFromObject(obj);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z) || 1;
+      const s = targetSize / maxDim;
+      obj.scale.setScalar(s);
+      // recompute centre after scaling and lift to origin
+      obj.position.sub(center.multiplyScalar(s));
+    }
+
+    /* ---------- GLTF / GLB loader (Draco + meshopt ready) ---------- */
+    const draco = new DRACOLoader();
+    draco.setDecoderPath('./vendor/three/draco/');   // local decoder, no CDN
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.setDRACOLoader(draco);
+    gltfLoader.setMeshoptDecoder(MeshoptDecoder);
+
+    gltfLoader.load(
+      MODEL_URL,
+      (gltf) => {
+        loaderEl.style.display = 'none';
+        model = gltf.scene || gltf.scenes[0];
+
+        // make sure every texture is treated as colour-managed sRGB
+        model.traverse((o) => {
+          if (o.isMesh && o.material) {
+            const mats = Array.isArray(o.material) ? o.material : [o.material];
+            for (const m of mats) {
+              if (m.map) { m.map.colorSpace = THREE.SRGBColorSpace; if ('encoding' in m.map) m.map.encoding = THREE.sRGBEncoding; }
+              m.envMapIntensity = 1.2;
+              m.needsUpdate = true;
+            }
+          }
+        });
+
+        frameObject(model);
+        root.add(model);
+
+        // play the embedded Blender animation, if any
+        if (gltf.animations && gltf.animations.length) {
+          spin = false;
+          mixer = new THREE.AnimationMixer(model);
+          gltf.animations.forEach((clip) => mixer.clipAction(clip).play());
+        } else {
+          setStatus('Model loaded — no embedded animation clip, so it is spinning on its Y axis. '
+            + 'Add an action + <code>NLA track</code> in Blender and re-export to drive it.', false);
+        }
+      },
+      (evt) => {
+        if (evt && evt.total) {
+          const pct = Math.min(100, Math.round((evt.loaded / evt.total) * 100));
+          loaderBar.style.width = pct + '%';
+        }
+      },
+      () => {
+        // model missing / failed → placeholder coin + notice
+        loaderEl.style.display = 'none';
+        buildPlaceholder();
+        setStatus('Model not found at <code>' + MODEL_URL + '</code>. Showing a plain placeholder coin. '
+          + 'Add <code>models/loonie_2003.glb</code> (see <code>models/README.md</code>) — or set '
+          + '<code>MODEL_URL</code> to a GitHub Release asset if the file is too heavy for the repo.', true);
+      }
+    );
+
+    /* ---------- placeholder (only if the GLB is absent) ---------- */
+    function buildPlaceholder() {
+      const geo = new THREE.CylinderGeometry(1.2, 1.2, 0.15, 11, 1, false);
+      geo.rotateX(Math.PI / 2);
+      const mat = new THREE.MeshStandardMaterial({
+        color: 0xC8A22E, metalness: 1.0, roughness: 0.34, envMapIntensity: 1.5, flatShading: true
+      });
+      model = new THREE.Mesh(geo, mat);
+      root.add(model);
+      spin = true;
+    }
+
+    function setStatus(html, isErr) {
+      statusEl.className = isErr ? 'err' : '';
+      statusEl.style.display = 'block';
+      statusEl.innerHTML = html;
+    }
 
     /* ---------- resize ---------- */
     window.addEventListener('resize', () => {
@@ -183,23 +241,18 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    /* ---------- loop: slow, continuous Y-axis rotation ---------- */
+    /* ---------- loop ---------- */
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const clock = new THREE.Clock();
     function tick() {
       requestAnimationFrame(tick);
-      if (!reduce) coin.rotation.y += 0.006;
+      const dt = clock.getDelta();
+      if (mixer && !reduce) mixer.update(dt);
+      if (spin && !reduce && model) root.rotation.y += 0.006;
       controls.update();
       renderer.render(scene, camera);
     }
     tick();
-
-    /* ---------- missing-texture notice (so the page is honest) ---------- */
-    let warned = false;
-    function showWarn() {
-      if (warned) return; warned = true;
-      warn.style.display = 'block';
-      warn.innerHTML = 'Texture files not found in <b>textures/loonie/</b>. The coin is showing plain gold until the six image maps (obverse/reverse &times; colour/normal/roughness) are added.';
-    }
   </script>
 </body>
 </html>
