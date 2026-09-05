@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Personal Finance From Scratch — a free interactive web-book</title>
   <meta name="description" content="A zero-knowledge personal finance curriculum, taught through the lens of investment banking. Canadian edition. Ten modules, fifty definitions, eleven worked examples, four live calculators.">
-  <meta name="theme-color" content="#222222">
+  <meta name="theme-color" content="#F0E7D4">
 
   <script>
     /* set the theme before first paint — no flash of the wrong mode */
@@ -20,7 +20,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -30,6 +30,16 @@
 
   <canvas id="scene-canvas" aria-hidden="true"></canvas>
   <div class="scene-fallback" aria-hidden="true"></div>
+
+  <!-- Bauhaus shape field: slow geometry behind the content, in front of the coin -->
+  <div class="bauhaus-field" aria-hidden="true">
+    <span class="shape circle s-red bf-1"></span>
+    <span class="shape quarter s-blue bf-2"></span>
+    <span class="shape bar s-yellow bf-3"></span>
+    <span class="shape tri bf-4"></span>
+    <span class="shape ring bf-5"></span>
+    <span class="shape half s-red bf-6"></span>
+  </div>
 
   <nav class="topnav" aria-label="Main">
     <a class="brand" href="#top">Personal Finance From Scratch<span class="dot">.</span></a>
