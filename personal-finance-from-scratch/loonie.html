@@ -94,14 +94,11 @@
        Both Draco- and meshopt-compressed GLBs are supported here.
        ============================================================ */
 
-    // The model is served as a GitHub *Release asset* (kept out of the repo so
-    // the heavy .glb doesn't bloat Pages). It loads once you attach the file to
-    // a release tagged "coin-v1" — see models/README.md for the 3-step upload.
-    // (Release downloads are sent with CORS headers, so the browser can fetch
-    //  them straight from the Pages origin.)
-    const MODEL_URL = 'https://github.com/Kali2007thecodemaster/finance/releases/download/coin-v1/loonie_2003.glb';
-    // If you'd rather commit a *compressed* copy instead, drop it at
-    // ./models/loonie_2003.glb and set MODEL_URL back to that path.
+    // Served straight from the repo: the raw Blender export (433 MB, 8.1 M verts)
+    // was meshopt-compressed + simplified down to ~21 MB with no visible quality
+    // loss, so it fits comfortably in Git/Pages and loads fast. The decoder is
+    // vendored locally — see models/README.md for how it was produced.
+    const MODEL_URL = './models/loonie_2003.glb';
 
     const app = document.getElementById('app');
     const statusEl = document.getElementById('status');
@@ -155,15 +152,28 @@
     let spin = true;           // spin ourselves only when there's no clip
     let model = null;
 
-    /* Fit any loaded object to a consistent on-screen size and centre it. */
+    /* Fit any loaded object to a consistent on-screen size, orient a coin FACE
+       toward the camera, and centre it. The model is a flat disc whose thin
+       axis (the coin's normal) may point any way; we rotate that axis onto +Z
+       so the spin below reads as a coin flip (face → edge → back) rather than a
+       plate spinning edge-on. */
     function frameObject(obj, targetSize = 2.4) {
-      const box = new THREE.Box3().setFromObject(obj);
+      let box = new THREE.Box3().setFromObject(obj);
       const size = box.getSize(new THREE.Vector3());
+
+      // thin axis = smallest bbox dimension = the coin's face normal
+      const dims = [['x', size.x], ['y', size.y], ['z', size.z]].sort((a, b) => a[1] - b[1]);
+      const thin = dims[0][0];
+      if (thin === 'y') obj.rotation.x = Math.PI / 2;   // +Y normal → +Z (face the camera)
+      else if (thin === 'x') obj.rotation.y = Math.PI / 2; // +X normal → Z axis
+
+      // re-measure after the rotation, then scale + centre to the origin
+      box = new THREE.Box3().setFromObject(obj);
+      const size2 = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
-      const maxDim = Math.max(size.x, size.y, size.z) || 1;
+      const maxDim = Math.max(size2.x, size2.y, size2.z) || 1;
       const s = targetSize / maxDim;
       obj.scale.setScalar(s);
-      // recompute centre after scaling and lift to origin
       obj.position.sub(center.multiplyScalar(s));
     }
 
@@ -215,9 +225,9 @@
         // model missing / failed → placeholder coin + notice
         loaderEl.style.display = 'none';
         buildPlaceholder();
-        setStatus('Model not loaded yet. Showing a plain placeholder coin. '
-          + 'Attach <code>loonie_2003.glb</code> to a GitHub Release tagged '
-          + '<code>coin-v1</code> (see <code>models/README.md</code>) and it will appear here.', true);
+        setStatus('Couldn\'t load <code>' + MODEL_URL + '</code>. Showing a plain '
+          + 'placeholder coin. Make sure <code>models/loonie_2003.glb</code> is present '
+          + '(see <code>models/README.md</code>).', true);
       }
     );
 
