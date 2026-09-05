@@ -123,19 +123,21 @@ import { MeshoptDecoder } from 'three/addons/meshopt_decoder.module.js';
   function applyThemeLook(theme) {
     var lightT = theme === 'light';
     if (lightT) {
-      renderer.toneMappingExposure = 0.98;
-      key.intensity = 2.9;
-      rim.intensity = 1.25;
-      rim2.intensity = 0.7;
+      renderer.toneMappingExposure = 0.78;
+      key.intensity = 1.7;
+      fill.intensity = 0.3;
+      rim.intensity = 0.9;
+      rim2.intensity = 0.45;
     } else {
-      renderer.toneMappingExposure = 1.12;
-      key.intensity = 2.35;
-      rim.intensity = 1.8;
-      rim2.intensity = 0.9;
+      renderer.toneMappingExposure = 0.84;
+      key.intensity = 1.25;
+      fill.intensity = 0.3;
+      rim.intensity = 0.75;
+      rim2.intensity = 0.4;
     }
     for (var i = 0; i < coinMats.length; i++) {
-      var base = coinMats[i].userData.emi || 1.2;
-      coinMats[i].envMapIntensity = base * (lightT ? 0.6 : 1);
+      var base = coinMats[i].userData.emi || 0.68;
+      coinMats[i].envMapIntensity = base * (lightT ? 0.55 : 1);
     }
   }
   applyThemeLook(readTheme());
@@ -198,8 +200,17 @@ import { MeshoptDecoder } from 'three/addons/meshopt_decoder.module.js';
           for (var k = 0; k < mats.length; k++) {
             var m = mats[k];
             if (m.map) { m.map.colorSpace = THREE.SRGBColorSpace; if ('encoding' in m.map) m.map.encoding = THREE.sRGBEncoding; }
-            if (m.userData.emi === undefined) m.userData.emi = 2.0;
-            m.envMapIntensity = 2.0;
+            /* the raw model reflected the studio like a mirror and washed out
+               to near-white — dial the metal back to a satin, deeper gold:
+               far less environment reflection, a roughness floor so the
+               reflection is diffuse rather than a hard specular, a slightly
+               softened metalness, and a deepened base colour so it reads as
+               gold rather than pale cream. */
+            if (m.userData.emi === undefined) m.userData.emi = 0.68;
+            m.envMapIntensity = 0.68;
+            if (typeof m.roughness === 'number') m.roughness = Math.min(1, Math.max(m.roughness, 0.52));
+            if (typeof m.metalness === 'number') m.metalness = Math.min(m.metalness, 0.86);
+            if (m.color && m.color.multiplyScalar) m.color.multiplyScalar(0.8);
             m.needsUpdate = true;
             coinMats.push(m);
           }

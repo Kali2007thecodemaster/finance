@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#F0E7D4">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('pfs-finance:theme') ||
+          (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', t);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
+    })();
+  </script>
+  <title>The Reading Room &mdash; Quotes, Charts &amp; Fact Sheets &middot; Personal Finance From Scratch</title>
+  <meta name="description" content="An interactive practicum: read a stock quote, a price chart, and a real ETF fact sheet (BMO's ZEQT) field by field.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <link rel="stylesheet" href="chapter.css">
+</head>
+<body data-chapter="reading">
+
+  <nav class="topbar" aria-label="Reader controls">
+    <a href="index.html" aria-label="Back to curriculum">&larr;</a>
+    <button class="gear" type="button" aria-label="Cycle reading text size">&#9881;</button>
+    <span class="bar-title">The Reading Room</span>
+    <span>
+      <button class="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="true" title="Light mode">
+        <svg class="tt-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <mask id="tt-moon-mask"><rect x="0" y="0" width="24" height="24" fill="#fff"></rect><circle class="tt-moon-cut" cx="24" cy="9" r="6" fill="#000"></circle></mask>
+          <circle class="tt-core" cx="12" cy="12" r="5.6" mask="url(#tt-moon-mask)"></circle>
+          <g class="tt-rays" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+            <line x1="12" y1="1.4" x2="12" y2="3.4"></line><line x1="12" y1="20.6" x2="12" y2="22.6"></line>
+            <line x1="1.4" y1="12" x2="3.4" y2="12"></line><line x1="20.6" y1="12" x2="22.6" y2="12"></line>
+            <line x1="4.4" y1="4.4" x2="5.8" y2="5.8"></line><line x1="18.2" y1="18.2" x2="19.6" y2="19.6"></line>
+            <line x1="4.4" y1="19.6" x2="5.8" y2="18.2"></line><line x1="18.2" y1="5.8" x2="19.6" y2="4.4"></line>
+          </g>
+        </svg>
+      </button>
+      <button class="heart" type="button" data-complete-toggle aria-pressed="false" aria-label="Toggle module complete">&hearts;<span data-complete-label hidden></span></button>
+      <a href="appendix-glossary.html" aria-label="Forward">&rarr;</a>
+    </span>
+  </nav>
+
+  <div class="page">
+    <main class="reading">
+
+      <header class="title-block">
+        <p class="kicker">practicum &middot; the reading room</p>
+        <h1>The Reading Room: Quotes, Charts &amp; Fact Sheets</h1>
+        <hr class="rule">
+        <p class="subtitle">A hands-on companion to <a href="module7.html">Module&nbsp;07</a> &middot; every figure below is clickable &middot; built on BMO's real ZEQT fact sheet</p>
+      </header>
+
+      <!-- ============ 1. HOOK ============ -->
+      <section id="hook">
+        <h2>1. Two Documents You'll Actually Stare At</h2>
+        <p>
+          <a href="module7.html">Module&nbsp;07</a> gave you the vocabulary. This page is the range where
+          you fire it. Almost every real decision comes down to reading two documents fluently: the
+          <strong>quote</strong> (with its chart) for an individual stock, and the <strong>fact sheet</strong>
+          for a fund. Below, each is reproduced and made <em>clickable</em> &mdash; tap any figure and a
+          panel explains exactly what it means and what a careful reader does with it. The fact sheet is
+          not a mock-up: it's BMO's published sheet for the <strong>ZEQT</strong> all-equity ETF, read
+          line by line.
+        </p>
+        <p class="sandbox-note">
+          Everything highlighted with a dotted underline is interactive. Click it (or tab to it and press
+          Enter) and the explanation docks in the corner.
+        </p>
+      </section>
+
+      <!-- ============ 2. READING A STOCK QUOTE ============ -->
+      <section id="quote">
+        <h2>2. Reading a Stock Quote</h2>
+        <p>
+          A quote is a car's dashboard. No single dial is the car &mdash; speed, fuel, revs and
+          temperature only mean something together. A price with no market cap is a speedometer with no
+          idea how big the vehicle is. Here is an <strong>illustrative</strong> quote for a gold miner
+          (a made-up ticker, real-shaped numbers, matching Module&nbsp;7's running example). Click each
+          field.
+        </p>
+
+        <div class="quote-card" aria-label="Interactive stock quote">
+          <div class="quote-head">
+            <span class="q-ticker explainable" data-explain="ticker">AUX</span>
+            <span class="q-exch explainable" data-explain="exchange">TSX &middot; Gold mining</span>
+            <span class="q-price explainable" data-explain="price">$42.18</span>
+            <span class="q-chg q-up explainable" data-explain="change">+1.34 (+3.28%)</span>
+          </div>
+          <div class="quote-grid">
+            <div class="q-cell"><span class="q-key">Open</span><span class="q-val explainable" data-explain="open">41.05</span></div>
+            <div class="q-cell"><span class="q-key">Day's range</span><span class="q-val explainable" data-explain="dayrange">40.90 &ndash; 42.60</span></div>
+            <div class="q-cell"><span class="q-key">52-week range</span><span class="q-val explainable" data-explain="range52">24.10 &ndash; 43.75</span></div>
+            <div class="q-cell"><span class="q-key">Volume</span><span class="q-val explainable" data-explain="volume">3.2M</span></div>
+            <div class="q-cell"><span class="q-key">Avg volume</span><span class="q-val explainable" data-explain="avgvol">2.1M</span></div>
+            <div class="q-cell"><span class="q-key">Market cap</span><span class="q-val explainable" data-explain="mktcap">$9.6B</span></div>
+            <div class="q-cell"><span class="q-key">P/E ratio</span><span class="q-val explainable" data-explain="pe">18.4</span></div>
+            <div class="q-cell"><span class="q-key">EPS (ttm)</span><span class="q-val explainable" data-explain="eps">2.29</span></div>
+            <div class="q-cell"><span class="q-key">Div / yield</span><span class="q-val explainable" data-explain="divyield">0.40 (0.95%)</span></div>
+            <div class="q-cell"><span class="q-key">Beta</span><span class="q-val explainable" data-explain="beta">1.80</span></div>
+          </div>
+        </div>
+
+        <p>
+          Read together, this dashboard tells a specific story: a \$9.6B mid-cap miner having a strong
+          day, trading near the <em>top</em> of its yearly range on <em>above-average</em> volume, priced
+          at 18&times; earnings, paying a token dividend, and &mdash; with a beta of 1.8 &mdash; expected
+          to swing nearly twice as hard as the market. None of those facts is decisive alone; the skill is
+          reading them as one picture, then asking whether the <a href="module7.html#definitions">four
+          pillars</a> justify it.
+        </p>
+      </section>
+
+      <!-- ============ 3. READING A CHART ============ -->
+      <section id="chart">
+        <h2>3. Reading a Price Chart</h2>
+        <p>
+          Most serious charts are drawn as <strong>candlesticks</strong>. Each candle packs four numbers
+          for one period &mdash; where price opened, closed, and the highest and lowest it reached. The
+          shape tells you the story of the fight between buyers and sellers. Click the parts.
+        </p>
+
+        <div class="candle-fig" aria-label="Candlestick anatomy">
+          <svg viewBox="0 0 620 280" role="img" aria-label="An up candle and a down candle, labelled">
+            <!-- price axis -->
+            <line class="c-axis" x1="46" y1="20" x2="46" y2="250"></line>
+            <text class="c-label" x="8" y="40">$44</text>
+            <text class="c-label" x="8" y="130">$42</text>
+            <text class="c-label" x="8" y="240">$40</text>
+
+            <!-- UP candle (green): open 40.8 close 42.2, high 42.9 low 40.4 -->
+            <g>
+              <line class="candle-wick explainable" data-explain="c-wick" x1="200" y1="35" x2="200" y2="230"></line>
+              <rect class="candle-up explainable" data-explain="c-up" x="176" y="95" width="48" height="90" rx="0"></rect>
+              <text class="c-label" x="238" y="45">high 42.90</text>
+              <text class="c-label" x="238" y="99">close 42.20</text>
+              <text class="c-label" x="238" y="189">open 40.80</text>
+              <text class="c-label" x="238" y="233">low 40.40</text>
+              <text class="c-label" x="150" y="270" font-weight="700">UP DAY</text>
+            </g>
+
+            <!-- DOWN candle (red): open 42.6 close 41.1, high 43.0 low 40.9 -->
+            <g>
+              <line class="candle-wick explainable" data-explain="c-wick" x1="430" y1="28" x2="430" y2="215"></line>
+              <rect class="candle-down explainable" data-explain="c-down" x="406" y="82" width="48" height="95" rx="0"></rect>
+              <text class="c-label" x="468" y="38">high 43.00</text>
+              <text class="c-label" x="468" y="86">open 42.60</text>
+              <text class="c-label" x="468" y="181">close 41.10</text>
+              <text class="c-label" x="468" y="219">low 40.90</text>
+              <text class="c-label" x="384" y="270" font-weight="700">DOWN DAY</text>
+            </g>
+          </svg>
+        </div>
+
+        <p>
+          One candle is a period; a <em>chart</em> is a row of them, and the row is read for context, not
+          for prophecy. Two dials matter as much as the candles themselves &mdash; the
+          <strong>time axis</strong> (a day of candles and a decade of candles tell different stories) and
+          the <strong>volume</strong> bars underneath (a big move on heavy volume is a firmer signal than
+          the same move on a quiet day). Below is a <em>real</em> reading example: the
+          &ldquo;growth of \$10,000&rdquo; line from the ZEQT fact sheet you're about to dissect.
+        </p>
+
+        <div class="candle-fig" aria-label="ZEQT growth of $10,000">
+          <svg viewBox="0 0 620 280" role="img" aria-label="Growth of a $10,000 investment in ZEQT">
+            <line class="c-axis" x1="60" y1="24" x2="60" y2="238"></line>
+            <line class="c-axis" x1="60" y1="238" x2="606" y2="238"></line>
+            <text class="c-label explainable" data-explain="chart-yaxis" x="10" y="42">$20k</text>
+            <text class="c-label" x="14" y="135">$15k</text>
+            <text class="c-label" x="14" y="228">$10k</text>
+            <text class="c-label explainable" data-explain="chart-xaxis" x="70" y="256">Dec 22</text>
+            <text class="c-label" x="210" y="256">Dec 23</text>
+            <text class="c-label" x="350" y="256">Dec 24</text>
+            <text class="c-label" x="490" y="256">Dec 25</text>
+            <!-- area + line: 10k -> 18,856, with a plausible wobble -->
+            <path class="explainable" data-explain="chart-line" d="M60,228 L130,205 L200,175 L270,196 L340,150 L410,120 L480,96 L560,64"
+                  fill="none" stroke="var(--red)" stroke-width="3"></path>
+            <circle class="explainable" data-explain="chart-endpoint" cx="560" cy="64" r="6" fill="var(--red)"></circle>
+            <text class="c-label" x="470" y="52" font-weight="700">$18,856</text>
+          </svg>
+        </div>
+        <p class="sandbox-note">
+          Real ZEQT figures: a \$10,000 investment near inception was worth <strong>\$18,856</strong> on
+          Jul&nbsp;31,&nbsp;2026. The line's shape &mdash; up, a dip, then up harder &mdash; is exactly the
+          volatility Module&nbsp;06 taught you to sit through.
+        </p>
+      </section>
+
+      <!-- ============ 4. READING A FACT SHEET (interactive ZEQT) ============ -->
+      <section id="factsheet">
+        <h2>4. Reading an ETF Fact Sheet</h2>
+        <p>
+          A fact sheet is a fund's one-page r&eacute;sum&eacute;: what it holds, what it costs, how it has
+          done, and how much it bounces. Below is BMO's real sheet for <strong>ZEQT</strong>, the BMO
+          All-Equity ETF &mdash; a Canadian all-in-one fund in the exact family from
+          <a href="module6.html#definitions">Module&nbsp;6.3</a>. Click any figure to learn to read it.
+        </p>
+
+        <div class="fsheet" aria-label="Interactive ZEQT fact sheet">
+          <div class="fsheet-head">
+            <span class="fs-ticker explainable" data-explain="fs-ticker">ZEQT</span>
+            <span class="fs-name">BMO All-Equity ETF</span>
+            <span class="fs-asof">DATA AS OF JUL 31, 2026</span>
+          </div>
+          <div class="fsheet-body">
+
+            <div class="fsheet-block">
+              <h4>Fund Details</h4>
+              <div class="kv-grid">
+                <div class="kv"><span class="kv-k">Exchange</span><span class="kv-v explainable" data-explain="fs-exchange">TSX</span></div>
+                <div class="kv"><span class="kv-k">Base currency</span><span class="kv-v">CAD</span></div>
+                <div class="kv"><span class="kv-k">Inception date</span><span class="kv-v explainable" data-explain="fs-inception">Jan 24, 2022</span></div>
+                <div class="kv"><span class="kv-k">Mgmt Expense Ratio</span><span class="kv-v explainable" data-explain="fs-mer">0.18%</span></div>
+                <div class="kv"><span class="kv-k">Max mgmt fee</span><span class="kv-v explainable" data-explain="fs-fee">0.15%</span></div>
+                <div class="kv"><span class="kv-k">Distribution freq.</span><span class="kv-v explainable" data-explain="fs-distfreq">Quarterly</span></div>
+                <div class="kv"><span class="kv-k">RSP / DRIP eligible</span><span class="kv-v explainable" data-explain="fs-eligible">Yes / Yes</span></div>
+              </div>
+            </div>
+
+            <div class="fsheet-block">
+              <h4>Fund Characteristics</h4>
+              <div class="kv-grid">
+                <div class="kv"><span class="kv-k">Net assets</span><span class="kv-v explainable" data-explain="fs-aum">$924.58M</span></div>
+                <div class="kv"><span class="kv-k">Number of securities</span><span class="kv-v explainable" data-explain="fs-numsec">6</span></div>
+                <div class="kv"><span class="kv-k">Shares outstanding</span><span class="kv-v explainable" data-explain="fs-shares">40,136,003</span></div>
+                <div class="kv"><span class="kv-k">Price / Earnings</span><span class="kv-v explainable" data-explain="fs-pe">37.24</span></div>
+                <div class="kv"><span class="kv-k">Price / Book</span><span class="kv-v explainable" data-explain="fs-pb">10.59</span></div>
+                <div class="kv"><span class="kv-k">Distribution yield</span><span class="kv-v explainable" data-explain="fs-yield">1.28%</span></div>
+              </div>
+            </div>
+
+            <div class="fsheet-block">
+              <h4>Annualized Performance <span style="font-weight:400;text-transform:none;letter-spacing:0">&mdash; to Jul 31, 2026</span></h4>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr>
+                    <th scope="col">1&nbsp;mo</th><th scope="col">6&nbsp;mo</th><th scope="col">YTD</th>
+                    <th scope="col">1Y</th><th scope="col">3Y</th><th scope="col">Incep.</th>
+                  </tr></thead>
+                  <tbody><tr>
+                    <td class="num explainable" data-explain="fs-1mo">-0.88%</td>
+                    <td class="num">11.48%</td>
+                    <td class="num explainable" data-explain="fs-ytd">13.68%</td>
+                    <td class="num explainable" data-explain="fs-1y">25.94%</td>
+                    <td class="num explainable" data-explain="fs-3y">20.83%</td>
+                    <td class="num explainable" data-explain="fs-incep">15.08%</td>
+                  </tr></tbody>
+                </table>
+              </div>
+              <p class="sandbox-note">Net of fees, distributions reinvested. The 5Y and 10Y columns are blank on the real sheet &mdash; the fund is too young, an <a href="module7.html#definitions">inception-date</a> point in action.</p>
+            </div>
+
+            <div class="fsheet-block">
+              <h4>Top Holdings <span style="font-weight:400;text-transform:none;letter-spacing:0" class="explainable" data-explain="fs-fof">&mdash; a fund of funds</span></h4>
+              <div class="alloc-list">
+                <div class="alloc-row"><span class="a-name">BMO S&amp;P 500 Index ETF</span><span class="a-track"><span class="a-fill" style="width:100%"></span></span><span class="a-pct">45.36%</span></div>
+                <div class="alloc-row"><span class="a-name">BMO S&amp;P/TSX Capped Composite</span><span class="a-track"><span class="a-fill" style="width:55.6%"></span></span><span class="a-pct">25.23%</span></div>
+                <div class="alloc-row"><span class="a-name">BMO MSCI EAFE Index ETF</span><span class="a-track"><span class="a-fill" style="width:37%"></span></span><span class="a-pct">16.78%</span></div>
+                <div class="alloc-row"><span class="a-name">BMO MSCI Emerging Markets</span><span class="a-track"><span class="a-fill" style="width:19.6%"></span></span><span class="a-pct">8.89%</span></div>
+                <div class="alloc-row"><span class="a-name">BMO S&amp;P US Mid Cap</span><span class="a-track"><span class="a-fill" style="width:5.5%"></span></span><span class="a-pct">2.50%</span></div>
+                <div class="alloc-row"><span class="a-name">BMO S&amp;P US Small Cap</span><span class="a-track"><span class="a-fill" style="width:2.8%"></span></span><span class="a-pct">1.26%</span></div>
+              </div>
+            </div>
+
+            <div class="fsheet-block">
+              <h4>Geographic Allocation</h4>
+              <div class="alloc-list">
+                <div class="alloc-row"><span class="a-name explainable" data-explain="fs-geo">United States</span><span class="a-track"><span class="a-fill" style="width:100%"></span></span><span class="a-pct">48.12%</span></div>
+                <div class="alloc-row"><span class="a-name">Canada</span><span class="a-track"><span class="a-fill" style="width:52.3%"></span></span><span class="a-pct">25.17%</span></div>
+                <div class="alloc-row"><span class="a-name">Japan</span><span class="a-track"><span class="a-fill" style="width:8.1%"></span></span><span class="a-pct">3.89%</span></div>
+                <div class="alloc-row"><span class="a-name">United Kingdom</span><span class="a-track"><span class="a-fill" style="width:5.5%"></span></span><span class="a-pct">2.66%</span></div>
+                <div class="alloc-row"><span class="a-name">Other (24 markets)</span><span class="a-track"><span class="a-fill" style="width:40%"></span></span><span class="a-pct">19.16%</span></div>
+              </div>
+            </div>
+
+            <div class="fsheet-block">
+              <h4>Sector Allocation</h4>
+              <div class="alloc-list">
+                <div class="alloc-row"><span class="a-name explainable" data-explain="fs-sector">Information Technology</span><span class="a-track"><span class="a-fill" style="width:100%"></span></span><span class="a-pct">24.27%</span></div>
+                <div class="alloc-row"><span class="a-name">Financials</span><span class="a-track"><span class="a-fill" style="width:89%"></span></span><span class="a-pct">21.66%</span></div>
+                <div class="alloc-row"><span class="a-name">Industrials</span><span class="a-track"><span class="a-fill" style="width:46%"></span></span><span class="a-pct">11.19%</span></div>
+                <div class="alloc-row"><span class="a-name">Consumer Discretionary</span><span class="a-track"><span class="a-fill" style="width:32%"></span></span><span class="a-pct">7.71%</span></div>
+                <div class="alloc-row"><span class="a-name">Everything else (7 sectors)</span><span class="a-track"><span class="a-fill" style="width:145%;max-width:100%"></span></span><span class="a-pct">35.17%</span></div>
+              </div>
+            </div>
+
+            <div class="fsheet-block">
+              <h4>Risk Rating</h4>
+              <div class="risk-scale" role="img" aria-label="Risk rating: Medium">
+                <span class="risk-seg">Low</span>
+                <span class="risk-seg">Low&ndash;Med</span>
+                <span class="risk-seg risk-on explainable" data-explain="fs-risk">Medium</span>
+                <span class="risk-seg">Med&ndash;High</span>
+                <span class="risk-seg">High</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <p>
+          Read as a whole, the sheet says something clean: for <strong>0.18% a year</strong> you own six
+          index ETFs that add up to thousands of companies across the planet &mdash; roughly half in the
+          US, a quarter in Canada, the rest international &mdash; tilted toward tech and financials, rated
+          <em>medium</em> risk, with a short but strong track record. That is a
+          <a href="module6.html#definitions">Module&nbsp;6.3</a> core holding, described in its own words.
+        </p>
+      </section>
+
+      <!-- ============ 5. COMMON CONFUSIONS ============ -->
+      <section id="common-confusions">
+        <h2>5. Common Confusions</h2>
+        <div class="warn-box">
+          <span class="box-label">Common Confusion</span>
+          <p>
+            A high number of nominal holdings does not equal real diversification. ZEQT lists only
+            <strong>6</strong> securities &mdash; yet each is an index ETF holding hundreds of companies,
+            so the true count is enormous. Conversely, a thematic fund can list 100 holdings that are all
+            one bet (Module&nbsp;7.6's PAVE). <em>Always look through to what the holdings actually are.</em>
+          </p>
+        </div>
+        <div class="warn-box">
+          <span class="box-label">Common Confusion</span>
+          <p>
+            Distribution yield is not total return. ZEQT's 1.28% yield is the cash paid out; the fund's
+            <em>growth</em> (its 15%+ since inception) is a separate, larger thing. Chasing a high
+            distribution yield while ignoring total return is how people end up with an income stream that
+            slowly eats its own principal.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 6. INTERVIEW TRANSLATION ============ -->
+      <section id="interview">
+        <h2>6. Interview Translation</h2>
+        <p>
+          &ldquo;Here's a quote / a fact sheet &mdash; what do you see?&rdquo; is a live-fire interview
+          exercise. They're testing whether you read the <em>whole</em> instrument, and whether you know
+          what each number does and doesn't tell you.
+        </p>
+        <div class="interview-box">
+          <span class="box-label">Interview Translation</span>
+          <p><strong>Handed a quote</strong>, narrate it as one picture, not a list:</p>
+          <p class="say">
+            &ldquo;Mid-cap name around \$9-10B, trading near its 52-week high on above-average volume, so
+            there's real conviction behind today's move. It's at 18&times; earnings with a high beta, which
+            tells me it's a cyclical, leveraged play &mdash; I'd want the macro and industry pillars to
+            support that multiple before touching it. The token dividend says this is a growth/price story,
+            not an income one.&rdquo;
+          </p>
+          <p><strong>Handed the ETF sheet</strong>, lead with cost, structure and look-through:</p>
+          <p class="say">
+            &ldquo;All-in-one equity fund, 0.18% MER, a fund-of-funds holding six index ETFs &mdash; so
+            six line items but thousands of underlying companies, which is genuine structural
+            diversification. Roughly 48% US, 25% Canada, the rest developed and emerging international;
+            tech and financials heavy, medium risk. Short track record given the 2022 inception, so I'd
+            weight the since-inception number lightly. As a portfolio <em>core</em> it's textbook.&rdquo;
+          </p>
+          <p>
+            The tells an interviewer is listening for: reading <em>market cap before price</em>, checking
+            <em>volume</em> to weight a move, quoting the <em>MER</em> unprompted, and &mdash; the senior
+            move &mdash; <em>looking through</em> a holdings count to what's actually inside. That last one
+            is the whole of Module&nbsp;7.6 in a sentence.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 7. RECAP ============ -->
+      <section id="recap">
+        <h2>7. Where to Go Next</h2>
+        <p>
+          This practicum operationalises <a href="module7.html#definitions">Module&nbsp;7.1</a> (reading a
+          quote) and <a href="module7.html#reading-etf">Module&nbsp;7.6</a> (reading a fact sheet). For
+          the definitions behind every field here &mdash; market cap, P/E, beta, MER, AUM, tracking
+          difference &mdash; see the <a href="appendix-glossary.html">consolidated Glossary</a>, and run
+          the live <a href="module7.html#sandbox">bull/base/bear DCF sandbox</a> to price a name once
+          you've read it.
+        </p>
+        <div class="exam-card">
+          <span class="exam-tag">Source &amp; honesty note</span>
+          <p style="margin-bottom:0">
+            The fact-sheet figures are reproduced from BMO Global Asset Management's published
+            <strong>ZEQT</strong> fact sheet, data as of Jul&nbsp;31,&nbsp;2026, for educational reading
+            only. The stock quote in &sect;2 is illustrative &mdash; a made-up ticker with realistic
+            numbers, not a real security. Nothing here is investment advice.
+          </p>
+        </div>
+      </section>
+
+      <nav class="chapter-nav">
+        <a href="module7.html">&larr; Module 07 &mdash; Equity &amp; Sector Analysis</a>
+        <a href="appendix-glossary.html">Appendix &mdash; Glossary &rarr;</a>
+      </nav>
+
+    </main>
+
+    <aside class="contents" aria-label="Module contents">
+      <p class="contents-label">Contents</p>
+      <ol>
+        <li><a href="#hook">1. Two Documents</a></li>
+        <li><a href="#quote">2. Reading a Quote</a></li>
+        <li><a href="#chart">3. Reading a Chart</a></li>
+        <li><a href="#factsheet">4. Reading a Fact Sheet</a></li>
+        <li><a href="#common-confusions">5. Common Confusions</a></li>
+        <li><a href="#interview">6. Interview Translation</a></li>
+        <li><a href="#recap">7. Where to Go Next</a></li>
+      </ol>
+      <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
+        <span data-complete-label>Mark module complete</span>
+      </button>
+    </aside>
+  </div>
+
+  <!-- docked explanation panel -->
+  <aside class="explain-panel" id="explain-panel" aria-live="polite" aria-label="Explanation">
+    <span class="explain-tag">Reading it</span>
+    <p class="explain-term"></p>
+    <div class="explain-desc"></div>
+    <span class="explain-hint">Click any highlighted figure</span>
+  </aside>
+
+  <!-- explanation copy: content lives here, wiring lives in reading-room.js -->
+  <script type="application/json" id="reading-explains">
+  {
+    "ticker": { "tag": "Quote", "term": "Ticker", "desc": "The short code a stock trades under on its exchange. <strong>AUX</strong> here is illustrative. A ticker is an address, not a verdict &mdash; it tells you nothing about quality, only where to look the company up." },
+    "exchange": { "tag": "Quote", "term": "Exchange & sector", "desc": "Where it trades (TSX = Toronto) and its industry. The venue is neutral &mdash; a listing on the TSX vs. NYSE says nothing about a company's worth, only its home market. Sector sets which macro forces matter most." },
+    "price": { "tag": "Quote", "term": "Share price", "desc": "The cost of <em>one share</em> right now. On its own it means almost nothing &mdash; a \\$5 stock isn't cheaper than a \\$500 one. <strong>Always translate price into market cap</strong> before forming any view of size." },
+    "change": { "tag": "Quote", "term": "Day change", "desc": "How much the price moved today, in dollars and percent. Green is up, red is down. It's noise until you ask <em>why</em> and <em>on what volume</em> &mdash; a 3% pop on heavy volume means something; on a quiet day it may not." },
+    "open": { "tag": "Quote", "term": "Open", "desc": "The first trade price of the session. Comparing open to the current price shows the day's direction; comparing today's open to yesterday's close reveals overnight <em>gaps</em>, often driven by after-hours news." },
+    "dayrange": { "tag": "Quote", "term": "Day's range", "desc": "The lowest and highest it traded today. A wide range signals a volatile, contested session; a narrow one, a quiet consensus. The current price's position <em>within</em> the range hints who's winning right now." },
+    "range52": { "tag": "Quote", "term": "52-week range", "desc": "The low and high over the past year. Here the price (42.18) sits near the top (43.75) &mdash; the stock is <em>near its highs</em>. That's context, not a signal: highs can keep making highs, or mark exhaustion. It frames every other number." },
+    "volume": { "tag": "Quote", "term": "Volume", "desc": "How many shares changed hands today. Volume is the <em>conviction meter</em> behind a price move: the same 3% gain means far more on 3.2M shares than on 0.3M. Compare it to average volume, next door." },
+    "avgvol": { "tag": "Quote", "term": "Average volume", "desc": "Typical daily volume. Today's 3.2M against a 2.1M average means trading is <strong>~50% heavier than usual</strong> &mdash; so today's move carries real conviction, not a thin-market fluke." },
+    "mktcap": { "tag": "Quote", "term": "Market capitalization", "desc": "Price &times; shares outstanding = what the market says the <em>whole company</em> is worth. This is the number that means &lsquo;size&rsquo;. \\$9.6B makes this a <strong>mid-cap</strong> &mdash; bigger than a speculative junior, smaller than a major. Read this <em>before</em> price, always." },
+    "pe": { "tag": "Quote", "term": "P/E ratio", "desc": "Price &divide; earnings-per-share = the price tag on \\$1 of annual profit, and roughly the years of today's profit to earn the price back. 18.4 is moderate. High P/E prices in growth; low P/E prices in decline &mdash; the ratio poses the question, it never answers it." },
+    "eps": { "tag": "Quote", "term": "EPS (trailing twelve months)", "desc": "Net income &divide; shares = profit attributable to one share over the last year. Here \\$2.29. It's the denominator of P/E: 42.18 &divide; 2.29 = 18.4. &lsquo;ttm&rsquo; means it looks backward; a <em>forward</em> EPS uses estimates instead." },
+    "divyield": { "tag": "Quote", "term": "Dividend & yield", "desc": "The annual cash paid per share (\\$0.40) and that as a percent of price (0.95%). A token yield like this signals a <em>growth/price</em> story, not an income one &mdash; the company keeps most profit to reinvest. Miners often pay little for exactly this reason." },
+    "beta": { "tag": "Quote", "term": "Beta", "desc": "How hard the stock swings per market swing. Beta 1.8 amplifies every market move by 1.8&times;, up <em>and</em> down &mdash; a <strong>leveraged play</strong>. It measures the <em>systematic</em> risk diversification can't remove (Module 5), and is why miners out-move the index." },
+
+    "c-wick": { "tag": "Chart", "term": "The wick (shadow)", "desc": "The thin line above and below the body marks the session's <strong>high and low</strong> &mdash; the extremes price reached before pulling back. Long wicks mean price was rejected there: buyers or sellers pushed, then lost ground." },
+    "c-up": { "tag": "Chart", "term": "An up candle", "desc": "When price <strong>closes above where it opened</strong>, the body is drawn green (or hollow). The bottom of the body is the open, the top is the close. A tall green body = buyers dominated the whole period." },
+    "c-down": { "tag": "Chart", "term": "A down candle", "desc": "When price <strong>closes below its open</strong>, the body is red (or filled). Now the top of the body is the open and the bottom is the close &mdash; the reverse of a green candle. A tall red body = sellers dominated." },
+    "chart-yaxis": { "tag": "Chart", "term": "The value (y) axis", "desc": "The vertical scale &mdash; here dollar value of the investment. Always check whether it's <em>linear</em> or <em>logarithmic</em>: a log axis makes equal <em>percentage</em> moves look equal, which is usually what you want for long horizons." },
+    "chart-xaxis": { "tag": "Chart", "term": "The time (x) axis", "desc": "The horizontal scale &mdash; time. The window changes the whole story: a single volatile week can look terrifying while the multi-year trend is calmly upward. Always ask &lsquo;over what period?&rsquo; before reacting to a chart's shape." },
+    "chart-line": { "tag": "Chart", "term": "The line", "desc": "A line chart connects one price (usually the close) per period &mdash; simpler than candles, good for seeing the <em>trend</em>. This one is the growth of a \\$10,000 stake in ZEQT. Note it isn't a straight line: it climbs, dips, then climbs harder." },
+    "chart-endpoint": { "tag": "Chart", "term": "$18,856 today", "desc": "The \\$10,000 invested near inception is worth <strong>\\$18,856</strong> on Jul 31, 2026 &mdash; about +89%. This is the same compounding from Module 1, made visible. The dip along the way is the volatility (Module 6) you had to hold through to reach it." },
+
+    "fs-ticker": { "tag": "Fact sheet", "term": "ZEQT", "desc": "BMO's All-Equity ETF &mdash; a single Canadian-listed fund holding a fixed, auto-rebalanced mix of other equity ETFs. This is exactly the <strong>all-in-one core</strong> holding from Module 6.3." },
+    "fs-exchange": { "tag": "Fact sheet", "term": "Exchange: TSX", "desc": "It trades on the Toronto Stock Exchange in Canadian dollars, like a stock. Being Canadian-listed matters for the withholding-tax nuance from Module 6.4 &mdash; a Canadian wrapper behaves differently from holding US ETFs directly." },
+    "fs-inception": { "tag": "Fact sheet", "term": "Inception date", "desc": "When the fund launched: Jan 24, 2022. This is why the 5- and 10-year performance columns are blank &mdash; the fund hasn't existed that long. A track record under ~3 years carries little weight; treat young funds' history cautiously." },
+    "fs-mer": { "tag": "Fact sheet", "term": "MER (0.18%)", "desc": "<strong>Management Expense Ratio</strong> &mdash; the all-in annual cost as a percent of assets, skimmed automatically. On \\$10,000 that's \\$18/year. It's the single most reliable predictor of a fund's long-run drag: low and boring wins. 0.18% is very cheap for global equity." },
+    "fs-fee": { "tag": "Fact sheet", "term": "Management fee vs. MER", "desc": "The management fee (0.15%) is what BMO charges to run it; the MER (0.18%) is that <em>plus</em> operating costs and taxes &mdash; the true all-in figure. Always compare funds on <strong>MER</strong>, not the headline management fee, which understates cost." },
+    "fs-distfreq": { "tag": "Fact sheet", "term": "Distribution frequency", "desc": "How often it pays out income (dividends from its holdings): quarterly. Frequency is a cash-flow convenience, not a measure of quality. Inside a TFSA/RRSP these distributions aren't taxed; in a non-registered account they are." },
+    "fs-eligible": { "tag": "Fact sheet", "term": "RSP / DRIP eligible", "desc": "<strong>RSP-eligible</strong>: can be held in registered accounts (RRSP, TFSA, FHSA) &mdash; where you'd want a core holding first (Module 6.4). <strong>DRIP</strong>: distributions can auto-reinvest into more units, compounding without you lifting a finger." },
+    "fs-aum": { "tag": "Fact sheet", "term": "Net assets (AUM)", "desc": "\\$924.58M &mdash; total money invested in the fund. Higher AUM generally means better liquidity (tighter bid-ask spreads) and lower risk of the fund being shut down for being uneconomic. Near a billion is healthy and stable." },
+    "fs-numsec": { "tag": "Fact sheet", "term": "Number of securities: 6", "desc": "The fund holds just <strong>six</strong> things &mdash; but each is itself an index ETF holding hundreds of companies. This is the look-through trap in reverse: a tiny holdings count that is <em>massively</em> diversified underneath. Never judge diversification by this number alone." },
+    "fs-shares": { "tag": "Fact sheet", "term": "Shares (units) outstanding", "desc": "How many ETF units exist: ~40.1M. Units are created and redeemed as demand changes, which (via arbitrage) keeps the ETF's market price close to the value of its holdings. AUM &divide; units &asymp; the price per unit." },
+    "fs-pe": { "tag": "Fact sheet", "term": "Portfolio P/E (37.24)", "desc": "The weighted-average price-to-earnings of everything the fund holds. 37 is on the richer side &mdash; reflecting its heavy US/tech tilt (see Sector Allocation). It's a valuation temperature for the whole basket, read the same way as a single stock's P/E." },
+    "fs-pb": { "tag": "Fact sheet", "term": "Portfolio P/B (10.59)", "desc": "Price-to-<em>book</em> &mdash; price versus the accounting net worth of the holdings. High P/B is typical of asset-light, tech-heavy portfolios (their value is brand and IP, not factories). Read alongside P/E as a second valuation lens." },
+    "fs-yield": { "tag": "Fact sheet", "term": "Distribution yield (1.28%)", "desc": "Annualized cash payout as a percent of price. <strong>This is not total return</strong> &mdash; the fund's growth (15%+ since inception) is separate and far larger. An all-equity growth fund pays a modest yield on purpose; it's reinvesting, not distributing." },
+    "fs-1mo": { "tag": "Fact sheet", "term": "1-month return (-0.88%)", "desc": "The last month was slightly negative. Short-window returns are <em>weather</em>, not climate &mdash; noise. They tell you almost nothing about a long-horizon core holding; the longer columns matter far more." },
+    "fs-ytd": { "tag": "Fact sheet", "term": "Year-to-date (13.68%)", "desc": "Return since Jan 1 of this year. Useful for a &lsquo;how's the year going&rsquo; glance, but it's an arbitrary window &mdash; it starts on a calendar date, not a meaningful one. Don't over-read it." },
+    "fs-1y": { "tag": "Fact sheet", "term": "1-year return (25.94%)", "desc": "A strong trailing year. One good year is not a trend &mdash; it can reflect a favourable market as much as the fund. Compare it to the fund's benchmark and to its 3-year to see whether it's typical or a spike." },
+    "fs-3y": { "tag": "Fact sheet", "term": "3-year annualized (20.83%)", "desc": "The <em>annualized</em> return over 3 years &mdash; the steady yearly rate that compounds to the total. Annualized (not cumulative) figures are what let you compare funds of different ages fairly. This is a genuinely strong 3-year run." },
+    "fs-incep": { "tag": "Fact sheet", "term": "Since inception (15.08%)", "desc": "Annualized return since Jan 2022. The most complete number the fund has &mdash; but still only ~4.5 years, so weight it accordingly. It's the figure the \\$10,000 &rarr; \\$18,856 chart draws." },
+    "fs-fof": { "tag": "Fact sheet", "term": "A fund of funds", "desc": "ZEQT doesn't buy stocks directly &mdash; it buys <em>other BMO index ETFs</em>. This is why it lists only 6 holdings. BMO waives the double management fee on the underlying funds, so you pay one low MER, not two stacked ones." },
+    "fs-geo": { "tag": "Fact sheet", "term": "Geographic allocation", "desc": "Where the underlying companies are domiciled: ~48% US, 25% Canada, the rest developed and emerging international. This is your true global exposure. The heavy US weight is why the portfolio P/E and P/B run high &mdash; US mega-cap tech pulls them up." },
+    "fs-sector": { "tag": "Fact sheet", "term": "Sector allocation", "desc": "Which industries the money sits in: tech (24%) and financials (22%) lead. This is how you check a fund's <em>real</em> tilt. A broad-market fund like this is spread across all 11 sectors &mdash; contrast a thematic ETF, which would pile into one." },
+    "fs-risk": { "tag": "Fact sheet", "term": "Risk rating: Medium", "desc": "A regulator-mandated (CSA) rating based on the <em>volatility</em> of returns &mdash; risk as bounce, exactly Module 6.1's definition. &lsquo;Medium&rsquo; is normal for a 100%-equity global fund. Note the fine print: a low rating never means &lsquo;can't lose money&rsquo;." }
+  }
+  </script>
+
+  <footer class="book-footer">
+    PERSONAL FINANCE FROM SCRATCH &mdash; a zero-knowledge curriculum, Canadian edition. Educational material, not financial advice.
+  </footer>
+
+  <script src="reader.js"></script>
+  <script src="widgets/reading-room.js"></script>
+  <script src="theme.js"></script>
+</body>
+</html>

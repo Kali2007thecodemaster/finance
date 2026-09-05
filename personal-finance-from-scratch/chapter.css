@@ -590,6 +590,107 @@ mjx-container[display="true"] {
 mjx-container:not([display="true"]) { max-width: 100%; }
 
 /* ============================================================
+   READING ROOM — interactive quote / chart / fact-sheet
+   ============================================================ */
+
+/* any clickable figure */
+.explainable {
+  cursor: pointer;
+  position: relative;
+  border-bottom: 2px dotted var(--accent);
+  transition: background 140ms ease;
+}
+.explainable:hover { background: color-mix(in srgb, var(--yellow) 45%, transparent); }
+.explainable.explain-active { background: var(--yellow); color: #17130C; border-bottom-color: transparent; }
+
+/* the docked explanation card */
+.explain-panel {
+  position: fixed;
+  right: 20px; bottom: 20px;
+  z-index: 60;
+  width: min(380px, calc(100vw - 40px));
+  background: var(--ink);
+  color: var(--bg);
+  border: 3px solid var(--rule);
+  box-shadow: 7px 7px 0 var(--red);
+  padding: 16px 18px 18px;
+  transform: translateY(140%);
+  opacity: 0;
+  transition: transform 320ms var(--ease, cubic-bezier(.22,1,.36,1)), opacity 220ms ease;
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+.explain-panel.explain-shown { transform: none; opacity: 1; }
+.explain-panel .explain-tag {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: #17130C; background: var(--yellow); padding: 3px 8px; margin-bottom: 10px;
+}
+.explain-panel .explain-term { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; color: #FFFFFF; margin-bottom: 8px; letter-spacing: -0.01em; }
+.explain-panel .explain-desc { font-family: var(--font-serif); font-size: 0.92rem; line-height: 1.6; color: var(--bg); }
+.explain-panel .explain-desc strong { color: #FFFFFF; }
+.explain-panel .explain-desc em { color: var(--yellow); font-style: normal; }
+.explain-panel .explain-hint { display: block; margin-top: 10px; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.06em; color: var(--faint); text-transform: uppercase; }
+:root[data-theme="dark"] .explain-panel { background: #0B0906; }
+
+@media (max-width: 640px) {
+  .explain-panel { right: 10px; left: 10px; bottom: 10px; width: auto; box-shadow: 4px 4px 0 var(--red); }
+}
+
+/* ---- interactive stock quote card ---- */
+.quote-card { border: 3px solid var(--rule); background: var(--panel); box-shadow: 6px 6px 0 var(--rule); padding: 18px 20px; margin: 24px 0; }
+.quote-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; border-bottom: 2px solid var(--border); padding-bottom: 12px; margin-bottom: 14px; }
+.quote-head .q-ticker { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; color: var(--ink); letter-spacing: -0.02em; }
+.quote-head .q-exch { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); }
+.quote-head .q-price { font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; color: var(--ink); margin-left: auto; }
+.quote-head .q-chg { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; }
+.q-up { color: var(--c-why); }
+.q-down { color: var(--c-warn); }
+.quote-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 2px; }
+.q-cell { padding: 9px 11px; background: var(--bg); }
+.q-cell .q-key { display: block; font-family: var(--font-mono); font-size: 0.64rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.q-cell .q-val { font-family: var(--font-mono); font-size: 0.98rem; font-weight: 700; color: var(--ink); }
+
+/* ---- candlestick anatomy ---- */
+.candle-fig { border: 2px solid var(--border); background: var(--panel); padding: 18px; margin: 22px 0; }
+.candle-fig svg { width: 100%; height: auto; display: block; }
+.candle-fig .c-label { font-family: var(--font-mono); font-size: 11px; fill: var(--muted); }
+.candle-fig .c-axis { stroke: var(--border); stroke-width: 1.5; }
+.candle-up { fill: var(--c-why); }
+.candle-down { fill: var(--c-warn); }
+.candle-wick { stroke: var(--ink); stroke-width: 2.5; }
+
+/* ---- allocation bars ---- */
+.alloc-list { margin: 16px 0; display: grid; gap: 7px; }
+.alloc-row { display: grid; grid-template-columns: minmax(120px, 40%) 1fr auto; align-items: center; gap: 12px; }
+.alloc-row .a-name { font-family: var(--font-sans); font-size: 0.85rem; color: var(--ink); }
+.alloc-row .a-track { height: 16px; background: var(--sunken); border: 1px solid var(--border); position: relative; }
+.alloc-row .a-fill { height: 100%; background: var(--blue); }
+.alloc-row:nth-child(3n+1) .a-fill { background: var(--red); }
+.alloc-row:nth-child(3n+2) .a-fill { background: var(--blue); }
+.alloc-row:nth-child(3n+3) .a-fill { background: var(--yellow); }
+.alloc-row .a-pct { font-family: var(--font-mono); font-size: 0.82rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
+
+/* ---- fact-sheet blocks ---- */
+.fsheet { border: 3px solid var(--rule); margin: 24px 0; background: var(--panel); }
+.fsheet-head { background: var(--ink); color: var(--bg); padding: 14px 18px; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.fsheet-head .fs-ticker { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; color: var(--yellow); }
+.fsheet-head .fs-name { font-family: var(--font-display); font-weight: 600; font-size: 1rem; }
+.fsheet-head .fs-asof { font-family: var(--font-mono); font-size: 0.66rem; color: var(--faint); margin-left: auto; }
+.fsheet-body { padding: 16px 18px; }
+.fsheet-block { margin-bottom: 22px; }
+.fsheet-block > h4 { font-family: var(--font-sans); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); border-bottom: 2px solid var(--border); padding-bottom: 6px; margin-bottom: 12px; }
+.kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px 20px; }
+.kv { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; border-bottom: 1px dotted var(--border); padding-bottom: 4px; }
+.kv .kv-k { font-family: var(--font-sans); font-size: 0.82rem; color: var(--muted); }
+.kv .kv-v { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: var(--ink); text-align: right; }
+
+/* risk scale */
+.risk-scale { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; margin: 8px 0 6px; }
+.risk-seg { text-align: center; font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.03em; text-transform: uppercase; color: var(--muted); padding: 10px 4px; background: var(--sunken); border: 1px solid var(--border); }
+.risk-seg.risk-on { background: var(--yellow); color: #17130C; font-weight: 700; border-color: var(--rule); }
+
+/* ============================================================
    THEME TOGGLE — sun (light) <-> moon (dark), animated
    ============================================================ */
 

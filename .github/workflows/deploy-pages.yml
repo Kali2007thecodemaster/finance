@@ -58,10 +58,11 @@ jobs:
           missing=0
           for f in index.html style.css scene.js theme.js main.js \
                    chapter.css reader.js appendix-glossary.html \
-                   loonie.html models/loonie_2003.glb \
+                   reading-room.html loonie.html models/loonie_2003.glb \
                    vendor/three/three.module.js vendor/three/GLTFLoader.js \
                    widgets/tvm-calculator.js widgets/amortization.js \
-                   widgets/npv-scenario.js widgets/dcf-scenario-sandbox.js; do
+                   widgets/npv-scenario.js widgets/dcf-scenario-sandbox.js \
+                   widgets/reading-room.js; do
             [ -f "$f" ] || { echo "missing: $f"; missing=1; }
           done
           for n in 0 1 2 3 4 5 6 7 8 9; do
