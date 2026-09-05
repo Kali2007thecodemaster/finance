@@ -133,7 +133,46 @@
           </p>
         </div>
 
+        <h4>Reading the quote: what each number actually tells you</h4>
+        <p>
+          <strong>Why market cap, never price.</strong> A share price is the cost of one <em>slice</em>;
+          market cap is the cost of the whole <em>pizza</em>. A \$5 stock is not &ldquo;cheaper&rdquo;
+          than a \$500 stock &mdash; a company chooses how many slices to cut, so the \$5 company might be
+          worth far more in total. Multiply price by shares outstanding and you get what the market says
+          the entire business is worth. That total is the only size that means anything, which is why the
+          first instinct of anyone who reads quotes for a living is to translate a price into a market
+          cap before saying a word.
+        </p>
+        <p>
+          <strong>What P/E really is.</strong> Price divided by earnings-per-share is the price tag on
+          \$1 of the company's annual profit &mdash; and, read the other way, roughly how many years of
+          today's profit it would take to earn the price back. A P/E of 30 means you're paying \$30 for
+          \$1 of current earnings, which only makes sense if you expect those earnings to <em>grow</em>.
+          So a high P/E isn't &ldquo;expensive&rdquo; or &ldquo;cheap&rdquo; on its own &mdash; it's the
+          market pricing in a growth expectation, and your job is to judge whether that expectation is
+          justified. A low P/E is the mirror: either a bargain or a business the market expects to
+          shrink. The ratio poses the question; it never answers it.
+        </p>
+        <p>
+          <strong>Beta as an amplifier.</strong> Beta measures how hard a stock swings for each swing in
+          the whole market. Think of a volume knob set relative to 1.0: a beta of 1 moves with the
+          market one-for-one; a beta of 1.8 amplifies every market move by 1.8&times;, up <em>and</em>
+          down. It is the formal measure of the <em>systematic</em> (undiversifiable) risk left over
+          after <a href="module5.html#definitions">Module&nbsp;05's</a> diversification &mdash; the part
+          of the ride you can't smooth away by owning more names, because it's the market itself moving.
+          The worked example in <a href="#worked-examples">&sect;4</a> shows why a high-beta miner is a
+          leveraged bet on its commodity.
+        </p>
+
         <h3>7.2 The Four-Pillar Institutional Research Framework</h3>
+        <p>
+          A quote is a snapshot of price. A <em>thesis</em> is an argument about value, and an argument
+          needs to survive attack from every direction at once. The four pillars are simply the four
+          directions the attack can come from &mdash; the macro weather, the industry ground, the
+          instrument's own wiring, and the range of futures &mdash; asked in a fixed order so nothing
+          load-bearing gets skipped. Run any name through all four and you have done, in miniature, what
+          a research desk does over weeks.
+        </p>
 
         <h4>Pillar 1 &mdash; Macroeconomic Environment</h4>
         <p><em>What's the broad backdrop doing to this asset?</em></p>
@@ -411,25 +450,35 @@
         <h3>From 7.1 &mdash; Beta, and why miners are leveraged plays</h3>
         <div class="example-box">
           <span class="box-label">Worked Example</span>
+          <p>The TSX rises 10%. A gold miner has a beta of 1.8. Apply the amplifier: multiply the market move by beta.</p>
+          <p>$$\text{expected stock move} \approx \beta \times \text{market move} = 1.8 \times 10\% = 18\%$$</p>
           <p>
-            TSX +10%, a miner with $\beta=1.8$ &rarr; roughly 18% expected move same direction &mdash;
-            why mining equities are &ldquo;leveraged plays&rdquo; on their commodity.
+            The stock is expected to move about 18% in the same direction &mdash; nearly twice the
+            market. The same knob works downward: a 10% market fall implies roughly &minus;18%. That's
+            what &ldquo;leveraged play&rdquo; means &mdash; you're not just exposed to gold, you're
+            exposed to an amplified version of it.
           </p>
         </div>
         <h3>From 7.2 &mdash; Operating leverage on a gold miner's margin</h3>
         <div class="example-box">
           <span class="box-label">Worked Example</span>
+          <p>Now find <em>where</em> that amplification physically comes from. A miner's cost to pull an ounce out of the ground is largely fixed at \$1,200/oz &mdash; it doesn't change much whether gold sells for \$2,000 or \$2,200. Watch what a 10% rise in the gold price does to the <em>margin</em> (price minus cost).</p>
+          <p><strong>Before:</strong> gold at \$2,000. Margin $= 2{,}000 - 1{,}200 = \$800\text{/oz}$.</p>
+          <p><strong>After a 10% price rise:</strong> gold at \$2,200. Margin $= 2{,}200 - 1{,}200 = \$1{,}000\text{/oz}$.</p>
+          <p><strong>The margin's percentage change:</strong></p>
+          <p>$$\frac{1{,}000 - 800}{800} = \frac{200}{800} = 25\%$$</p>
           <p>
-            Fixed cost \$1,200/oz, gold \$2,000&rarr;\$2,200 (+10%) &rarr; margin
-            \$800&rarr;\$1,000/oz (+25%) &mdash; why miner equities often out-move the commodity
-            itself.
+            Gold moved 10%; the miner's profit-per-ounce moved 25% &mdash; because the whole \$200 price
+            increase dropped straight to margin while the fixed \$1,200 cost stayed put. That is
+            operating leverage: when costs are fixed, revenue changes hit profit magnified.
           </p>
         </div>
         <p>
-          Read the two together and they are the same phenomenon seen from two levels. Beta measures the
-          amplification statistically, from price history; operating leverage explains where the
-          amplification physically comes from, in the cost structure. A thesis that cites one without
-          the other is only half a thesis.
+          Read the two examples together and they are the same phenomenon seen from two levels. Beta
+          measures the amplification <em>statistically</em>, from price history (18% for a 10% market
+          move); operating leverage explains where the amplification <em>physically</em> comes from, in
+          the cost structure (25% margin change for a 10% price move). A thesis that cites one without the
+          other is only half a thesis &mdash; the number and its cause.
         </p>
       </section>
 
@@ -537,9 +586,46 @@
         </div>
       </section>
 
-      <!-- ============ 7. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <!-- ============ 7. INTERVIEW TRANSLATION ============ -->
+      <section id="interview">
+        <h2>7. Interview Translation</h2>
+        <p>
+          This is the module an equity-research or investment-banking interview draws on most, because it
+          is the actual job. You will be asked to <em>pitch a stock</em>, and a good pitch is not a pile
+          of facts &mdash; it's a structured argument with a valuation attached and an honest sense of
+          what could be wrong. The four pillars and the DCF give you exactly that structure.
+        </p>
+        <div class="interview-box">
+          <span class="box-label">Interview Translation</span>
+          <p><strong>If asked to &ldquo;pitch me a stock&rdquo;</strong> (the classic prompt), don't ramble &mdash; deliver the shape:</p>
+          <p class="say">
+            &ldquo;Here's the thesis in one line, then the four pillars. <em>Macro:</em> where do rates
+            and the cycle push this asset? <em>Industry:</em> what are the supply/demand and margin
+            drivers &mdash; for a miner, operating leverage means a 10% commodity move can swing margins
+            25%. <em>Structure:</em> does the instrument actually give the exposure I want &mdash; beta,
+            index weighting, split-adjusted data? <em>Scenarios:</em> I don't give one target, I give
+            bull/base/bear, each a DCF with different assumptions, and I care about the <em>range</em> as
+            much as the base case. My valuation is a DCF &mdash; discount projected free cash flows to
+            present value &mdash; and I'll tell you upfront it's an estimate whose swing factor is the
+            discount rate.&rdquo;
+          </p>
+          <p>
+            <strong>Three things that signal maturity.</strong> First, quote size in <em>market cap</em>,
+            never share price. Second, treat a DCF as reasoned estimation, not truth &mdash; the line
+            &ldquo;a DCF produces <em>a</em> value, not <em>the</em> value, entirely dependent on my
+            assumptions&rdquo; is exactly what a PM wants to hear, because it shows you won't be fooled by
+            your own model. Third, on the news that will inevitably come up, filter it: <em>which pillar
+            does this headline touch, and was it already priced in?</em> Markets move on surprises versus
+            expectations, not on confirmations. Landing those three &mdash; cap over price, humility about
+            the model, and surprise-versus-expectation on news &mdash; tells an interviewer you'd be safe
+            to hand a live name to.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 8. RECAP &AMP; GLOSSARY TERMS ============ -->
       <section id="recap">
-        <h2>7. Recap &amp; Glossary Terms</h2>
+        <h2>8. Recap &amp; Glossary Terms</h2>
         <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
         <ul class="recap-list">
           <li><a href="appendix-glossary.html#g-ticker">Ticker</a><span class="recap-gloss"> &mdash; Short code identifying a stock on an exchange</span></li>
@@ -584,7 +670,8 @@
         <li><a href="#common-confusions">4. Common Confusions</a></li>
         <li><a href="#knowledge-checks">5. Knowledge Checks</a></li>
         <li><a href="#sandbox">6. Sandbox</a></li>
-        <li><a href="#recap">7. Recap &amp; Glossary Terms</a></li>
+        <li><a href="#interview">7. Interview Translation</a></li>
+        <li><a href="#recap">8. Recap &amp; Glossary Terms</a></li>
       </ol>
       <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
         <span data-complete-label>Mark module complete</span>
