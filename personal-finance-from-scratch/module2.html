@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#222222">
+  <meta name="theme-color" content="#F0E7D4">
   <script>
     (function () {
       try {
@@ -18,7 +18,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
   <script>
     MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
@@ -97,6 +97,15 @@
       <section id="definitions">
         <h2>3. Definitions</h2>
         <h3>2.1 Personal Balance Sheet</h3>
+        <p>
+          A balance sheet lists the two piles from <a href="module0.html">Module&nbsp;00</a> &mdash;
+          assets on one side, liabilities on the other &mdash; frozen on a single day. But not every
+          asset is equally spendable, and the word for &ldquo;how quickly can I turn this into cash
+          without taking a loss&rdquo; is <em>liquidity</em>. Think of a spectrum of temperature. Cash is
+          liquid &mdash; it pours. A term deposit is slushy; you can get it, but with a small delay or
+          penalty. A car or a condo is frozen solid: real value, but you can't spend a corner of it this
+          afternoon, and forcing a fast sale usually means selling cheap.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 2.1 &mdash; Liquid Asset</span>
           <p>
@@ -104,11 +113,32 @@
             asset</strong>.
           </p>
         </div>
+        <p>
+          Liquidity is <em>not</em> the same as worth. A \$400,000 house is worth far more than \$400 in
+          your pocket, yet the \$400 is what pays for groceries tonight. This is why net worth alone
+          can mislead in the other direction too: someone can be asset-rich and cash-poor, wealthy on
+          paper and unable to cover an emergency. The balance sheet tells you <em>how much</em>; liquidity
+          tells you <em>how reachable</em>.
+        </p>
+
         <h3>2.2 Personal Income Statement</h3>
+        <p>
+          Where the balance sheet is a photograph, the income statement is footage: it records what
+          flowed <em>in</em> and what flowed <em>out</em> across a stretch of time &mdash; a month, a
+          year. Subtract one from the other and you get the number that says whether the tank is filling
+          or draining.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 2.2 &mdash; Cash Flow</span>
           <p>$\text{Income} - \text{Expenses}$, over a period.</p>
         </div>
+        <p>
+          The two documents are linked by a hose. Positive cash flow this month is water flowing into the
+          tank; over a year, that flow is what raises the level the balance sheet measures. That is the
+          precise sense in which you <em>watch cash flow month-to-month and net worth year-to-year</em>:
+          the flow is fast and noisy, the level is slow and cumulative, and it is the flow, sustained,
+          that eventually moves the level.
+        </p>
       </section>
 
       <!-- ============ 4. WORKED EXAMPLES ============ -->
@@ -185,9 +215,40 @@
         </p>
       </section>
 
-      <!-- ============ 7. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <!-- ============ 7. INTERVIEW TRANSLATION ============ -->
+      <section id="interview">
+        <h2>7. Interview Translation</h2>
+        <p>
+          &ldquo;Walk me through the three financial statements and how they link&rdquo; is close to a
+          rite of passage in corporate-finance interviews. You've just built the personal version of two
+          of them; the vocabulary transfers directly.
+        </p>
+        <div class="interview-box">
+          <span class="box-label">Interview Translation</span>
+          <p><strong>If asked to distinguish the balance sheet from the income statement</strong>, lead with time, not contents:</p>
+          <p class="say">
+            &ldquo;The balance sheet is a point-in-time snapshot &mdash; assets, liabilities and the
+            equity residual on one date. The income statement covers a period &mdash; revenue minus
+            expenses, ending in profit. They're linked: the period's retained profit flows into equity on
+            the balance sheet, the way a month of positive cash flow raises net worth. So one is a stock
+            measured at an instant and the other is a flow measured over an interval.&rdquo;
+          </p>
+          <p>
+            <strong>The trap they're probing for:</strong> confusing <em>profit</em> with <em>cash
+            flow</em>. The disciplined line is that a company &mdash; or a person &mdash; can be
+            profitable on paper and still run out of cash, because timing and non-cash items sit between
+            the two. Personally, the mirror is <em>lifestyle creep</em>: your income line can rise while
+            your cash flow stays flat, because spending rose to meet it. Naming that a raise which lifts
+            expenses one-for-one leaves cash flow unchanged tells an interviewer you read the whole
+            statement, not just the top line &mdash; and it sets up the free-cash-flow discipline of
+            <a href="module7.html#definitions">Module&nbsp;7.4</a>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 8. RECAP &AMP; GLOSSARY TERMS ============ -->
       <section id="recap">
-        <h2>7. Recap &amp; Glossary Terms</h2>
+        <h2>8. Recap &amp; Glossary Terms</h2>
         <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
         <ul class="recap-list">
           <li><a href="appendix-glossary.html#g-liquid-asset">Liquid Asset</a><span class="recap-gloss"> &mdash; Easily convertible to spendable cash</span></li>
@@ -211,7 +272,8 @@
         <li><a href="#worked-examples">4. Worked Examples</a></li>
         <li><a href="#common-confusions">5. Common Confusions</a></li>
         <li><a href="#knowledge-checks">6. Knowledge Checks</a></li>
-        <li><a href="#recap">7. Recap &amp; Glossary Terms</a></li>
+        <li><a href="#interview">7. Interview Translation</a></li>
+        <li><a href="#recap">8. Recap &amp; Glossary Terms</a></li>
       </ol>
       <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
         <span data-complete-label>Mark module complete</span>

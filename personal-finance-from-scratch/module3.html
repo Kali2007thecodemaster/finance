@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#222222">
+  <meta name="theme-color" content="#F0E7D4">
   <script>
     (function () {
       try {
@@ -18,7 +18,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
   <script>
     MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
@@ -96,14 +96,26 @@
       <!-- ============ 3. DEFINITIONS ============ -->
       <section id="definitions">
         <h2>3. Definitions</h2>
+        <p>
+          Think about how car insurance is priced. A driver with three recent crashes pays a higher
+          premium than one with a spotless record &mdash; not as punishment, but because the insurer is
+          pricing the <em>chance</em> it has to pay out. A lender does the identical thing. The interest
+          rate it charges is a premium against the possibility that you don't pay it back, and that
+          possibility has a name.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 3.1 &mdash; Credit Risk</span>
           <p>The risk a borrower won't repay; priced directly into the rate charged.</p>
         </div>
         <p>
           &ldquo;Priced directly into the rate charged&rdquo; is the load-bearing half of that
-          definition, and the Common Confusion in <a href="#common-confusions">&sect;5</a> is what it
-          looks like in practice.
+          definition. It means an interest rate is really two things stacked together: a base cost of
+          money (what the lender itself must pay to obtain funds, ultimately anchored to the
+          <strong>Bank of Canada</strong>'s rate) plus a <em>risk premium</em> sized to how likely this
+          particular loan is to go bad. Turn the premium up and you get a credit card; turn it down and
+          you get a mortgage. What decides the premium is whether the lender has anything to grab if you
+          stop paying &mdash; the distinction the Common Confusion in
+          <a href="#common-confusions">&sect;5</a> turns on.
         </p>
       </section>
 
@@ -112,12 +124,23 @@
         <h2>4. Worked Examples</h2>
         <div class="example-box">
           <span class="box-label">Worked Example</span>
+          <p>You carry \$1,000 on a card at 20% APR and leave it untouched for a year. Use Module&nbsp;1's one-year move, only now it is working against you.</p>
+          <p><strong>The move:</strong> multiply the balance by $(1 + r)$, with $r = 0.20$.</p>
+          <p>$$\text{Owed} = 1{,}000 \times (1 + 0.20) = 1{,}000 \times 1.20 = \$1{,}200$$</p>
           <p>
-            \$1,000 at 20% APR untouched a year &rarr; \$1,200 owed &mdash; the same compounding math
-            as <a href="module1.html#definitions">Module&nbsp;1</a>, working against you. Why paying
-            off high-interest debt usually outranks investing.
+            The \$200 is the lender's rent on money you're renting &mdash; the borrower's side of the
+            \$40 the bank paid <em>you</em> back in <a href="module0.html#worked-examples">Module&nbsp;0.2</a>,
+            just at a steeper rate. And because it compounds, an untouched balance in year two would grow
+            on \$1,200, not \$1,000: the snowball rolls downhill for the lender.
           </p>
         </div>
+        <p>
+          Here is why that reframes &ldquo;should I invest or pay down debt?&rdquo; into arithmetic
+          rather than temperament. Clearing a 20% balance is a <em>guaranteed, tax-free 20% return</em>
+          &mdash; you are buying back a \$200 obligation for \$1,000. Almost no investment offers a
+          guaranteed 20%. So paying off high-interest debt usually outranks investing not because debt is
+          morally bad, but because its certain return is higher than an uncertain market's.
+        </p>
         <p>
           Set that against <a href="module1.html#worked-examples">Module&nbsp;1's worked example</a>
           &mdash; \$1,000 growing to \$1,157.63 over three years at 5% &mdash; and the comparison is
@@ -186,9 +209,38 @@
         </div>
       </section>
 
-      <!-- ============ 8. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <!-- ============ 8. INTERVIEW TRANSLATION ============ -->
+      <section id="interview">
+        <h2>8. Interview Translation</h2>
+        <p>
+          Credit and rate-setting are the ground floor of fixed income and lending. The idea an
+          interviewer wants to hear is that a rate is <em>decomposable</em> &mdash; that you can take one
+          apart into its risk-free base and its risk premium.
+        </p>
+        <div class="interview-box">
+          <span class="box-label">Interview Translation</span>
+          <p><strong>If asked &ldquo;why does a credit card cost 20% while a mortgage costs 6%?&rdquo;</strong> don't say &ldquo;cards are riskier&rdquo; and stop &mdash; say why, in the language of pricing:</p>
+          <p class="say">
+            &ldquo;A rate is the risk-free cost of money plus a premium for credit risk. A mortgage is
+            <em>secured</em> &mdash; the house is collateral the lender can seize and sell &mdash; so loss
+            given default is low and the premium is thin. A card is <em>unsecured</em>; there's nothing
+            to repossess but a promise, so the expected loss is higher and the premium is fat. Same
+            borrower, same bank &mdash; the collateral, not the person, explains most of the spread.&rdquo;
+          </p>
+          <p>
+            <strong>The pay-down-versus-invest follow-up</strong> is where you show judgment: paying off a
+            20% balance is a guaranteed, tax-free 20% return, and you'd have to find an investment
+            confident of beating that after tax and risk to prefer investing. Framing debt paydown as a
+            <em>return</em> rather than a chore &mdash; and comparing it on the same risk-adjusted footing
+            as an investment &mdash; is exactly the reasoning <a href="module4.html">Module&nbsp;04</a>
+            formalises as opportunity cost inside a discount rate.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 9. RECAP &AMP; GLOSSARY TERMS ============ -->
       <section id="recap">
-        <h2>8. Recap &amp; Glossary Terms</h2>
+        <h2>9. Recap &amp; Glossary Terms</h2>
         <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
         <ul class="recap-list">
           <li><a href="appendix-glossary.html#g-credit-risk">Credit Risk</a><span class="recap-gloss"> &mdash; The risk a borrower won't repay</span></li>
@@ -212,7 +264,8 @@
         <li><a href="#common-confusions">5. Common Confusions</a></li>
         <li><a href="#knowledge-checks">6. Knowledge Checks</a></li>
         <li><a href="#sandbox">7. Sandbox</a></li>
-        <li><a href="#recap">8. Recap &amp; Glossary Terms</a></li>
+        <li><a href="#interview">8. Interview Translation</a></li>
+        <li><a href="#recap">9. Recap &amp; Glossary Terms</a></li>
       </ol>
       <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
         <span data-complete-label>Mark module complete</span>

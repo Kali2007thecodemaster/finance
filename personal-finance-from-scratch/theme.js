@@ -31,7 +31,7 @@
     if (persist) { try { localStorage.setItem(KEY, theme); } catch (e) { /* fine */ } }
 
     var meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) { meta.setAttribute('content', theme === 'light' ? '#F4F1E9' : '#222222'); }
+    if (meta) { meta.setAttribute('content', theme === 'light' ? '#F0E7D4' : '#16130D'); }
 
     Array.prototype.forEach.call(document.querySelectorAll('.theme-toggle'), function (btn) {
       btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');

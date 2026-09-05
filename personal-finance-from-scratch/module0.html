@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#222222">
+  <meta name="theme-color" content="#F0E7D4">
   <script>
     (function () {
       try {
@@ -18,7 +18,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
   <script>
     MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
@@ -83,55 +83,125 @@
       <section id="definitions">
         <h2>2. Definitions</h2>
         <h3>0.1 What Even <em>Is</em> Money, Functionally?</h3>
+
+        <p>
+          Start with a picture, not a definition. Imagine emptying your entire life onto a table: your
+          bank card, your laptop, your bike, the phone in your hand, and next to it a stack of every
+          bill and loan statement you owe. The table now has two piles. One pile is made of things that
+          would put cash <em>into</em> your hand if you sold or spent them. The other pile is made of
+          promises that will take cash <em>out</em> of your hand later. Every idea in this entire
+          curriculum &mdash; balance sheets, credit, valuation, the lot &mdash; is just a more careful
+          way of sorting those two piles and doing arithmetic on them.
+        </p>
+        <p>The first pile has a name.</p>
+
         <div class="definition-box">
           <span class="box-label">Definition 0.1 &mdash; Asset</span>
           <p>Anything you own that has value.</p>
         </div>
+        <p>
+          An asset is anything on that table that <em>points cash toward you</em>: the money itself, yes,
+          but also the laptop you could sell, the shares you could cash out, the security deposit you'll
+          get back. It does not have to be cash today; it only has to be convertible to value at some
+          point. The second pile is its mirror image.
+        </p>
+
         <div class="definition-box">
           <span class="box-label">Definition 0.2 &mdash; Liability</span>
           <p>Anything you owe.</p>
         </div>
+        <p>
+          A liability points cash <em>away</em> from you: a credit-card balance, a student loan, the rent
+          you've agreed to pay. Notice the symmetry &mdash; every liability you have is, from the other
+          side of the table, somebody else's asset. Your student loan is an asset on the bank's books.
+          That single fact is the seed of <a href="module3.html">Module&nbsp;03</a>. Now the only
+          question left is what happens when you set one pile against the other.
+        </p>
+
         <div class="definition-box">
           <span class="box-label">Definition 0.3 &mdash; Net Worth</span>
           <p>What you actually have, once debts are subtracted.</p>
           <p>$$\text{Net Worth} = \text{Assets} - \text{Liabilities}$$</p>
         </div>
+        <p>
+          Before the symbols, the mechanics. This is not really a &ldquo;formula&rdquo; in the sense of
+          something you compute and forget &mdash; it is a <em>definition of truth-telling</em>. The
+          left pile is a positive number. The right pile is a negative one. Net worth is what survives
+          when they collide. Read the equation dynamically: anything that grows the asset pile (earning,
+          saving, an investment rising) pushes net worth up dollar-for-dollar; anything that grows the
+          liability pile (borrowing, a balance compounding) pushes it down the same way. Two people can
+          earn identical salaries and have opposite net worths, entirely because of which pile each has
+          been feeding.
+        </p>
+
         <div class="tip-box">
           <span class="box-label">Why This Matters</span>
           <p>
             &ldquo;How much money do I have&rdquo; is a trick question if you only look at your bank
-            balance. Net worth is the number that tells the truth.
+            balance, because the balance shows you one entry from the asset pile and none of the
+            liability pile. A \$3,000 chequing balance sitting on top of a \$9,000 card balance is not
+            \$3,000 of anything. Net worth is the single number that refuses to be fooled by a healthy
+            bank balance &mdash; it is the score, and everything else is a move that changes the score.
           </p>
         </div>
+
         <h3>0.2 What Even <em>Is</em> Interest?</h3>
+        <p>
+          Money, like an apartment, can be rented. If you let someone live in your apartment for a year,
+          you expect rent; if you let someone use your money for a year, you expect interest. That is the
+          whole idea &mdash; interest is rent on money &mdash; and the analogy is exact enough to carry
+          you a surprisingly long way.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 0.4 &mdash; Interest</span>
           <p>The price of using someone else's money.</p>
         </div>
+        <p>
+          Read it from both ends of the lease. When your savings sit in a bank, <em>you</em> are the
+          landlord: the bank is renting your money and pays you interest for it. When you carry a balance
+          on a card, the roles flip: now you are the tenant, renting the lender's money, and you pay the
+          rent. Same word, same arithmetic, opposite direction &mdash; and which direction you're facing
+          is most of what separates building wealth from leaking it.
+        </p>
       </section>
 
       <!-- ============ 3. WORKED EXAMPLES ============ -->
       <section id="worked-examples">
         <h2>3. Worked Examples</h2>
-        <h3>From 0.1 &mdash; Net worth, computed</h3>
+        <h3>From 0.1 &mdash; Net worth, computed step by step</h3>
         <div class="example-box">
           <span class="box-label">Worked Example</span>
-          <p>\$2,000 chequing + \$1,500 laptop &minus; \$500 credit card balance:</p>
-          <p>$$\text{Net Worth} = 3500 - 500 = \$3,000$$</p>
+          <p>You have \$2,000 in chequing, a laptop worth \$1,500, and a \$500 credit-card balance. Work it in three deliberate steps.</p>
+          <p><strong>Step 1 &mdash; total the asset pile.</strong> Two things point cash toward you: the cash itself and the laptop you could sell. $2{,}000 + 1{,}500 = \$3{,}500$.</p>
+          <p><strong>Step 2 &mdash; total the liability pile.</strong> One thing points cash away: the card balance. That's \$500.</p>
+          <p><strong>Step 3 &mdash; subtract.</strong></p>
+          <p>$$\text{Net Worth} = \underbrace{3{,}500}_{\text{assets}} - \underbrace{500}_{\text{liabilities}} = \$3{,}000$$</p>
+          <p>
+            The chequing balance alone said \$2,000. The honest figure is \$3,000, because the laptop
+            counted and the card debt was subtracted rather than ignored. The bank balance was neither.
+          </p>
         </div>
         <h3>From 0.2 &mdash; Interest, computed</h3>
         <div class="example-box">
           <span class="box-label">Worked Example</span>
           <p>
-            \$1,000 at 4%/year &rarr; \$40 interest in year one. The bank pays you for the use of your
-            money &mdash; literally what a bank <em>is</em> (<a href="module3.html">Module&nbsp;3</a>).
+            \$1,000 sits in a savings account paying 4% per year. The 4% is the rent rate; the rent
+            itself is that rate applied to the amount rented.
+          </p>
+          <p>$$\text{Interest} = 1{,}000 \times 0.04 = \$40 \text{ in year one}$$</p>
+          <p>
+            The bank pays you \$40 for the use of your \$1,000 &mdash; because the bank turns around and
+            rents that money out to someone else for more. Paying depositors to borrow, then lending at a
+            higher rate, is not a feature of a bank; it is the definition of one
+            (<a href="module3.html">Module&nbsp;3</a>).
           </p>
         </div>
         <p>
           That second example is worth sitting with, because it runs in both directions. When the bank
-          pays you 4%, you are the lender. When you carry a balance at 20%, you are the borrower and the
-          same arithmetic is pointed at you &mdash; which is exactly what
-          <a href="module3.html#worked-examples">Module&nbsp;3's worked example</a> shows.
+          pays you 4%, you are the lender collecting \$40. When you carry a \$1,000 balance at 20%, you
+          are the borrower and the identical arithmetic &mdash; $1{,}000 \times 0.20 = \$200$ &mdash; is
+          now pointed at you. Same machine, reversed polarity, which is exactly what
+          <a href="module3.html#worked-examples">Module&nbsp;3's worked example</a> makes concrete.
         </p>
       </section>
 
@@ -166,9 +236,41 @@
         </div>
       </section>
 
-      <!-- ============ 6. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <!-- ============ 6. INTERVIEW TRANSLATION ============ -->
+      <section id="interview">
+        <h2>6. Interview Translation</h2>
+        <p>
+          The point of this section, here and in every module, is to convert what you just learned into
+          the words you would actually say across a desk from a portfolio manager or a corporate-finance
+          interviewer. They rarely ask for a definition; they ask you to <em>connect</em> the small idea
+          to the big one.
+        </p>
+        <div class="interview-box">
+          <span class="box-label">Interview Translation</span>
+          <p>
+            <strong>If asked &ldquo;what is net worth, really?&rdquo;</strong> don't recite the
+            subtraction &mdash; locate it. Say:
+          </p>
+          <p class="say">
+            &ldquo;Net worth is the personal version of shareholders' equity on a company balance sheet:
+            it's assets minus liabilities, the residual claim left over once everything owed is settled.
+            A bank balance is a single asset line; net worth is the bottom line. That's why I'd never
+            judge financial health from cash on hand &mdash; I'd judge it from the residual, and from
+            whether it's trending up or down over time.&rdquo;
+          </p>
+          <p>
+            That answer does three things an interviewer is listening for: it maps a personal term to the
+            corporate one (<em>net worth &harr; equity</em>), it names the concept precisely (a
+            <em>residual claim</em>), and it distinguishes a stock (net worth, measured at an instant)
+            from a trajectory (the direction it's moving) &mdash; the exact snapshot-versus-video
+            distinction <a href="module2.html">Module&nbsp;02</a> is built on.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 7. RECAP &AMP; GLOSSARY TERMS ============ -->
       <section id="recap">
-        <h2>6. Recap &amp; Glossary Terms</h2>
+        <h2>7. Recap &amp; Glossary Terms</h2>
         <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
         <ul class="recap-list">
           <li><a href="appendix-glossary.html#g-asset">Asset</a><span class="recap-gloss"> &mdash; Something you own with value</span></li>
@@ -193,7 +295,8 @@
         <li><a href="#worked-examples">3. Worked Examples</a></li>
         <li><a href="#common-confusions">4. Common Confusions</a></li>
         <li><a href="#knowledge-checks">5. Knowledge Checks</a></li>
-        <li><a href="#recap">6. Recap &amp; Glossary Terms</a></li>
+        <li><a href="#interview">6. Interview Translation</a></li>
+        <li><a href="#recap">7. Recap &amp; Glossary Terms</a></li>
       </ol>
       <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
         <span data-complete-label>Mark module complete</span>

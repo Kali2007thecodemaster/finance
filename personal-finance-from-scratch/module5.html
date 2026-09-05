@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#222222">
+  <meta name="theme-color" content="#F0E7D4">
   <script>
     (function () {
       try {
@@ -18,7 +18,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=Inter:wght@400;600;700&family=Fira+Code:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 
   <script>
     MathJax = { tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] } };
@@ -80,6 +80,14 @@
       <!-- ============ 2. DEFINITIONS ============ -->
       <section id="definitions">
         <h2>2. Definitions</h2>
+        <p>
+          There are only two fundamental ways to put money into a business, and they are the two ways you
+          could back a friend opening a bakery. You could become a <em>co-owner</em> &mdash; put in cash
+          for a share of the shop, so if it thrives you share the profits and if it fails you lose your
+          stake. Or you could <em>lend</em> the money &mdash; hand over cash on the promise of getting it
+          back on a set date with interest, whether the croissants sell or not. The first is a stock; the
+          second is a bond. Every security in the world is a variation on one of these two moves.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 5.1 &mdash; Stock (Equity)</span>
           <p>Ownership share in a company.</p>
@@ -99,10 +107,31 @@
             business goes (barring bankruptcy).
           </p>
         </div>
+        <p>
+          The sharpest way to feel the difference is to ask <em>who gets paid first when the money runs
+          out.</em> Lenders (bondholders) stand at the front of the line: they're owed a fixed amount and
+          get paid before owners see anything. Owners (shareholders) stand at the back &mdash; they get
+          whatever is left, which can be spectacular or nothing. That single ordering explains the whole
+          trade-off: a bond's return is capped but comes first and is contractual; a stock's return is
+          uncapped but comes last and is uncertain. You are paid more, on average, for standing further
+          back in the line and bearing that uncertainty.
+        </p>
+        <p>
+          Owning one bakery, though &mdash; however you own it &mdash; means one bad oven fire can wipe
+          you out. The fix has a name.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 5.3 &mdash; Diversification</span>
           <p>Spreading money so no single failure badly hurts the total.</p>
         </div>
+        <p>
+          Diversification is the &ldquo;don't carry all the eggs in one basket&rdquo; rule, made
+          financial. Own one company and its fate is your fate. Own two hundred and any single collapse
+          is a rounding error against the whole &mdash; you've traded the chance of one big win for the
+          near-certainty of the group's average. The catch is that buying two hundred companies by hand
+          is absurd for an individual, which is what makes the fourth definition the one that turns the
+          idea into a product you can actually own.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 5.4 &mdash; Index Fund / ETF</span>
           <p>
@@ -111,10 +140,12 @@
           </p>
         </div>
         <p>
-          Definition&nbsp;5.4 is the hinge of the second half of this book.
+          An ETF is a single basket you buy in one click that already contains the two hundred eggs,
+          pre-sorted. Definition&nbsp;5.4 is the hinge of the second half of this book:
           <a href="module6.html#definitions">Module&nbsp;6.3</a> builds an entire portfolio core out of
           it, and <a href="module7.html#definitions">Module&nbsp;7.6</a> shows how to check, from a real
-          fact sheet, whether a given ETF's diversification is genuine or only nominal.
+          fact sheet, whether a given ETF's diversification is genuine or only a hundred versions of the
+          same bet.
         </p>
       </section>
 
@@ -123,15 +154,18 @@
         <h2>3. Worked Examples</h2>
         <div class="example-box">
           <span class="box-label">Worked Example</span>
-          <p>
-            \$1,000 in one stock, &minus;50% &rarr; \$500. \$1,000 spread across 100 stocks, one drops
-            50% &rarr; \$995.
-          </p>
+          <p>Put \$1,000 to work two ways, then hit each with the same disaster: one company halves in value.</p>
+          <p><strong>Undiversified.</strong> All \$1,000 sits in a single stock. It drops 50%.</p>
+          <p>$$1{,}000 \times (1 - 0.50) = \$500 \quad\text{— half your money, gone.}$$</p>
+          <p><strong>Diversified.</strong> The \$1,000 is spread evenly across 100 stocks &mdash; \$10 each. <em>One</em> of them drops 50%; assume the other 99 are flat.</p>
+          <p>$$\underbrace{99 \times 10}_{\text{untouched} \;=\; 990} + \underbrace{10 \times 0.50}_{\text{the loser} \;=\; 5} = \$995 \quad\text{— a 0.5% dent.}$$</p>
         </div>
         <p>
-          The comparison is the entire argument for Definition&nbsp;5.3, and it is worth noting what it
-          does <em>not</em> claim: diversification did not prevent the 50% loss, it made the loss
-          irrelevant to the total. That distinction is what
+          Same catastrophe, same 50% collapse of a company &mdash; but a \$500 wound in one case and a
+          \$5 scratch in the other. Note carefully what diversification did <em>not</em> do: it did not
+          prevent the 50% loss or predict it. It made the loss <em>irrelevant to your total</em> by
+          shrinking any single name to a small slice of the whole. That distinction &mdash; surviving
+          failures rather than avoiding them &mdash; is exactly what
           <a href="module6.html#definitions">Module&nbsp;6.1</a> means when it redefines risk as
           volatility rather than as the chance of losing everything.
         </p>
@@ -162,9 +196,41 @@
         </p>
       </section>
 
-      <!-- ============ 6. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <!-- ============ 6. INTERVIEW TRANSLATION ============ -->
+      <section id="interview">
+        <h2>6. Interview Translation</h2>
+        <p>
+          Stocks, bonds and diversification are the vocabulary of every markets desk. The two ideas that
+          separate a memorised answer from an understood one are the <em>capital-structure ordering</em>
+          (who gets paid first) and what diversification actually removes.
+        </p>
+        <div class="interview-box">
+          <span class="box-label">Interview Translation</span>
+          <p><strong>If asked to contrast equity and debt</strong>, answer with the payment line, not just &ldquo;ownership vs. loan&rdquo;:</p>
+          <p class="say">
+            &ldquo;Debt holders have a fixed, contractual claim and sit senior in the capital structure
+            &mdash; they're paid before equity in both good times and bankruptcy. Equity holders own the
+            residual: unlimited upside, but last in line and first to absorb losses. So debt trades a cap
+            on return for priority and certainty; equity takes on the risk of the residual claim in
+            exchange for the upside. That risk is why equities carry a higher expected return &mdash;
+            it's compensation for standing at the back of the line.&rdquo;
+          </p>
+          <p>
+            <strong>On diversification, name what it does and doesn't do.</strong> The precise line is
+            that diversification removes <em>idiosyncratic</em> (company-specific) risk &mdash; one
+            bakery's fire &mdash; essentially for free, but it cannot remove <em>systematic</em> (market-wide)
+            risk, because when the whole economy falls, all the baskets fall together. That is the exact
+            boundary <a href="module6.html">Module&nbsp;06</a> builds a portfolio around and that the
+            <em>beta</em> of <a href="module7.html#definitions">Module&nbsp;7.1</a> measures. Saying
+            &ldquo;diversification is the only free lunch in finance, but it only buys down the
+            diversifiable half of risk&rdquo; signals you know where the idea stops.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 7. RECAP &AMP; GLOSSARY TERMS ============ -->
       <section id="recap">
-        <h2>6. Recap &amp; Glossary Terms</h2>
+        <h2>7. Recap &amp; Glossary Terms</h2>
         <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
         <ul class="recap-list">
           <li><a href="appendix-glossary.html#g-stock">Stock</a><span class="recap-gloss"> &mdash; Ownership share in a company</span></li>
@@ -188,7 +254,8 @@
         <li><a href="#worked-examples">3. Worked Examples</a></li>
         <li><a href="#common-confusions">4. Common Confusions</a></li>
         <li><a href="#knowledge-checks">5. Knowledge Checks</a></li>
-        <li><a href="#recap">6. Recap &amp; Glossary Terms</a></li>
+        <li><a href="#interview">6. Interview Translation</a></li>
+        <li><a href="#recap">7. Recap &amp; Glossary Terms</a></li>
       </ol>
       <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
         <span data-complete-label>Mark module complete</span>
