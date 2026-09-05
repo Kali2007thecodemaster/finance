@@ -1,97 +1,82 @@
 # 3D model — `loonie_2003.glb`
 
-`loonie.html` loads a real 3D coin from this folder and plays the animation
-baked into the file (exported from Blender). The page expects:
+`loonie.html` loads a real 3D coin and plays the animation baked into the file
+(exported from Blender). Nothing is drawn in code — geometry, PBR materials and
+the animation clip all live inside the `.glb`. If the file can't be loaded the
+page falls back to a plain gold placeholder and shows a notice, so it never
+renders blank.
+
+## ► This project uses **Option B** — the model is a GitHub Release asset
+
+The `.glb` is **not** committed to the repo (it's too heavy for GitHub Pages).
+`loonie.html` is already pointed at:
 
 ```
-personal-finance-from-scratch/models/loonie_2003.glb
+https://github.com/Kali2007thecodemaster/finance/releases/download/coin-v1/loonie_2003.glb
 ```
 
-Nothing is drawn in code — geometry, PBR materials and the animation clip all
-live inside the `.glb`. If the file is missing the page falls back to a plain
-gold placeholder and shows a notice, so it never renders blank.
+So all you have to do is **attach the file to a release tagged `coin-v1`** — no
+code change needed. Steps:
+
+1. On GitHub: **Releases** → **Draft a new release**.
+2. **Tag** = `coin-v1` (type it in the tag box and choose "Create new tag"),
+   target branch `main`. Give it any title, e.g. "Coin model".
+3. Drag **`loonie_2003.glb`** into the **"Attach binaries by dropping them here"**
+   box and wait for the upload to finish (Release assets allow up to 2 GB, and
+   the web uploader handles large files, so the "too heavy" problem goes away).
+4. Click **Publish release**.
+
+Reload `loonie.html` (or the deployed Pages URL) — the coin loads from the
+release. Release downloads are served with CORS headers, so the browser fetches
+it directly from the Pages origin with no extra config.
+
+> Prefer the CLI? `gh release create coin-v1 loonie_2003.glb --title "Coin model"`
+
+If you ever change the tag or filename, update `MODEL_URL` at the top of the
+`<script type="module">` block in `loonie.html` to match.
 
 ---
 
-## The catch: GitHub Pages + big files
+## Why a Release asset and not the repo
 
-Your export is **too heavy**, and GitHub is strict about size:
+GitHub is strict about file size, and a raw Blender export blows past it:
 
-- **100 MB** — hard limit; a push containing a bigger file is rejected outright.
+- **100 MB** — hard push limit; a commit containing a bigger file is rejected.
 - **50 MB** — GitHub warns above this.
 - **Git LFS does _not_ work here.** GitHub Pages serves the *pointer text file*
   for an LFS-tracked binary, not the binary itself — the loader would get a few
   lines of text instead of a model. So **do not** `git lfs track` the `.glb`.
 
-You therefore have two good options. Pick one.
+Release assets sidestep all of that: up to **2 GB**, served with CORS, and
+nothing lands in the repo or the Pages deploy. That's why this project uses it.
 
 ---
 
-## Option A — compress the GLB and commit it (recommended if you can get under ~40 MB)
+## Alternative — commit a *compressed* copy instead
 
-Use [`gltf-transform`](https://gltf-transform.dev/) (Node ≥ 18). It shrinks a
-Blender export dramatically by Draco/meshopt-compressing the mesh and resizing
-textures — both of which `loonie.html` already knows how to decode locally.
+If you'd rather keep the model in the repo, shrink it first with
+[`gltf-transform`](https://gltf-transform.dev/) (Node ≥ 18) until it's well
+under the size limit, drop it at `models/loonie_2003.glb`, and set `MODEL_URL`
+in `loonie.html` back to `'./models/loonie_2003.glb'`.
 
 ```bash
-# one-time install
 npm install -g @gltf-transform/cli
 
-# from the personal-finance-from-scratch/ folder, with your raw export as input:
-#   1) Draco-compress geometry, 2) resize textures to 2K, 3) WebP-encode them
+# Draco-compress geometry + resize/re-encode textures
 gltf-transform optimize loonie_2003_raw.glb models/loonie_2003.glb \
   --compress draco \
   --texture-compress webp \
   --texture-size 2048
-```
 
-Check the result and, if it's comfortably under the limit, commit it:
-
-```bash
 ls -lh models/loonie_2003.glb          # aim well under 50 MB
-git add models/loonie_2003.glb
-git commit -m "Add compressed loonie GLB model"
-git push -u origin claude/personal-finance-from-scratch-3banuv
 ```
 
-Tips if it's still too big:
+Tips if it's still too big: `--texture-size 1024`; `gltf-transform draco in.glb
+out.glb -q 10` for tighter quantization; bake to a **single** material/atlas in
+Blender; remove unused UV maps / vertex colours / extra scenes before exporting.
 
-- `--texture-size 1024` — 1K textures are plenty for a spinning coin.
-- `gltf-transform draco loonie.glb out.glb -q 10` — tighter quantization.
-- Bake to a **single** material/atlas in Blender before exporting.
-- Remove unused UV maps / vertex colours / extra scenes in Blender.
-
-> `loonie.html` handles both Draco and meshopt compression out of the box — the
-> decoders are vendored under `vendor/three/`. No CDN, nothing to configure.
-
----
-
-## Option B — host the heavy GLB as a GitHub Release asset (no size wrangling)
-
-Release assets allow files up to **2 GB** and are served with proper CORS, so
-the browser can fetch them directly. The `.glb` stays out of the repo entirely.
-
-1. **Create a release** (GitHub → *Releases* → *Draft a new release*), tag it
-   e.g. `coin-v1`, and **drag `loonie_2003.glb` into the "Attach binaries" box**.
-   Publish the release.
-
-2. **Copy the asset URL.** It looks like:
-
-   ```
-   https://github.com/Kali2007thecodemaster/finance/releases/download/coin-v1/loonie_2003.glb
-   ```
-
-3. **Point the page at it.** In `loonie.html`, set:
-
-   ```js
-   const MODEL_URL = 'https://github.com/Kali2007thecodemaster/finance/releases/download/coin-v1/loonie_2003.glb';
-   ```
-
-   Commit that one-line change and push. Done — the model loads from the
-   release, and the repo (and Pages deploy) stays small.
-
-> Uploading via the CLI instead of the web UI: with the `gh` tool,
-> `gh release create coin-v1 loonie_2003.glb --title "Coin model"`.
+> `loonie.html` decodes both Draco- and meshopt-compressed GLBs out of the box —
+> the decoders are vendored under `vendor/three/`. No CDN, nothing to configure.
 
 ---
 

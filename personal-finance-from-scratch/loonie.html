@@ -94,9 +94,14 @@
        Both Draco- and meshopt-compressed GLBs are supported here.
        ============================================================ */
 
-    // Point this at a Release asset URL to serve a heavy model off-repo, e.g.
-    //   const MODEL_URL = 'https://github.com/<owner>/<repo>/releases/download/coin-v1/loonie_2003.glb';
-    const MODEL_URL = './models/loonie_2003.glb';
+    // The model is served as a GitHub *Release asset* (kept out of the repo so
+    // the heavy .glb doesn't bloat Pages). It loads once you attach the file to
+    // a release tagged "coin-v1" — see models/README.md for the 3-step upload.
+    // (Release downloads are sent with CORS headers, so the browser can fetch
+    //  them straight from the Pages origin.)
+    const MODEL_URL = 'https://github.com/Kali2007thecodemaster/finance/releases/download/coin-v1/loonie_2003.glb';
+    // If you'd rather commit a *compressed* copy instead, drop it at
+    // ./models/loonie_2003.glb and set MODEL_URL back to that path.
 
     const app = document.getElementById('app');
     const statusEl = document.getElementById('status');
@@ -210,9 +215,9 @@
         // model missing / failed → placeholder coin + notice
         loaderEl.style.display = 'none';
         buildPlaceholder();
-        setStatus('Model not found at <code>' + MODEL_URL + '</code>. Showing a plain placeholder coin. '
-          + 'Add <code>models/loonie_2003.glb</code> (see <code>models/README.md</code>) — or set '
-          + '<code>MODEL_URL</code> to a GitHub Release asset if the file is too heavy for the repo.', true);
+        setStatus('Model not loaded yet. Showing a plain placeholder coin. '
+          + 'Attach <code>loonie_2003.glb</code> to a GitHub Release tagged '
+          + '<code>coin-v1</code> (see <code>models/README.md</code>) and it will appear here.', true);
       }
     );
 
