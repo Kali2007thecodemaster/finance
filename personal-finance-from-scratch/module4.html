@@ -92,16 +92,45 @@
       <!-- ============ 3. DEFINITIONS ============ -->
       <section id="definitions">
         <h2>3. Definitions</h2>
+        <p>
+          Imagine a stranger offers to sell you a machine. Every year for three years it will drop a
+          fixed number of coins into your hand, and then it stops. The machine has a price today. Is it
+          worth buying? You can't just add up the coins, because &mdash; from <a href="module1.html">Module&nbsp;01</a>
+          &mdash; a coin arriving in year three is worth less than a coin in your hand now. So you do
+          something careful: you drag every future coin <em>back</em> to today's value, add those
+          present-day amounts, and compare the total to the sticker price. That comparison is net present
+          value, and a certification is exactly such a machine &mdash; it costs money now and drops
+          higher earnings into your hand later.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 4.1 &mdash; NPV</span>
           <p>Present value of future benefits minus present cost.</p>
           <p>$$NPV = \left(\sum_{t=1}^{n} \frac{CF_t}{(1+r)^t}\right) - \text{Initial Cost}$$</p>
         </div>
+
+        <h4>Deconstructing the sum, term by term</h4>
         <p>
-          Read the sum slowly: it is <a href="module1.html#definitions">Module&nbsp;1's present-value
-          formula</a> applied once per year and added up. Nothing new has been introduced &mdash; only
-          repeated. The same sum reappears, with free cash flow in the numerator, as the discounted
-          cash flow of <a href="module7.html#definitions">Module&nbsp;7.3</a>.
+          The formula looks heavier than it is. Take it apart into three plain instructions:
+        </p>
+        <ul>
+          <li><strong>$\dfrac{CF_t}{(1+r)^t}$</strong> &mdash; one future benefit ($CF_t$, the cash flow
+          in year $t$), dragged back to today by dividing out $t$ years of growth. This is
+          <a href="module1.html#definitions">Module&nbsp;1's</a> $PV = FV/(1+r)^n$, unchanged, applied to
+          a single year.</li>
+          <li><strong>$\displaystyle\sum_{t=1}^{n}$</strong> &mdash; the &ldquo;add them all up&rdquo;
+          sign. Do the drag-back once for each year from $1$ to $n$, then total the present-day values.
+          That total is what all the future benefits are worth, expressed in today's money.</li>
+          <li><strong>$-\,\text{Initial Cost}$</strong> &mdash; subtract what you pay right now. Today's
+          cost needs no discounting; it's already in today's dollars.</li>
+        </ul>
+        <p>
+          So the whole expression asks one question: <em>are the future benefits, valued in today's
+          money, worth more than what I pay today?</em> Positive NPV means yes, the deal creates value;
+          negative means no, you'd be paying more than you get back. The decision rule is that simple
+          &mdash; the difficulty is entirely in the inputs, which is the honest point the module keeps
+          returning to. The same sum, with free cash flow in the numerator, reappears as the discounted
+          cash flow of <a href="module7.html#definitions">Module&nbsp;7.3</a>; learn it once here and you
+          have already learned equity valuation's core.
         </p>
       </section>
 
@@ -110,23 +139,24 @@
         <h2>4. Worked Examples</h2>
         <div class="example-box">
           <span class="box-label">Worked Example</span>
-          <p>\$2,000 certification, +\$3,000/year for 3 years, 6% discount rate:</p>
-          <p>$$NPV = 2830.19+2669.99+2518.86-2000=\$6{,}019.04$$</p>
+          <p>A \$2,000 certification is expected to raise your earnings by \$3,000 per year for three years. Your discount rate is 6%. Drag each year's \$3,000 back to today, one at a time.</p>
+          <p><strong>Year 1 benefit:</strong> $\dfrac{3{,}000}{1.06^1} = \dfrac{3{,}000}{1.06} = \$2{,}830.19$</p>
+          <p><strong>Year 2 benefit:</strong> $\dfrac{3{,}000}{1.06^2} = \dfrac{3{,}000}{1.1236} = \$2{,}669.99$</p>
+          <p><strong>Year 3 benefit:</strong> $\dfrac{3{,}000}{1.06^3} = \dfrac{3{,}000}{1.191016} = \$2{,}518.86$</p>
+          <p><strong>Add the present values, subtract today's cost:</strong></p>
+          <p>$$NPV = \underbrace{2{,}830.19+2{,}669.99+2{,}518.86}_{\text{benefits in today's dollars} \;=\; 8{,}019.04} - \underbrace{2{,}000}_{\text{cost}} = \$6{,}019.04$$</p>
           <p>
-            Strongly positive on these assumptions &mdash; the answer hinges entirely on honest input
-            estimates.
+            Strongly positive on these assumptions &mdash; roughly \$6,000 of value created in today's
+            money. But watch the three benefit terms shrink: the <em>same</em> \$3,000 is worth \$2,830
+            in year one and only \$2,519 by year three. That erosion is the exponent from
+            <a href="module1.html#common-confusions">Module&nbsp;1's Common Confusion</a>, and it is why
+            the discount rate &mdash; not the \$3,000 &mdash; is the assumption worth arguing about.
           </p>
         </div>
         <p>
-          The three numbers being added are the three annual \$3,000 benefits, each discounted back by
-          one, two and three years respectively at 6%. Notice how much smaller the third one is than
-          the first: that shrinkage is the exponent from
-          <a href="module1.html#common-confusions">Module&nbsp;1's Common Confusion</a>, and it is why
-          the discount rate is the assumption worth arguing about.
-        </p>
-        <p>
           The <a href="#sandbox">sandbox</a> below opens on exactly these numbers, so you can test that
-          last sentence rather than take it on trust.
+          last sentence rather than take it on trust: push the discount rate up and watch the far-year
+          benefits melt faster than the near ones.
         </p>
       </section>
 
@@ -180,9 +210,43 @@
         </div>
       </section>
 
-      <!-- ============ 8. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <!-- ============ 8. INTERVIEW TRANSLATION ============ -->
+      <section id="interview">
+        <h2>8. Interview Translation</h2>
+        <p>
+          NPV is the decision rule underneath capital budgeting, and interviewers use it to test whether
+          you understand <em>value creation</em> rather than just arithmetic. Two ideas earn the marks:
+          the sign of NPV as a yes/no rule, and where the discount rate comes from.
+        </p>
+        <div class="interview-box">
+          <span class="box-label">Interview Translation</span>
+          <p><strong>If asked &ldquo;how would you decide whether to take on a project?&rdquo;</strong> give the rule and its meaning in one breath:</p>
+          <p class="say">
+            &ldquo;Discount the project's future cash flows back to today at a rate that reflects their
+            risk and opportunity cost, sum them, and subtract the upfront cost. If NPV is positive, the
+            project earns more than the required return &mdash; it creates value, so take it. The rule is
+            just: accept positive-NPV projects. The whole game is in the inputs, especially the discount
+            rate, because it compounds inside an exponent and later cash flows are highly sensitive to
+            it.&rdquo;
+          </p>
+          <p>
+            <strong>Where the discount rate comes from</strong> is the sophisticated follow-up. The rate
+            is an <em>opportunity cost</em> &mdash; the return you'd give up on the next-best use of the
+            same money at the same risk. For a firm that's the cost of capital; for you weighing a
+            certification, it's what your money could otherwise safely earn (recall from
+            <a href="module3.html">Module&nbsp;03</a> that paying down a 20% debt is itself a 20%
+            benchmark). Saying &ldquo;the discount rate <em>is</em> an opportunity cost, so a riskier
+            project deserves a higher one, which lowers its NPV&rdquo; connects capital budgeting straight
+            back to <a href="module1.html">Module&nbsp;01</a> and forward to the DCF in
+            <a href="module7.html#definitions">Module&nbsp;7.3</a> &mdash; and shows you understand a
+            valuation is reasoned estimation, not measurement.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 9. RECAP &AMP; GLOSSARY TERMS ============ -->
       <section id="recap">
-        <h2>8. Recap &amp; Glossary Terms</h2>
+        <h2>9. Recap &amp; Glossary Terms</h2>
         <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
         <ul class="recap-list">
           <li><a href="appendix-glossary.html#g-npv">NPV</a><span class="recap-gloss"> &mdash; Present value of benefits minus present cost</span></li>
@@ -206,7 +270,8 @@
         <li><a href="#common-confusions">5. Common Confusions</a></li>
         <li><a href="#knowledge-checks">6. Knowledge Checks</a></li>
         <li><a href="#sandbox">7. Sandbox</a></li>
-        <li><a href="#recap">8. Recap &amp; Glossary Terms</a></li>
+        <li><a href="#interview">8. Interview Translation</a></li>
+        <li><a href="#recap">9. Recap &amp; Glossary Terms</a></li>
       </ol>
       <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
         <span data-complete-label>Mark module complete</span>

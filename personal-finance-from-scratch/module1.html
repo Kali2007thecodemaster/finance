@@ -108,6 +108,15 @@
       <section id="definitions">
         <h2>3. Definitions</h2>
         <h3>1.1 The Time Value of Money</h3>
+
+        <p>
+          Here is the analogy to hold onto before any symbols appear. A dollar is like a seed. A seed
+          you plant today has all season to grow; the same seed planted in autumn does not. The seed
+          hasn't changed &mdash; what changed is how much <em>time</em> it was given to do its one job.
+          Money works the same way: a dollar in your hand today can be put to work immediately, so it is
+          worth more than a dollar that only shows up next year. The dollar didn't change; the growing
+          season did.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 1.1 &mdash; TVM</span>
           <p>
@@ -115,6 +124,11 @@
             immediately.
           </p>
         </div>
+        <p>
+          Because a dollar's worth depends on <em>when</em> it lands, we need a way to carry a dollar
+          across time &mdash; forward to see what it becomes, or backward to see what a future dollar is
+          worth right now. Those two directions have names.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 1.2 &amp; 1.3 &mdash; Present Value (PV) / Future Value (FV)</span>
           <p>
@@ -124,7 +138,45 @@
           </p>
           <p>$$FV = PV \times (1+r)^n \qquad \Longleftrightarrow \qquad PV = \frac{FV}{(1+r)^n}$$</p>
         </div>
+
+        <h4>Deconstructing the formula, before trusting the symbols</h4>
+        <p>
+          Do not memorise $FV = PV \times (1+r)^n$ as a shape. Build it. Ask what one year of growth
+          does to a pile of money, then let the years stack up.
+        </p>
+        <p>
+          <strong>One year.</strong> Put down $PV$ dollars at rate $r$. At year's end you still have your
+          original pile <em>and</em> the interest it earned: the pile ($PV$) plus its growth ($PV \times
+          r$). Factor out the $PV$ and that is $PV \times (1 + r)$. So the entire engine is one move
+          &mdash; <em>multiply by $(1+r)$</em> &mdash; where the $1$ is &ldquo;keep what you had&rdquo;
+          and the $r$ is &ldquo;add this year's rent.&rdquo;
+        </p>
+        <p>
+          <strong>Two years.</strong> Year two does the exact same move, but to year one's <em>ending</em>
+          pile, not the original. So you multiply by $(1+r)$ a second time: $PV \times (1+r) \times (1+r)
+          = PV \times (1+r)^2$. That is the whole secret of the exponent &mdash; $n$ is simply
+          <em>how many times in a row you apply the one-year move</em>. Three years is three multiplications,
+          ten years is ten. The power isn't decoration; it is a count of growing seasons.
+        </p>
+        <p>
+          <strong>Why it curves.</strong> Because each year multiplies the <em>result</em> of the last
+          one, the growth is not a straight line &mdash; it bends upward, gently at first and then
+          steeply, the way a rumour spreads to a growing audience. Turn the same machine around and the
+          division form, $PV = FV / (1+r)^n$, does the reverse: it strips out the growing seasons to ask
+          &ldquo;what seed would have produced this harvest?&rdquo; A larger $r$ or a longer $n$ means
+          more seasons stripped away, so a future dollar shrinks harder the further off, or the more
+          heavily discounted, it is. Sit with that sentence &mdash; it is the entire reason
+          <a href="module4.html">Module&nbsp;04's</a> NPV is so touchy about its discount rate.
+        </p>
+
         <h3>1.2 Compound Interest</h3>
+        <p>
+          Compounding is what you just saw, named. The reason two years wasn't simply &ldquo;twice one
+          year&rdquo; is that in year two the interest itself started earning interest. Picture a snowball
+          rolling downhill: it doesn't just pick up snow, it picks up snow <em>along a surface that keeps
+          getting bigger</em>, so each turn adds more than the last. Money left to compound is a snowball
+          made of dollars.
+        </p>
         <div class="definition-box">
           <span class="box-label">Definition 1.4 &mdash; Compound Interest</span>
           <p>Interest earned on previously earned interest.</p>
@@ -137,9 +189,17 @@
         <h3>From 1.1 &mdash; Moving a dollar in both directions</h3>
         <div class="example-box">
           <span class="box-label">Worked Example</span>
+          <p>Take \$1,000, a rate of 5% per year, and a term of 3 years. Apply the one-year move three times, watching each multiplication land on the previous result.</p>
+          <p><strong>Year 1:</strong> $1{,}000 \times 1.05 = \$1{,}050.00$ &nbsp;(you kept your \$1,000 and added \$50 of rent).</p>
+          <p><strong>Year 2:</strong> $1{,}050 \times 1.05 = \$1{,}102.50$ &nbsp;(this year's \$52.50 of interest is larger than last year's \$50 &mdash; the extra \$2.50 is interest earned <em>on</em> last year's interest).</p>
+          <p><strong>Year 3:</strong> $1{,}102.50 \times 1.05 = \$1{,}157.63$.</p>
+          <p>Three multiplications in a row is exactly what the exponent packages up:</p>
+          <p>$$FV = 1{,}000 \times 1.05^3 = \$1{,}157.63$$</p>
           <p>
-            \$1,000 at 5%/year, 3 years: $FV = 1000 \times 1.05^3 = \$1,157.63$. Reversed, \$1,157.63
-            in 3 years at 5% is worth exactly \$1,000 today.
+            Now run the machine backward. If someone promises you \$1,157.63 in three years and money
+            grows at 5%, what is that promise worth today? Undo the three multiplications by dividing:
+            $1{,}157.63 / 1.05^3 = \$1{,}000$. The future sum is worth exactly the present sum &mdash;
+            they are the same dollar, photographed at two different times.
           </p>
         </div>
         <h3>From 1.2 &mdash; Three years of interest-on-interest</h3>
@@ -222,9 +282,40 @@
         </div>
       </section>
 
-      <!-- ============ 8. RECAP &AMP; GLOSSARY TERMS ============ -->
+      <!-- ============ 8. INTERVIEW TRANSLATION ============ -->
+      <section id="interview">
+        <h2>8. Interview Translation</h2>
+        <p>
+          Time value is the single most-tested idea in an entry-level finance interview, because every
+          valuation question is secretly a time-value question. You will not be asked to plug numbers
+          &mdash; you'll be asked to <em>explain why the machine behaves the way it does</em>.
+        </p>
+        <div class="interview-box">
+          <span class="box-label">Interview Translation</span>
+          <p><strong>If asked &ldquo;why is a dollar today worth more than a dollar next year?&rdquo;</strong> resist the textbook sentence and give the mechanism:</p>
+          <p class="say">
+            &ldquo;Because today's dollar can be put to work immediately, so it compounds one extra period.
+            Formally, future value is present value times $(1+r)$ raised to the number of periods &mdash;
+            each period you multiply by $(1+r)$, once to keep the principal and once more to add that
+            period's return. Discounting is just that machine in reverse: I divide by $(1+r)^n$ to ask
+            what a future cash flow is worth now. It's the same operation behind bond pricing, NPV and a
+            DCF &mdash; only the cash flows change.&rdquo;
+          </p>
+          <p>
+            <strong>The follow-up you should expect:</strong> &ldquo;What happens to present value if I
+            raise the discount rate?&rdquo; The crisp answer is <em>it falls, and it falls faster for
+            cash flows further out</em>, because the rate compounds inside an exponent &mdash; a small
+            change in $r$ is magnified by $n$. Being able to say <em>why</em> it falls non-linearly,
+            rather than just <em>that</em> it falls, is the difference between having memorised a formula
+            and having understood it. That same sensitivity is the risk you'll manage directly in
+            <a href="module4.html#sandbox">Module&nbsp;04</a> and <a href="module7.html#definitions">Module&nbsp;7.3</a>.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============ 9. RECAP &AMP; GLOSSARY TERMS ============ -->
       <section id="recap">
-        <h2>8. Recap &amp; Glossary Terms</h2>
+        <h2>9. Recap &amp; Glossary Terms</h2>
         <p>Every term introduced above, with its one-line meaning. Each links through to its entry in the <a href="appendix-glossary.html">consolidated Glossary</a>.</p>
         <ul class="recap-list">
           <li><a href="appendix-glossary.html#g-time-value-of-money">Time Value of Money</a><span class="recap-gloss"> &mdash; A dollar today &gt; a dollar later</span></li>
@@ -250,7 +341,8 @@
         <li><a href="#common-confusions">5. Common Confusions</a></li>
         <li><a href="#knowledge-checks">6. Knowledge Checks</a></li>
         <li><a href="#sandbox">7. Sandbox</a></li>
-        <li><a href="#recap">8. Recap &amp; Glossary Terms</a></li>
+        <li><a href="#interview">8. Interview Translation</a></li>
+        <li><a href="#recap">9. Recap &amp; Glossary Terms</a></li>
       </ol>
       <button type="button" class="mark-complete" data-complete-toggle aria-pressed="false">
         <span data-complete-label>Mark module complete</span>
