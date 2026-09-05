@@ -575,8 +575,16 @@
     </div>
   </footer>
 
-  <script src="three.min.js"></script>
-  <script src="scene.js"></script>
+  <!-- three.js (ESM) + addons, vendored locally — powers the GLB loonie hero -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./vendor/three/three.module.js",
+      "three/addons/": "./vendor/three/"
+    }
+  }
+  </script>
+  <script type="module" src="scene.js"></script>
   <script src="main.js"></script>
   <script src="theme.js"></script>
 </body>
