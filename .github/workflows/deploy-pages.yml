@@ -56,8 +56,10 @@ jobs:
           set -euo pipefail
           cd personal-finance-from-scratch
           missing=0
-          for f in index.html style.css scene.js three.min.js main.js \
+          for f in index.html style.css scene.js theme.js main.js \
                    chapter.css reader.js appendix-glossary.html \
+                   loonie.html models/loonie_2003.glb \
+                   vendor/three/three.module.js vendor/three/GLTFLoader.js \
                    widgets/tvm-calculator.js widgets/amortization.js \
                    widgets/npv-scenario.js widgets/dcf-scenario-sandbox.js; do
             [ -f "$f" ] || { echo "missing: $f"; missing=1; }
